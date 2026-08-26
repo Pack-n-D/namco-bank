@@ -35,25 +35,18 @@ This project consists of pure standard HTML5, CSS3, and Vanilla JavaScript with 
 3. Set the repository to **Public** and click **Create repository**.
 
 ### Step 2: Push Your Code
-In your project directory (`c:\Users\DELL\Desktop\Namco Bank`), run in your terminal:
-
-```bash
-git init
-git add .
-git commit -m "Initial commit: Namco Bank SMS Consent Portal"
-git branch -M main
-git remote add origin https://github.com/<YOUR-USERNAME>/<YOUR-REPO-NAME>.git
-git push -u origin main
-```
+Repository is connected and pushed to:
+`https://github.com/Pack-n-D/namco-bank.git`
 
 ### Step 3: Enable GitHub Pages
-1. Open your repository on GitHub.
+1. Open your repository at [https://github.com/Pack-n-D/namco-bank](https://github.com/Pack-n-D/namco-bank).
 2. Click on **Settings** (tab at the top).
-3. Scroll down the left sidebar and click on **Pages**.
-4. Under **Build and deployment** > **Branch**, select `main` and `/ (root)` folder.
-5. Click **Save**.
-6. Within 1-2 minutes, your live site will be published at:
-   `https://<YOUR-USERNAME>.github.io/<YOUR-REPO-NAME>/`
+3. In the left sidebar, click on **Pages** (under the "Code and automation" section).
+4. Under **Build and deployment** > **Source**, choose **Deploy from a branch**.
+5. Under **Branch**, select `main` and keep the folder as `/ (root)`.
+6. Click **Save**.
+7. In about 1–2 minutes, your live site will be published at:
+   👉 **`https://pack-n-d.github.io/namco-bank/`**
 
 ---
 
