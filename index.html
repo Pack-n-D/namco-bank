@@ -3,863 +3,222 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bank SMS Alert Consent Form | The Nasik Merchants Co-op Bank Ltd. (Namco Bank)</title>
-  <meta name="description" content="Official SMS Alert Registration and Customer Authorization Form for The Nasik Merchants Co-operative Bank Ltd. (Namco Bank), compliant with RBI guidelines.">
+  <title>Bank SMS Alert Consent Form - Namco Bank</title>
+  <meta name="description" content="Official SMS Alert Registration and Customer Consent Form for The Nasik Merchants Co-operative Bank Ltd. (Namco Bank).">
+  <!-- Clean Professional Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tiro+Devanagari+Marathi&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Top Announcement Bar -->
-  <div class="top-announcement">
-    <div class="container top-bar-content">
-      <span><i class="fa-solid fa-shield-halved"></i> RBI Mandated Security Compliance | 24x7 Instant Banking Alerts Facility</span>
-      <div class="top-bar-links">
-        <a href="tel:18002336262"><i class="fa-solid fa-phone"></i> Toll Free: 1800-233-6262</a>
-        <button id="toggleOfficerModeBtn" class="top-mode-btn" title="Switch to Branch Officer Processing Desk">
-          <i class="fa-solid fa-user-tie"></i> Bank Staff Desk
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Header Section -->
-  <header class="bank-header">
-    <div class="container header-container">
-      <div class="brand-wrapper">
-        <img src="assets/logo.png" alt="Namco Bank Official Logo" class="bank-logo" id="bankLogoImg">
-        <div class="bank-titles">
-          <div class="marathi-sanskrit-tag">॥ संहतिः कार्यसाधिकाः ॥ &bull; स्थापना: १९५९</div>
-          <h1 class="bank-name-en">The Nasik Merchants Co-operative Bank Ltd., Nashik</h1>
-          <div class="bank-badge-row">
-            <span class="bank-brand-highlight">Namco Bank</span>
-            <span class="bank-status-pill">(Multi-State Scheduled Bank)</span>
-          </div>
-          <p class="bank-sub-info">Regd. Head Office: 'Namco Bank Bhavan', CBS, Nashik - 422 002 (Maharashtra)</p>
-        </div>
-      </div>
-      <div class="header-doc-meta">
-        <div class="doc-badge">
-          <span class="doc-badge-title">FORM NO: NMB-SMS-01</span>
-          <span class="doc-badge-sub">RBI / DPSS Compliance</span>
-        </div>
-        <div class="current-date-badge">
-          <i class="fa-regular fa-calendar-check"></i> <span id="currentDateDisplay">--</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Content Area -->
-  <main class="container main-content">
-    
-    <!-- Hero / Intro Banner -->
-    <section class="form-title-banner">
-      <div class="banner-decor"></div>
-      <div class="banner-text">
-        <h2>Bank SMS Alert Registration & Consent Form</h2>
-        <p>Customer authorization & mobile update for instant transaction alerts, OTPs, security advisories & e-banking notifications as per Reserve Bank of India (RBI) guidelines.</p>
-      </div>
-      <div class="banner-quick-actions">
-        <button type="button" id="fillSampleDataBtn" class="btn btn-secondary btn-sm">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> Load Sample Data
-        </button>
-        <button type="button" id="printBlankFormBtn" class="btn btn-outline btn-sm">
-          <i class="fa-solid fa-print"></i> Print Blank Physical Form
-        </button>
-      </div>
-    </section>
-
-    <!-- Branch Officer Portal (Hidden by default, toggleable) -->
-    <section id="officerPortalSection" class="officer-portal-section hidden">
-      <div class="officer-card">
-        <div class="officer-header">
-          <div class="officer-title">
-            <i class="fa-solid fa-building-columns"></i>
-            <div>
-              <h3>Branch Officer Verification Desk</h3>
-              <p>Review received digital consent submissions, verify customer KYC, and mark CBS mobile updates.</p>
-            </div>
-          </div>
-          <button type="button" id="closeOfficerViewBtn" class="btn-icon-close"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <div class="officer-stats-grid">
-          <div class="stat-box">
-            <span class="stat-number" id="totalSubmissionsCount">0</span>
-            <span class="stat-label">Total Submissions</span>
-          </div>
-          <div class="stat-box stat-pending">
-            <span class="stat-number" id="pendingVerificationCount">0</span>
-            <span class="stat-label">Pending Verification</span>
-          </div>
-          <div class="stat-box stat-verified">
-            <span class="stat-number" id="cbsUpdatedCount">0</span>
-            <span class="stat-label">CBS Updated</span>
-          </div>
-        </div>
-
-        <div class="submissions-table-container">
-          <table class="data-table" id="submissionsTable">
-            <thead>
-              <tr>
-                <th>Ref Number</th>
-                <th>Customer Name</th>
-                <th>Account No</th>
-                <th>Mobile Number</th>
-                <th>Branch</th>
-                <th>Submitted On</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="submissionsTableBody">
-              <tr>
-                <td colspan="8" class="text-center empty-state">No submissions yet. Submit a form below to test branch verification.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- Main Registration Form Container -->
-    <div class="form-layout-grid">
-
-      <!-- Form Column -->
-      <div class="form-column">
-        <form id="smsConsentForm" novalidate>
-
-          <!-- Section 1: Customer Identification -->
-          <div class="form-section-card">
-            <div class="section-badge-header">
-              <span class="section-num">1</span>
-              <div>
-                <h3 class="section-title">Customer Identification Details</h3>
-                <p class="section-subtitle">Please enter your primary account details as recorded with Namco Bank</p>
-              </div>
-            </div>
-
-            <div class="form-grid">
-              <div class="form-group col-12">
-                <label for="customerName" class="form-label required">Full Name of Customer / Account Holder</label>
-                <div class="input-with-icon">
-                  <i class="fa-solid fa-user input-icon"></i>
-                  <input type="text" id="customerName" name="customerName" class="form-control" placeholder="e.g. Ramesh Shankar Patil" required>
-                </div>
-                <span class="input-hint">As printed in passbook / cheque book</span>
-              </div>
-
-              <div class="form-group col-6">
-                <label for="accountNumber" class="form-label required">Account Number (15 Digits)</label>
-                <div class="input-with-icon">
-                  <i class="fa-solid fa-wallet input-icon"></i>
-                  <input type="text" id="accountNumber" name="accountNumber" class="form-control mono-font" placeholder="001010100012345" maxlength="16" required>
-                </div>
-                <span class="input-hint">15-digit Namco Bank CBS Account Number</span>
-              </div>
-
-              <div class="form-group col-6">
-                <label for="customerCif" class="form-label required">Customer ID (CIF No.)</label>
-                <div class="input-with-icon">
-                  <i class="fa-solid fa-id-card input-icon"></i>
-                  <input type="text" id="customerCif" name="customerCif" class="form-control mono-font" placeholder="e.g. 10928472" maxlength="12" required>
-                </div>
-                <span class="input-hint">Found on the first page of your passbook</span>
-              </div>
-
-              <div class="form-group col-6">
-                <label for="branchName" class="form-label required">Home Branch Name</label>
-                <div class="input-with-icon">
-                  <i class="fa-solid fa-location-dot input-icon"></i>
-                  <select id="branchName" name="branchName" class="form-control" required>
-                    <option value="" disabled selected>Select Branch</option>
-                    <option value="CBS Head Office Branch, Nashik">CBS Head Office Branch, Nashik (001)</option>
-                    <option value="Canada Corner Branch, Nashik">Canada Corner Branch, Nashik (002)</option>
-                    <option value="Panchavati Main Branch, Nashik">Panchavati Main Branch, Nashik (003)</option>
-                    <option value="Mumbai Naka Branch, Nashik">Mumbai Naka Branch, Nashik (004)</option>
-                    <option value="College Road Branch, Nashik">College Road Branch, Nashik (005)</option>
-                    <option value="Gangapur Road Branch, Nashik">Gangapur Road Branch, Nashik (006)</option>
-                    <option value="Satpur MIDC Branch, Nashik">Satpur MIDC Branch, Nashik (007)</option>
-                    <option value="Ambad MIDC Branch, Nashik">Ambad MIDC Branch, Nashik (008)</option>
-                    <option value="Nashik Road Branch">Nashik Road Branch (009)</option>
-                    <option value="Deolali Camp Branch">Deolali Camp Branch (010)</option>
-                    <option value="Pune Main Branch, Camp">Pune Main Branch, Camp (021)</option>
-                    <option value="Mumbai Fort Branch">Mumbai Fort Branch (031)</option>
-                    <option value="Other Branch">Other Registered Branch</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group col-6">
-                <label for="accountType" class="form-label required">Account Type</label>
-                <div class="input-with-icon">
-                  <i class="fa-solid fa-layer-group input-icon"></i>
-                  <select id="accountType" name="accountType" class="form-control" required>
-                    <option value="Savings Bank Account" selected>Savings Bank Account (SB)</option>
-                    <option value="Current Account">Current Account (CA)</option>
-                    <option value="Cash Credit / Overdraft">Cash Credit / Overdraft (CC/OD)</option>
-                    <option value="Salary Account">Salary Account</option>
-                    <option value="Term Deposit / Loan Linked">Term Deposit / Loan Linked</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 2: Mobile Number Registration -->
-          <div class="form-section-card">
-            <div class="section-badge-header">
-              <span class="section-num">2</span>
-              <div>
-                <h3 class="section-title">Mobile Number Registration</h3>
-                <p class="section-subtitle">Enter the official mobile number to be linked for all OTPs & SMS transaction alerts</p>
-              </div>
-            </div>
-
-            <div class="form-grid">
-              <div class="form-group col-8">
-                <label for="mobileNumber" class="form-label required">Registered Mobile Number (10 Digits)</label>
-                <div class="phone-input-group">
-                  <span class="phone-prefix"><img src="https://flagcdn.com/w20/in.png" alt="IN flag" class="flag-icon"> +91</span>
-                  <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control mono-font phone-input" placeholder="98XXXXXXXX" maxlength="10" required>
-                  <button type="button" id="verifyOtpBtn" class="btn-inline-verify" title="Verify via OTP simulation">
-                    <i class="fa-solid fa-shield-check"></i> Verify
-                  </button>
-                </div>
-                <div id="otpVerifiedBadge" class="verified-badge hidden">
-                  <i class="fa-solid fa-circle-check"></i> Mobile number verified via OTP
-                </div>
-                <span class="input-hint">Mandatory for all transactional SMS alerts & OTP authentication</span>
-              </div>
-
-              <div class="form-group col-4">
-                <label for="actionType" class="form-label required">Request Type</label>
-                <select id="actionType" name="actionType" class="form-control" required>
-                  <option value="New Registration">New Registration</option>
-                  <option value="Update Mobile Number">Update Existing Mobile No.</option>
-                  <option value="Re-activate Alerts">Re-activate Alert Service</option>
-                </select>
-              </div>
-
-              <div class="form-group col-6">
-                <label for="altMobileNumber" class="form-label">Alternate Contact Number (Optional)</label>
-                <div class="input-with-icon">
-                  <i class="fa-solid fa-phone input-icon"></i>
-                  <input type="tel" id="altMobileNumber" name="altMobileNumber" class="form-control mono-font" placeholder="Optional Landline or Mobile" maxlength="12">
-                </div>
-              </div>
-
-              <div class="form-group col-6">
-                <label for="emailAddress" class="form-label">Email ID (Optional for E-Statements)</label>
-                <div class="input-with-icon">
-                  <i class="fa-solid fa-envelope input-icon"></i>
-                  <input type="email" id="emailAddress" name="emailAddress" class="form-control" placeholder="name@example.com">
-                </div>
-              </div>
-            </div>
-
-            <!-- Alert Facilities Selection -->
-            <div class="alert-facilities-box">
-              <label class="form-label font-bold mb-2">Select Preferred Alert Services:</label>
-              <div class="checkbox-options-grid">
-                <label class="custom-checkbox-card selected">
-                  <input type="checkbox" name="alertServices" value="Transactions" checked disabled>
-                  <div class="check-content">
-                    <span class="check-title"><i class="fa-solid fa-money-bill-transfer"></i> Transaction Alerts</span>
-                    <span class="check-desc">Credits, debits, ATM withdrawals & UPI payments (RBI Mandatory)</span>
-                  </div>
-                  <span class="mandatory-badge">Mandatory</span>
-                </label>
-
-                <label class="custom-checkbox-card selected">
-                  <input type="checkbox" name="alertServices" value="OTPs" checked disabled>
-                  <div class="check-content">
-                    <span class="check-title"><i class="fa-solid fa-key"></i> OTP & Security Alerts</span>
-                    <span class="check-desc">NetBanking / Mobile App logins, password reset, 2FA</span>
-                  </div>
-                  <span class="mandatory-badge">Mandatory</span>
-                </label>
-
-                <label class="custom-checkbox-card">
-                  <input type="checkbox" name="alertServices" id="alertBalance" value="Balance Updates" checked>
-                  <div class="check-content">
-                    <span class="check-title"><i class="fa-solid fa-scale-balanced"></i> Periodic Balance Summary</span>
-                    <span class="check-desc">Monthly / End-of-week account balance notification</span>
-                  </div>
-                </label>
-
-                <label class="custom-checkbox-card">
-                  <input type="checkbox" name="alertServices" id="alertOffers" value="Bank Circulars & Schemes">
-                  <div class="check-content">
-                    <span class="check-title"><i class="fa-solid fa-bullhorn"></i> Bank Schemes & FD Interest Rates</span>
-                    <span class="check-desc">Special interest rates, dividend notices & member communications</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 3: Consent Declaration -->
-          <div class="form-section-card">
-            <div class="section-badge-header">
-              <span class="section-num">3</span>
-              <div>
-                <h3 class="section-title">Consent Declaration & RBI Guidelines</h3>
-                <p class="section-subtitle">Statutory terms governing electronic banking alerts & customer responsibility</p>
-              </div>
-            </div>
-
-            <div class="declaration-legal-box">
-              <div class="declaration-lead">
-                <i class="fa-solid fa-scale-balanced declaration-icon"></i>
-                <p>
-                  I hereby give my explicit consent to <strong>The Nasik Merchants Co-operative Bank Ltd., Nashik (Namco Bank)</strong> to send SMS alerts, OTPs, transaction advisories, service-related information, and other banking communications on my registered mobile number provided above.
-                </p>
-              </div>
-
-              <div class="legal-clauses-list">
-                <div class="clause-item">
-                  <i class="fa-solid fa-circle-dot"></i>
-                  <p><strong>Exclusive Destination:</strong> SMS alerts and critical one-time passwords (OTPs) will be sent only to the registered mobile number officially provided by me.</p>
-                </div>
-                <div class="clause-item">
-                  <i class="fa-solid fa-circle-dot"></i>
-                  <p><strong>Customer Responsibility:</strong> I undertake the sole responsibility of notifying the Bank immediately in writing or through prescribed branch channels regarding any change, loss, or transfer of my mobile number.</p>
-                </div>
-                <div class="clause-item">
-                  <i class="fa-solid fa-circle-dot"></i>
-                  <p><strong>Service Charges:</strong> I agree that the Bank may levy applicable SMS alert service charges as per its schedule of charges and RBI / Co-operative Banking circulars from time to time.</p>
-                </div>
-                <div class="clause-item">
-                  <i class="fa-solid fa-circle-dot"></i>
-                  <p><strong>Network Delays:</strong> I acknowledge that SMS delivery is subject to telecommunication service provider availability and the Bank shall not be liable for non-receipt due to telecom outages beyond bank control.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 4: Customer Consent & Signature -->
-          <div class="form-section-card">
-            <div class="section-badge-header">
-              <span class="section-num">4</span>
-              <div>
-                <h3 class="section-title">Customer Consent & Authorization</h3>
-                <p class="section-subtitle">Acknowledge terms and provide your signature</p>
-              </div>
-            </div>
-
-            <!-- Mandatory Consent Checkbox -->
-            <div class="consent-agreement-container">
-              <label class="consent-checkbox-label">
-                <input type="checkbox" id="consentCheckbox" name="consentCheckbox" required>
-                <span class="checkbox-custom"></span>
-                <span class="consent-text">
-                  <strong>I agree to receive SMS alerts from Namco Bank.</strong> I confirm that the information furnished above is true, complete, and accurate, and I authorize the bank to update my mobile records accordingly.
-                </span>
-              </label>
-            </div>
-
-            <!-- Signature Pad & Mode -->
-            <div class="signature-section-wrapper">
-              <div class="signature-nav-row">
-                <label class="form-label required">Customer Signature / Authorization</label>
-                <div class="signature-tabs">
-                  <button type="button" class="sig-tab active" data-tab="draw"><i class="fa-solid fa-pen-nib"></i> Draw Signature</button>
-                  <button type="button" class="sig-tab" data-tab="type"><i class="fa-solid fa-keyboard"></i> Type Signature</button>
-                  <button type="button" class="sig-tab" data-tab="upload"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Image</button>
-                </div>
-              </div>
-
-              <!-- Tab 1: Draw Signature Canvas -->
-              <div id="drawSigTab" class="sig-panel active">
-                <div class="canvas-wrapper">
-                  <canvas id="signatureCanvas" width="600" height="180"></canvas>
-                  <div class="canvas-placeholder-text" id="canvasPlaceholder">
-                    <i class="fa-solid fa-signature"></i>
-                    <span>Sign inside this box using mouse or finger touch</span>
-                  </div>
-                </div>
-                <div class="canvas-actions">
-                  <span class="canvas-tip"><i class="fa-solid fa-circle-info"></i> Supports touch devices & stylus</span>
-                  <button type="button" id="clearSignatureBtn" class="btn-clear-sig">
-                    <i class="fa-solid fa-rotate-left"></i> Clear Signature
-                  </button>
-                </div>
-              </div>
-
-              <!-- Tab 2: Type Signature -->
-              <div id="typeSigTab" class="sig-panel hidden">
-                <input type="text" id="typedSignatureInput" class="form-control typed-sig-input" placeholder="Type your full name as digital signature">
-                <div id="typedSignaturePreview" class="typed-sig-preview">Ramesh Shankar Patil</div>
-              </div>
-
-              <!-- Tab 3: Upload Signature -->
-              <div id="uploadSigTab" class="sig-panel hidden">
-                <div class="upload-sig-dropzone" id="sigDropzone">
-                  <input type="file" id="sigFileInput" accept="image/*" class="file-input-hidden">
-                  <i class="fa-solid fa-image upload-icon"></i>
-                  <p>Click or drag & drop scanned signature image (JPG, PNG)</p>
-                  <span class="btn btn-secondary btn-sm">Select Image</span>
-                </div>
-                <div id="uploadedSigPreviewContainer" class="uploaded-preview-box hidden">
-                  <img id="uploadedSigImg" alt="Signature Preview">
-                  <button type="button" id="removeUploadedSigBtn" class="btn-remove-upload"><i class="fa-solid fa-trash"></i> Remove</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Date & Place Row -->
-            <div class="form-grid mt-4">
-              <div class="form-group col-6">
-                <label for="submissionDate" class="form-label required">Date of Submission</label>
-                <div class="input-with-icon">
-                  <i class="fa-regular fa-calendar input-icon"></i>
-                  <input type="date" id="submissionDate" name="submissionDate" class="form-control" required>
-                </div>
-              </div>
-
-              <div class="form-group col-6">
-                <label for="submissionPlace" class="form-label required">Place / City</label>
-                <div class="input-with-icon">
-                  <i class="fa-solid fa-map-pin input-icon"></i>
-                  <input type="text" id="submissionPlace" name="submissionPlace" class="form-control" value="Nashik" placeholder="e.g. Nashik / Pune / Mumbai" required>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 5: For Bank Use Only (Official Preview & Verification Section) -->
-          <div class="form-section-card bank-official-section">
-            <div class="section-badge-header">
-              <span class="section-num bank-num">5</span>
-              <div>
-                <h3 class="section-title">For Bank Use Only</h3>
-                <p class="section-subtitle">Branch officer processing & core banking system (CBS) record verification</p>
-              </div>
-            </div>
-
-            <div class="bank-use-grid">
-              <div class="bank-field-box">
-                <span class="field-label">Mobile Number Updated in CBS:</span>
-                <div class="radio-inline-group">
-                  <label class="radio-label">
-                    <input type="radio" name="cbsUpdateStatus" value="Yes" checked>
-                    <span>Yes</span>
-                  </label>
-                  <label class="radio-label">
-                    <input type="radio" name="cbsUpdateStatus" value="No">
-                    <span>No</span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="bank-field-box">
-                <span class="field-label">Verified By (Staff Name & Token):</span>
-                <input type="text" id="bankOfficerName" class="form-control form-control-sm" placeholder="e.g. Amit S. Kulkarni (Token: NMB-8472)" value="CBS Incharge / Branch Officer">
-              </div>
-
-              <div class="bank-field-box">
-                <span class="field-label">Verification Date & Seal:</span>
-                <div class="bank-seal-placeholder">
-                  <i class="fa-solid fa-stamp"></i>
-                  <span>Branch Officer Stamp & Date</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Form Submit Actions -->
-          <div class="form-actions-footer">
-            <button type="reset" id="resetFormBtn" class="btn btn-outline">
-              <i class="fa-solid fa-arrow-rotate-left"></i> Reset Form
-            </button>
-            <div class="submit-btns-right">
-              <button type="button" id="previewFormBtn" class="btn btn-secondary">
-                <i class="fa-solid fa-eye"></i> Live A4 Form Preview
-              </button>
-              <button type="submit" id="submitFormBtn" class="btn btn-primary">
-                <i class="fa-solid fa-file-circle-check"></i> Submit & Generate Receipt
-              </button>
-            </div>
-          </div>
-
-        </form>
+  <div class="page-wrapper">
+    <div class="form-container">
+      
+      <!-- Bank Header with Official Banner Logo -->
+      <div class="bank-header">
+        <img src="assets/logo.png" alt="The Nasik Merchants Co-operative Bank Ltd. (Namco Bank)" class="banner-logo">
       </div>
 
-      <!-- Right Column: Live Summary Card & Guidelines -->
-      <aside class="summary-column">
-        
-        <!-- Live Summary Card -->
-        <div class="sidebar-card summary-sticky-card">
-          <div class="sidebar-card-header">
-            <i class="fa-solid fa-address-card"></i>
-            <h4>Application Summary</h4>
-          </div>
-          
-          <div class="summary-body">
-            <div class="summary-meta-item">
-              <span class="summary-key">Customer Name:</span>
-              <span class="summary-val highlight" id="sumCustomerName">--</span>
-            </div>
-            <div class="summary-meta-item">
-              <span class="summary-key">Account Number:</span>
-              <span class="summary-val mono-font" id="sumAccountNo">--</span>
-            </div>
-            <div class="summary-meta-item">
-              <span class="summary-key">Customer CIF:</span>
-              <span class="summary-val mono-font" id="sumCif">--</span>
-            </div>
-            <div class="summary-meta-item">
-              <span class="summary-key">Mobile Number:</span>
-              <span class="summary-val mono-font" id="sumMobile">--</span>
-            </div>
-            <div class="summary-meta-item">
-              <span class="summary-key">Branch:</span>
-              <span class="summary-val" id="sumBranch">--</span>
-            </div>
-            <div class="summary-meta-item">
-              <span class="summary-key">Consent Status:</span>
-              <span class="summary-val" id="sumConsentStatus">
-                <span class="badge badge-warning"><i class="fa-solid fa-clock"></i> Pending Authorization</span>
-              </span>
-            </div>
-          </div>
-
-          <div class="summary-footer-info">
-            <div class="security-note">
-              <i class="fa-solid fa-lock"></i>
-              <span>Your banking data is processed under strict banking encryption standards.</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- RBI Guidelines Card -->
-        <div class="sidebar-card">
-          <div class="sidebar-card-header">
-            <i class="fa-solid fa-landmark"></i>
-            <h4>RBI Key Directives for SMS Alerts</h4>
-          </div>
-          <ul class="guidelines-list">
-            <li>
-              <i class="fa-solid fa-check"></i>
-              <div><strong>Mandatory Alerting:</strong> Banks must send SMS alerts for all electronic banking debits/credits immediately.</div>
-            </li>
-            <li>
-              <i class="fa-solid fa-check"></i>
-              <div><strong>Fraud Reporting:</strong> Customers should report unauthorized transactions within 3 days for zero liability under RBI guidelines.</div>
-            </li>
-            <li>
-              <i class="fa-solid fa-check"></i>
-              <div><strong>Never Share OTP:</strong> Namco Bank never asks for your OTP, CVV, or NetBanking password via call or SMS.</div>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Branch Contact Support -->
-        <div class="sidebar-card help-card">
-          <div class="help-card-content">
-            <i class="fa-solid fa-headset help-icon"></i>
-            <h5>Need Assistance?</h5>
-            <p>Visit your nearest Namco Bank branch or call customer care.</p>
-            <a href="tel:18002336262" class="support-phone"><i class="fa-solid fa-phone"></i> 1800-233-6262</a>
-          </div>
-        </div>
-
-      </aside>
-
-    </div>
-  </main>
-
-  <!-- ============================================== -->
-  <!-- MODAL 1: OTP SIMULATION MODAL -->
-  <!-- ============================================== -->
-  <div id="otpModal" class="modal-overlay hidden">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title-with-icon">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          <h4>Verify Mobile Number</h4>
-        </div>
-        <button type="button" class="close-modal-btn" id="closeOtpModalBtn">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p class="modal-text">An SMS OTP simulation has been triggered for mobile number <strong id="otpTargetMobile">+91 XXXXXXXXXX</strong>.</p>
-        
-        <div class="otp-simulation-pill">
-          <span>Demo Verification Code:</span>
-          <strong id="generatedOtpCode" class="otp-code-highlight">7492</strong>
-        </div>
-
-        <div class="otp-input-row">
-          <input type="text" maxlength="1" class="otp-digit" data-index="0" autofocus>
-          <input type="text" maxlength="1" class="otp-digit" data-index="1">
-          <input type="text" maxlength="1" class="otp-digit" data-index="2">
-          <input type="text" maxlength="1" class="otp-digit" data-index="3">
-        </div>
-
-        <div id="otpErrorMsg" class="error-msg-pill hidden">
-          <i class="fa-solid fa-circle-exclamation"></i> Invalid OTP. Please try entering the code shown above.
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="resendOtpBtn" class="btn btn-outline btn-sm"><i class="fa-solid fa-rotate-right"></i> Resend OTP</button>
-        <button type="button" id="confirmOtpBtn" class="btn btn-primary"><i class="fa-solid fa-check"></i> Verify & Confirm</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================================== -->
-  <!-- MODAL 2: SUBMISSION CONFIRMATION & RECEIPT MODAL -->
-  <!-- ============================================== -->
-  <div id="receiptModal" class="modal-overlay hidden">
-    <div class="modal-card modal-lg">
-      <div class="modal-header bg-success-header">
-        <div class="modal-title-with-icon text-white">
-          <i class="fa-solid fa-circle-check"></i>
-          <div>
-            <h4 class="text-white">Consent Form Submitted Successfully</h4>
-            <span class="sub-lead-text">Customer Acknowledgment Receipt Generated</span>
-          </div>
-        </div>
-        <button type="button" class="close-modal-btn text-white" id="closeReceiptModalBtn">&times;</button>
+      <!-- Form Title Bar -->
+      <div class="form-heading-bar">
+        <h1>BANK SMS ALERT REGISTRATION / CONSENT FORM</h1>
+        <p>As per Reserve Bank of India (RBI) Guidelines for Electronic Banking Communications</p>
       </div>
 
-      <div class="modal-body print-ready-content" id="printableReceiptArea">
-        
-        <!-- Printable Bank Header for Receipt -->
-        <div class="receipt-bank-header">
-          <img src="assets/logo.png" alt="Namco Bank Logo" class="receipt-logo">
-          <div class="receipt-header-text">
-            <h3>The Nasik Merchants Co-operative Bank Ltd., Nashik</h3>
-            <p class="text-marathi">॥ संहतिः कार्यसाधिकाः ॥ &bull; (Multi-State Scheduled Bank)</p>
-            <p class="receipt-doc-title">CUSTOMER SMS ALERT REGISTRATION ACKNOWLEDGEMENT</p>
-          </div>
-        </div>
+      <form id="smsConsentForm" novalidate>
 
-        <div class="receipt-meta-banner">
-          <div>
-            <span class="meta-label">Acknowledgement Ref No:</span>
-            <strong class="meta-val mono-font highlight-red" id="receiptRefNo">NAMCO/SMS/2026/08/94821</strong>
-          </div>
-          <div>
-            <span class="meta-label">Date & Time:</span>
-            <strong class="meta-val" id="receiptDateTime">26 Aug 2026, 12:30 PM</strong>
-          </div>
-        </div>
-
-        <div class="receipt-details-table-wrap">
-          <table class="receipt-table">
-            <tr>
-              <th width="30%">Customer Name</th>
-              <td id="receiptCustName" width="70%">--</td>
-            </tr>
-            <tr>
-              <th>Account Number</th>
-              <td id="receiptAccNo" class="mono-font">--</td>
-            </tr>
-            <tr>
-              <th>Customer ID (CIF)</th>
-              <td id="receiptCif" class="mono-font">--</td>
-            </tr>
-            <tr>
-              <th>Registered Mobile No.</th>
-              <td id="receiptMobile" class="mono-font">--</td>
-            </tr>
-            <tr>
-              <th>Home Branch</th>
-              <td id="receiptBranch">--</td>
-            </tr>
-            <tr>
-              <th>Consent Status</th>
-              <td><span class="status-verified-text"><i class="fa-solid fa-circle-check"></i> Authorized & Consent Registered</span></td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="receipt-signatures-row">
-          <div class="receipt-sig-box">
-            <div class="sig-image-container" id="receiptCustomerSigContainer">
-              <span class="sig-placeholder">Signature Attached</span>
-            </div>
-            <div class="sig-box-line">Customer Signature</div>
-          </div>
-          <div class="receipt-sig-box">
-            <div class="receipt-stamp-box">
-              <i class="fa-solid fa-stamp"></i>
-              <span>CBS ACKNOWLEDGED</span>
-            </div>
-            <div class="sig-box-line">Authorized Bank Seal</div>
-          </div>
-        </div>
-
-        <div class="receipt-footer-note">
-          <p><strong>Important Note:</strong> This is a computer-generated customer acknowledgment receipt. Please retain this reference number for future communication with your branch. SMS Alert activation normally takes 2 to 24 business hours.</p>
-        </div>
-
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" id="printReceiptBtn" class="btn btn-primary">
-          <i class="fa-solid fa-print"></i> Print / Save as PDF
-        </button>
-        <button type="button" id="closeReceiptBtn2" class="btn btn-secondary">
-          <i class="fa-solid fa-xmark"></i> Close
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============================================== -->
-  <!-- MODAL 3: FULL OFFICIAL A4 PRINTABLE FORM MODAL -->
-  <!-- ============================================== -->
-  <div id="fullFormPrintModal" class="modal-overlay hidden">
-    <div class="modal-card modal-xl">
-      <div class="modal-header">
-        <div class="modal-title-with-icon">
-          <i class="fa-solid fa-file-pdf"></i>
-          <h4>Official Bank Form (Printable A4 Sheet)</h4>
-        </div>
-        <button type="button" class="close-modal-btn" id="closeFullPrintModalBtn">&times;</button>
-      </div>
-
-      <div class="modal-body full-form-preview-scroll">
-        <!-- Physical Form Template that prints cleanly -->
-        <div class="official-a4-sheet" id="officialA4Sheet">
-          
-          <!-- Sheet Header -->
-          <div class="a4-header">
-            <img src="assets/logo.png" alt="Namco Bank Logo" class="a4-logo">
-            <div class="a4-header-center">
-              <div class="a4-sanskrit">॥ संहतिः कार्यसाधिकाः ॥ &bull; स्थापना: १९५९</div>
-              <h2 class="a4-bank-title">THE NASIK MERCHANTS CO-OPERATIVE BANK LTD., NASHIK</h2>
-              <div class="a4-sub-line"><strong>(MULTI-STATE SCHEDULED BANK)</strong> &bull; 'Namco Bank Bhavan', CBS, Nashik - 422002</div>
-              <div class="a4-form-name-badge">APPLICATION & CONSENT FORM FOR SMS ALERT FACILITY</div>
-            </div>
-            <div class="a4-branch-stamp-box">
-              <span>Branch Code / Stamp</span>
+        <!-- 1. Customer Details -->
+        <fieldset class="form-section">
+          <legend class="section-title">1. Customer Details</legend>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="customerName" class="form-label">Name of Customer <span class="req">*</span></label>
+              <input type="text" id="customerName" name="customerName" class="form-input" placeholder="Enter full name of account holder" required>
             </div>
           </div>
 
-          <!-- Section 1 -->
-          <div class="a4-section">
-            <div class="a4-sec-header">1. CUSTOMER IDENTIFICATION DETAILS</div>
-            <div class="a4-row">
-              <div class="a4-col-12"><span class="a4-label">Name of Customer:</span> <strong id="a4CustName" class="a4-field-val">____________________________________________________</strong></div>
+          <div class="form-row two-col">
+            <div class="form-group">
+              <label for="accountNumber" class="form-label">Account Number <span class="req">*</span></label>
+              <input type="text" id="accountNumber" name="accountNumber" class="form-input mono" placeholder="Enter bank account number" maxlength="16" required>
             </div>
-            <div class="a4-row">
-              <div class="a4-col-6"><span class="a4-label">Account Number:</span> <strong id="a4AccNo" class="a4-field-val mono-font">________________________</strong></div>
-              <div class="a4-col-6"><span class="a4-label">Customer ID (CIF):</span> <strong id="a4Cif" class="a4-field-val mono-font">________________________</strong></div>
-            </div>
-            <div class="a4-row">
-              <div class="a4-col-6"><span class="a4-label">Branch Name:</span> <strong id="a4Branch" class="a4-field-val">________________________</strong></div>
-              <div class="a4-col-6"><span class="a4-label">Account Type:</span> <strong id="a4AccType" class="a4-field-val">Savings Bank Account</strong></div>
+            <div class="form-group">
+              <label for="customerCif" class="form-label">Customer ID (CIF) <span class="req">*</span></label>
+              <input type="text" id="customerCif" name="customerCif" class="form-input mono" placeholder="Enter CIF / Customer ID" maxlength="12" required>
             </div>
           </div>
 
-          <!-- Section 2 -->
-          <div class="a4-section">
-            <div class="a4-sec-header">2. MOBILE NUMBER REGISTRATION</div>
-            <div class="a4-row">
-              <div class="a4-col-7"><span class="a4-label">Registered Mobile Number:</span> <strong id="a4Mobile" class="a4-field-val mono-font font-bold">+91 ____________________</strong></div>
-              <div class="a4-col-5"><span class="a4-label">Request Type:</span> <strong id="a4ReqType" class="a4-field-val">New Registration</strong></div>
-            </div>
-            <div class="a4-row">
-              <div class="a4-col-7"><span class="a4-label">Email ID (If any):</span> <strong id="a4Email" class="a4-field-val">__________________________________</strong></div>
-              <div class="a4-col-5"><span class="a4-label">Alternate Mobile:</span> <strong id="a4AltMobile" class="a4-field-val">____________________</strong></div>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="branchName" class="form-label">Branch Name <span class="req">*</span></label>
+              <input type="text" id="branchName" name="branchName" class="form-input" placeholder="e.g. CBS Head Office / Canada Corner / Mumbai Naka" required>
             </div>
           </div>
+        </fieldset>
 
-          <!-- Section 3 -->
-          <div class="a4-section">
-            <div class="a4-sec-header">3. CONSENT DECLARATION & TERMS</div>
-            <p class="a4-declaration-p">
+        <!-- 2. Mobile Number Registration -->
+        <fieldset class="form-section">
+          <legend class="section-title">2. Mobile Number Registration</legend>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="mobileNumber" class="form-label">Registered Mobile Number <span class="req">*</span></label>
+              <div class="phone-input-wrap">
+                <span class="phone-prefix">+91</span>
+                <input type="tel" id="mobileNumber" name="mobileNumber" class="form-input mono phone-field" placeholder="10-digit mobile number" maxlength="10" required>
+              </div>
+              <span class="field-hint">SMS alerts and OTPs will be delivered to this registered mobile number.</span>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- 3. Consent Declaration & Guidelines -->
+        <fieldset class="form-section">
+          <legend class="section-title">3. Consent Declaration</legend>
+          <div class="declaration-box">
+            <p class="declaration-main">
               I hereby give my consent to <strong>The Nasik Merchants Co-operative Bank Ltd. (Namco Bank)</strong> to send SMS alerts regarding my bank account transactions, OTPs, service-related information, and other banking communications on my registered mobile number.
             </p>
-            <ul class="a4-terms-list">
+            
+            <p class="declaration-subtitle">I understand and agree to the following terms & guidelines:</p>
+            <ul class="guidelines-list">
               <li>SMS alerts will be sent only to the registered mobile number provided by me.</li>
-              <li>I am responsible for informing the bank promptly about any change in my mobile number in writing.</li>
-              <li>The bank may charge applicable SMS alert service charges as per its schedule of charges and rules.</li>
+              <li>I am responsible for informing the bank immediately about any change in my mobile number.</li>
+              <li>The bank may charge applicable SMS alert service charges as per its rules.</li>
             </ul>
           </div>
+        </fieldset>
 
-          <!-- Section 4 -->
-          <div class="a4-section">
-            <div class="a4-sec-header">4. CUSTOMER CONSENT & SIGNATURE</div>
-            <div class="a4-agree-box">
-              <span class="a4-checkbox">[ &#x2714; ]</span>
-              <span><strong>I agree to receive SMS alerts from the bank.</strong></span>
-            </div>
-            <div class="a4-sig-row">
-              <div class="a4-sig-col">
-                <div class="a4-sig-preview-box" id="a4CustomerSigBox">
-                  <span class="a4-sig-text">(Signature of Customer)</span>
-                </div>
-                <div class="a4-sig-caption">Signature of Customer / Account Holder</div>
+        <!-- 4. Customer Consent & Authorization -->
+        <fieldset class="form-section">
+          <legend class="section-title">4. Customer Consent</legend>
+          
+          <div class="consent-options-group">
+            <label class="radio-option-card">
+              <input type="radio" name="consentChoice" value="agree" checked>
+              <div class="radio-text">
+                <strong>I agree to receive SMS alerts from the bank.</strong>
+                <span>(Recommended: Stay notified of all account credits, debits & security OTPs)</span>
               </div>
-              <div class="a4-sig-meta-col">
-                <div class="a4-meta-line"><span class="a4-label">Date:</span> <strong id="a4Date">____ / ____ / ________</strong></div>
-                <div class="a4-meta-line"><span class="a4-label">Place:</span> <strong id="a4Place">Nashik</strong></div>
+            </label>
+
+            <label class="radio-option-card">
+              <input type="radio" name="consentChoice" value="disagree">
+              <div class="radio-text">
+                <strong>I do not want to receive optional SMS alerts.</strong>
+                <span>(Note: Critical statutory alerts will still be delivered as mandated by RBI)</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="signature-block">
+            <div class="sig-header">
+              <label class="form-label">Signature of Customer <span class="req">*</span></label>
+              <button type="button" id="clearSigBtn" class="btn-text">Clear</button>
+            </div>
+            <div class="signature-canvas-container">
+              <canvas id="signatureCanvas" width="600" height="130"></canvas>
+              <div id="sigPlaceholder" class="sig-placeholder">Sign here with mouse or touch</div>
+            </div>
+          </div>
+
+          <div class="form-row two-col mt-3">
+            <div class="form-group">
+              <label for="formDate" class="form-label">Date <span class="req">*</span></label>
+              <input type="date" id="formDate" name="formDate" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="formPlace" class="form-label">Place <span class="req">*</span></label>
+              <input type="text" id="formPlace" name="formPlace" class="form-input" value="Nashik" placeholder="Enter city" required>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- 5. For Bank Use Only -->
+        <fieldset class="form-section bank-only-section">
+          <legend class="section-title bank-title">5. For Bank Use Only</legend>
+          <div class="form-row two-col">
+            <div class="form-group">
+              <label class="form-label">Mobile Number Updated:</label>
+              <div class="bank-radio-row">
+                <label class="inline-label"><input type="radio" name="mobileUpdated" value="Yes" checked> Yes</label>
+                <label class="inline-label"><input type="radio" name="mobileUpdated" value="No"> No</label>
               </div>
             </div>
-          </div>
-
-          <!-- Tear Off Line -->
-          <div class="a4-tear-line">
-            <span>&#9986; Tear Here (For Bank Office Processing & Acknowledgement Slip) &#9986;</span>
-          </div>
-
-          <!-- Section 5: For Bank Use Only -->
-          <div class="a4-section a4-bank-use-section">
-            <div class="a4-sec-header bank-header-bg">5. FOR BANK USE ONLY (BRANCH PROCESSING)</div>
-            <div class="a4-row">
-              <div class="a4-col-4"><span class="a4-label">Mobile Number Updated in CBS:</span> <strong>[ &#x2714; ] Yes &nbsp;&nbsp; [ &nbsp; ] No</strong></div>
-              <div class="a4-col-4"><span class="a4-label">Verified By:</span> <strong id="a4VerifiedBy">____________________</strong></div>
-              <div class="a4-col-4"><span class="a4-label">Staff Token No:</span> <strong>____________________</strong></div>
-            </div>
-            <div class="a4-row mt-2">
-              <div class="a4-col-6"><span class="a4-label">Branch Name & Code:</span> <strong>________________________________</strong></div>
-              <div class="a4-col-6 text-right"><span class="a4-label">Branch Officer Signature & Stamp:</span> <strong>________________________</strong></div>
+            <div class="form-group">
+              <label for="verifiedBy" class="form-label">Verified By (Bank Official):</label>
+              <input type="text" id="verifiedBy" name="verifiedBy" class="form-input" placeholder="Staff Name / Token No.">
             </div>
           </div>
+        </fieldset>
 
+        <!-- Action Buttons -->
+        <div class="button-bar">
+          <button type="button" id="printBtn" class="btn btn-secondary">
+            Print / Save as PDF
+          </button>
+          <button type="submit" id="submitBtn" class="btn btn-primary">
+            Submit Consent Form
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Submission Acknowledgment Modal -->
+      <div id="successModal" class="modal hidden">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <h3>Consent Form Submitted</h3>
+            <button type="button" id="closeModalBtn" class="close-btn">&times;</button>
+          </div>
+          <div class="modal-body" id="modalPrintArea">
+            <div class="success-banner">
+              <div class="check-icon">&#10003;</div>
+              <h4>Thank you! Your SMS Alert Consent has been recorded.</h4>
+              <p>Reference No: <strong id="modalRefNo" class="mono">--</strong></p>
+            </div>
+            <table class="summary-table">
+              <tr>
+                <th>Customer Name</th>
+                <td id="modalCustName">--</td>
+              </tr>
+              <tr>
+                <th>Account Number</th>
+                <td id="modalAccNo" class="mono">--</td>
+              </tr>
+              <tr>
+                <th>Customer ID (CIF)</th>
+                <td id="modalCif" class="mono">--</td>
+              </tr>
+              <tr>
+                <th>Mobile Number</th>
+                <td id="modalMobile" class="mono">--</td>
+              </tr>
+              <tr>
+                <th>Consent Status</th>
+                <td id="modalStatus">--</td>
+              </tr>
+              <tr>
+                <th>Date & Place</th>
+                <td id="modalDatePlace">--</td>
+              </tr>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="printSlipBtn" class="btn btn-secondary">Print Receipt</button>
+            <button type="button" id="modalDoneBtn" class="btn btn-primary">Done</button>
+          </div>
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button type="button" id="printFullFormBtn" class="btn btn-primary">
-          <i class="fa-solid fa-print"></i> Print Official A4 Document
-        </button>
-        <button type="button" id="closeFullPrintModalBtn2" class="btn btn-secondary">
-          <i class="fa-solid fa-xmark"></i> Close Preview
-        </button>
-      </div>
     </div>
-  </div>
 
-  <!-- Toast Notification Container -->
-  <div id="toastNotification" class="toast-notification hidden">
-    <i class="fa-solid fa-circle-check toast-icon"></i>
-    <span id="toastMessage">Success notification message</span>
+    <!-- Footer -->
+    <footer class="page-footer">
+      <p>&copy; The Nasik Merchants Co-operative Bank Ltd., Nashik (Namco Bank). All Rights Reserved.</p>
+    </footer>
   </div>
-
-  <!-- Footer -->
-  <footer class="bank-footer">
-    <div class="container footer-content">
-      <div class="footer-left">
-        <p class="footer-title"><strong>The Nasik Merchants Co-operative Bank Ltd., Nashik</strong> (Namco Bank)</p>
-        <p class="footer-sub">Multi-State Scheduled Bank | Established: 1959 | Reserve Bank of India Licensed Bank</p>
-      </div>
-      <div class="footer-right">
-        <p><i class="fa-solid fa-shield-halved"></i> 256-Bit SSL Secured Banking Portal</p>
-        <p class="footer-copy">&copy; 2026 Namco Bank. All Rights Reserved. Built for RBI SMS Alert Compliance.</p>
-      </div>
-    </div>
-  </footer>
 
   <script src="app.js"></script>
 </body>
