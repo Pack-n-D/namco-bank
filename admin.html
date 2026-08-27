@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin & Officer Portal - Namco Bank SMS Consent</title>
+  <meta name="description" content="Official Admin and Branch Officer Management Portal for Namco Bank SMS Alert Consent Registrations.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Admin Portal Specific Styles */
+    .admin-wrapper {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .admin-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--primary-color);
+      margin-bottom: 20px;
+    }
+    .admin-badge {
+      background: #1e3a5f;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .login-box {
+      max-width: 420px;
+      margin: 40px auto;
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 28px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+      border-top: 4px solid var(--primary-color);
+    }
+    .stat-card.stat-green { border-top-color: #059669; }
+    .stat-card.stat-amber { border-top-color: #d97706; }
+    .stat-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      font-family: var(--font-mono);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .admin-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      min-width: 260px;
+    }
+    .data-table-wrap {
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .admin-table th {
+      background: #f8fafc;
+      color: var(--primary-color);
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      white-space: nowrap;
+    }
+    .admin-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+    .admin-table tr:hover {
+      background: #f8fafc;
+    }
+    .badge-status {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-agreed { background: #d1fae5; color: #065f46; }
+    .badge-disagreed { background: #fee2e2; color: #991b1b; }
+    .badge-cbs-yes { background: #e0f2fe; color: #0369a1; }
+    .badge-cbs-no { background: #fef3c7; color: #92400e; }
+    .table-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid #d1d5db;
+      background: #fff;
+    }
+    .btn-sm:hover {
+      background: #f3f4f6;
+    }
+    .quick-cred-hint {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper admin-wrapper">
+
+    <!-- Header -->
+    <div class="admin-header-flex">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="assets/logo.png" alt="Namco Bank" style="max-height: 48px;">
+        <div>
+          <h2 style="font-size: 1.1rem; color: var(--primary-color); margin: 0;">Branch Officer & Admin Portal</h2>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">SMS Alert Consent Verification System</span>
+        </div>
+      </div>
+      <div>
+        <a href="index.html" class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px; text-decoration: none;">&larr; Customer Form</a>
+      </div>
+    </div>
+
+    <!-- 1. LOGIN PANEL (Shown if not authenticated) -->
+    <div id="adminLoginSection" class="login-box">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <span class="admin-badge">Officer Login</span>
+        <h3 style="margin-top: 10px; color: var(--primary-color);">Staff Authorization</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Enter official bank credentials to access records</p>
+      </div>
+
+      <form id="adminLoginForm">
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label for="adminUsername" class="form-label">Username / Token ID</label>
+          <input type="text" id="adminUsername" class="form-input" placeholder="e.g. admin or officer" required autofocus>
+        </div>
+        <div class="form-group" style="margin-bottom: 18px;">
+          <label for="adminPassword" class="form-label">Password</label>
+          <input type="password" id="adminPassword" class="form-input" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Login to Dashboard</button>
+      </form>
+
+      <div class="quick-cred-hint">
+        <strong>Demo Login Credentials:</strong><br>
+        • Username: <code class="mono">admin</code> &nbsp;|&nbsp; Password: <code class="mono">admin</code><br>
+        • Or Username: <code class="mono">officer</code> &nbsp;|&nbsp; Password: <code class="mono">namco123</code>
+      </div>
+    </div>
+
+    <!-- 2. DASHBOARD PANEL (Shown when authenticated) -->
+    <div id="adminDashboardSection" style="display: none;">
+      
+      <!-- Top Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="totalRecords">0</div>
+          <div class="stat-label">Total Submissions</div>
+        </div>
+        <div class="stat-card stat-green">
+          <div class="stat-num" id="agreedRecords">0</div>
+          <div class="stat-label">Agreed to SMS</div>
+        </div>
+        <div class="stat-card stat-amber">
+          <div class="stat-num" id="cbsPendingRecords">0</div>
+          <div class="stat-label">CBS Pending</div>
+        </div>
+      </div>
+
+      <!-- Controls & Search -->
+      <div class="admin-controls">
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="text" id="tableSearchInput" class="search-input" placeholder="Search by name, account no, mobile, CIF...">
+          <select id="statusFilter" class="search-input" style="min-width: 140px;">
+            <option value="ALL">All Records</option>
+            <option value="AGREED">Agreed Only</option>
+            <option value="DISAGREED">Opted-Out</option>
+            <option value="CBS_PENDING">CBS Pending</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" id="exportCsvBtn" class="btn-sm" style="font-weight: 600;">📥 Export CSV</button>
+          <button type="button" id="clearDataBtn" class="btn-sm" style="color: #dc2626;">🗑 Clear Sample Data</button>
+          <button type="button" id="adminLogoutBtn" class="btn-sm" style="background: #1e3a5f; color: #fff; border-color: #1e3a5f;">Logout</button>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="data-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Ref No.</th>
+              <th>Customer Name</th>
+              <th>Account No.</th>
+              <th>Mobile</th>
+              <th>Branch</th>
+              <th>SMS Consent</th>
+              <th>CBS Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recordsTableBody">
+            <!-- Populated dynamically via JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Modal for Record Details -->
+    <div id="viewRecordModal" class="modal hidden">
+      <div class="modal-dialog" style="max-width: 580px;">
+        <div class="modal-header">
+          <h3>Customer Consent Details</h3>
+          <button type="button" id="closeDetailModal" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="detailModalContent">
+          <!-- Dynamic Content -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="toggleCbsBtn" class="btn btn-secondary">Toggle CBS Status</button>
+          <button type="button" id="printRecordBtn" class="btn btn-primary">Print Form</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer" style="margin-top: 32px;">
+      <p>&copy; The Nasik Merchants Co-operative Bank Ltd., Nashik (Namco Bank). Internal Officer Desk.</p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Sample default data if empty
+    function initSampleData() {
+      if (!localStorage.getItem('namco_sms_records')) {
+        const samples = [
+          {
+            refNo: 'NAMCO-SMS-2026-84920',
+            name: 'Sunil Ramesh Patil',
+            accNo: '00120100049281',
+            cif: '10049281',
+            branch: 'CBS Head Office, Nashik',
+            mobile: '9822014589',
+            consent: 'agree',
+            cbsUpdated: 'Yes',
+            verifiedBy: 'M. K. Joshi (Token #4102)',
+            date: '2026-08-27',
+            place: 'Nashik'
+          },
+          {
+            refNo: 'NAMCO-SMS-2026-51294',
+            name: 'Pooja Anand Deshmukh',
+            accNo: '00150200031940',
+            cif: '10031940',
+            branch: 'Canada Corner Branch',
+            mobile: '9423187652',
+            consent: 'agree',
+            cbsUpdated: 'No',
+            verifiedBy: 'Pending',
+            date: '2026-08-27',
+            place: 'Nashik'
+          }
+        ];
+        localStorage.setItem('namco_sms_records', JSON.stringify(samples));
+      }
+    }
+
+    initSampleData();
+
+    // Authentication Logic
+    const loginSection = document.getElementById('adminLoginSection');
+    const dashboardSection = document.getElementById('adminDashboardSection');
+    const loginForm = document.getElementById('adminLoginForm');
+    const logoutBtn = document.getElementById('adminLogoutBtn');
+
+    // Check existing session
+    if (sessionStorage.getItem('namco_admin_auth') === 'true') {
+      showDashboard();
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = document.getElementById('adminUsername').value.trim().toLowerCase();
+      const p = document.getElementById('adminPassword').value.trim();
+
+      if ((u === 'admin' && p === 'admin') || (u === 'officer' && p === 'namco123')) {
+        sessionStorage.setItem('namco_admin_auth', 'true');
+        showDashboard();
+      } else {
+        alert('Invalid Staff Credentials. Try admin / admin');
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('namco_admin_auth');
+      loginSection.style.display = 'block';
+      dashboardSection.style.display = 'none';
+      document.getElementById('adminPassword').value = '';
+    });
+
+    function showDashboard() {
+      loginSection.style.display = 'none';
+      dashboardSection.style.display = 'block';
+      renderRecords();
+    }
+
+    function getRecords() {
+      return JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
+    }
+
+    function saveRecords(records) {
+      localStorage.setItem('namco_sms_records', JSON.stringify(records));
+      renderRecords();
+    }
+
+    let activeRecordRef = null;
+
+    function renderRecords() {
+      const records = getRecords();
+      const search = document.getElementById('tableSearchInput').value.toLowerCase().trim();
+      const filter = document.getElementById('statusFilter').value;
+
+      // Stats
+      document.getElementById('totalRecords').textContent = records.length;
+      document.getElementById('agreedRecords').textContent = records.filter(r => r.consent === 'agree').length;
+      document.getElementById('cbsPendingRecords').textContent = records.filter(r => r.cbsUpdated === 'No' || !r.cbsUpdated).length;
+
+      const tbody = document.getElementById('recordsTableBody');
+      tbody.innerHTML = '';
+
+      const filtered = records.filter(r => {
+        const matchesSearch = !search || 
+          r.refNo.toLowerCase().includes(search) ||
+          r.name.toLowerCase().includes(search) ||
+          r.accNo.toLowerCase().includes(search) ||
+          r.mobile.toLowerCase().includes(search) ||
+          r.cif.toLowerCase().includes(search);
+
+        if (!matchesSearch) return false;
+
+        if (filter === 'AGREED') return r.consent === 'agree';
+        if (filter === 'DISAGREED') return r.consent === 'disagree';
+        if (filter === 'CBS_PENDING') return r.cbsUpdated === 'No' || !r.cbsUpdated;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 24px;">No matching customer consent records found.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(r => {
+        const tr = document.createElement('tr');
+        const isAgreed = r.consent === 'agree';
+        const isCbsYes = r.cbsUpdated === 'Yes';
+
+        tr.innerHTML = `
+          <td><strong class="mono" style="color: var(--primary-color);">${r.refNo}</strong></td>
+          <td><strong>${r.name}</strong></td>
+          <td class="mono">${r.accNo}</td>
+          <td class="mono">+91 ${r.mobile}</td>
+          <td>${r.branch || 'Nashik'}</td>
+          <td><span class="badge-status ${isAgreed ? 'badge-agreed' : 'badge-disagreed'}">${isAgreed ? 'Agreed' : 'Opted Out'}</span></td>
+          <td><span class="badge-status ${isCbsYes ? 'badge-cbs-yes' : 'badge-cbs-no'}">${isCbsYes ? 'Updated' : 'Pending'}</span></td>
+          <td>
+            <div class="table-actions">
+              <button class="btn-sm" onclick="viewDetail('${r.refNo}')">View</button>
+              <button class="btn-sm" style="color: #dc2626;" onclick="deleteRecord('${r.refNo}')">✕</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.viewDetail = function(refNo) {
+      activeRecordRef = refNo;
+      const records = getRecords();
+      const r = records.find(x => x.refNo === refNo);
+      if (!r) return;
+
+      const content = `
+        <table class="summary-table">
+          <tr><th>Reference ID</th><td class="mono"><strong>${r.refNo}</strong></td></tr>
+          <tr><th>Customer Name</th><td>${r.name}</td></tr>
+          <tr><th>Account Number</th><td class="mono">${r.accNo}</td></tr>
+          <tr><th>Customer ID (CIF)</th><td class="mono">${r.cif}</td></tr>
+          <tr><th>Branch</th><td>${r.branch}</td></tr>
+          <tr><th>Mobile Number</th><td class="mono">+91 ${r.mobile}</td></tr>
+          <tr><th>Consent Status</th><td>${r.consent === 'agree' ? '✅ Agreed to SMS Alerts' : '❌ Opted Out'}</td></tr>
+          <tr><th>CBS Status</th><td><strong>${r.cbsUpdated === 'Yes' ? 'Updated in CBS' : 'Pending CBS Update'}</strong></td></tr>
+          <tr><th>Verified By Staff</th><td>${r.verifiedBy || 'Not specified'}</td></tr>
+          <tr><th>Date & Place</th><td>${r.date}, ${r.place}</td></tr>
+        </table>
+      `;
+      document.getElementById('detailModalContent').innerHTML = content;
+      document.getElementById('viewRecordModal').classList.remove('hidden');
+    };
+
+    window.deleteRecord = function(refNo) {
+      if (confirm(`Are you sure you want to delete consent record ${refNo}?`)) {
+        let records = getRecords();
+        records = records.filter(x => x.refNo !== refNo);
+        saveRecords(records);
+      }
+    };
+
+    document.getElementById('toggleCbsBtn').addEventListener('click', () => {
+      if (!activeRecordRef) return;
+      let records = getRecords();
+      const r = records.find(x => x.refNo === activeRecordRef);
+      if (r) {
+        r.cbsUpdated = r.cbsUpdated === 'Yes' ? 'No' : 'Yes';
+        saveRecords(records);
+        window.viewDetail(activeRecordRef);
+      }
+    });
+
+    document.getElementById('printRecordBtn').addEventListener('click', () => {
+      window.print();
+    });
+
+    document.getElementById('closeDetailModal').addEventListener('click', () => {
+      document.getElementById('viewRecordModal').classList.add('hidden');
+    });
+
+    document.getElementById('tableSearchInput').addEventListener('input', renderRecords);
+    document.getElementById('statusFilter').addEventListener('change', renderRecords);
+
+    // Export to CSV
+    document.getElementById('exportCsvBtn').addEventListener('click', () => {
+      const records = getRecords();
+      if (!records.length) {
+        alert('No records to export.');
+        return;
+      }
+      let csv = 'RefNo,CustomerName,AccountNumber,CIF,Mobile,Branch,Consent,CBSUpdated,VerifiedBy,Date,Place\n';
+      records.forEach(r => {
+        csv += `"${r.refNo}","${r.name}","${r.accNo}","${r.cif}","${r.mobile}","${r.branch}","${r.consent}","${r.cbsUpdated || 'No'}","${r.verifiedBy || ''}","${r.date}","${r.place}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `namco_sms_consent_records_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    });
+
+    // Clear data
+    document.getElementById('clearDataBtn').addEventListener('click', () => {
+      if (confirm('Clear all local records?')) {
+        localStorage.removeItem('namco_sms_records');
+        renderRecords();
+      }
+    });
+  </script>
+</body>
+</html>

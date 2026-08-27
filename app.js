@@ -169,6 +169,30 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modalStatus').textContent = consent === 'agree' ? 'Agreed to receive SMS Alerts' : 'Opted out of optional SMS alerts';
     document.getElementById('modalDatePlace').textContent = `${dateVal}, ${placeVal}`;
 
+    // Save record to LocalStorage for Admin/Officer desk
+    const newRecord = {
+      refNo: refNo,
+      name: name,
+      accNo: accNo,
+      cif: cif,
+      branch: branch,
+      mobile: mobile,
+      consent: consent,
+      cbsUpdated: document.querySelector('input[name="mobileUpdated"]:checked')?.value || 'Yes',
+      verifiedBy: document.getElementById('verifiedBy')?.value || 'Online Consent',
+      date: dateVal,
+      place: placeVal,
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      const existing = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
+      existing.unshift(newRecord);
+      localStorage.setItem('namco_sms_records', JSON.stringify(existing));
+    } catch(err) {
+      console.error('Storage error', err);
+    }
+
     successModal.classList.remove('hidden');
   });
 
