@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Admin Executive Dashboard - Namco Bank</title>
+  <meta name="description" content="Central Super Administrator Control Panel & Analytics for The Nasik Merchants Co-operative Bank Ltd.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --super-primary: #0f172a;
+      --super-accent: #b91c1c;
+      --super-gold: #d97706;
+      --super-card: #ffffff;
+      --super-border: #e2e8f0;
+    }
+    body {
+      background-color: #0b1120;
+      color: #f1f5f9;
+    }
+    .super-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+    .super-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e293b;
+      padding: 16px 24px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      margin-bottom: 24px;
+    }
+    .super-badge {
+      background: linear-gradient(135deg, #b91c1c, #dc2626);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .nav-link-btn {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      transition: all 0.2s ease;
+    }
+    .nav-link-btn:hover {
+      color: #fff;
+      border-color: #94a3b8;
+    }
+    .super-login-card {
+      max-width: 440px;
+      margin: 60px auto;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 32px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .super-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .super-stat-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .super-stat-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #3b82f6;
+    }
+    .super-stat-card.red::before { background: #ef4444; }
+    .super-stat-card.green::before { background: #10b981; }
+    .super-stat-card.gold::before { background: #f59e0b; }
+    .stat-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #f8fafc;
+    }
+    .stat-sub {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .analytics-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 840px) {
+      .analytics-row { grid-template-columns: 1fr; }
+    }
+    .dark-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .dark-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #334155;
+    }
+    .dark-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .branch-list {
+      list-style: none;
+    }
+    .branch-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #334155;
+      font-size: 0.85rem;
+    }
+    .branch-item:last-child { border-bottom: none; }
+    .progress-bar-bg {
+      background: #334155;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #10b981;
+      border-radius: 4px;
+    }
+    .dark-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .dark-table th {
+      background: #0f172a;
+      color: #94a3b8;
+      text-align: left;
+      padding: 12px;
+      font-weight: 600;
+      border-bottom: 1px solid #334155;
+    }
+    .dark-table td {
+      padding: 12px;
+      border-bottom: 1px solid #334155;
+      color: #e2e8f0;
+    }
+    .dark-table tr:hover {
+      background: #0f172a80;
+    }
+    .btn-super {
+      background: #b91c1c;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .btn-super:hover {
+      background: #991b1b;
+    }
+    .input-dark {
+      background: #0f172a;
+      border: 1px solid #475569;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 6px;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 0.9rem;
+    }
+    .input-dark:focus {
+      outline: none;
+      border-color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="super-container">
+
+    <!-- Top Navigation Header -->
+    <header class="super-nav">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <img src="assets/logo.png" alt="Namco Bank" style="max-height: 44px; filter: brightness(1.1);">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h1 style="font-size: 1.15rem; color: #fff; margin: 0;">Namco Bank Central Headquarters</h1>
+            <span class="super-badge">Super Admin</span>
+          </div>
+          <span style="font-size: 0.75rem; color: #94a3b8;">RBI Electronic Banking Compliance & Governance Dashboard</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link-btn">Customer Form</a>
+        <a href="admin.html" class="nav-link-btn">Officer Desk</a>
+        <button id="superLogoutBtn" class="nav-link-btn" style="display:none; color: #ef4444; border-color: #ef4444;">Logout</button>
+      </nav>
+    </header>
+
+    <!-- 1. SUPER ADMIN LOGIN -->
+    <div id="superLoginSection" class="super-login-card">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <span class="super-badge" style="background:#b91c1c;">Executive Access</span>
+        <h2 style="font-size: 1.3rem; margin-top: 12px; color: #fff;">Super Admin Portal</h2>
+        <p style="font-size: 0.8rem; color: #94a3b8;">Chief Information Security Officer & IT Auditor Access</p>
+      </div>
+
+      <form id="superLoginForm">
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:6px; color:#cbd5e1;">Super Admin ID</label>
+          <input type="text" id="superUser" class="input-dark" placeholder="Enter Superadmin ID" required autofocus>
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:6px; color:#cbd5e1;">Master Key</label>
+          <input type="password" id="superPass" class="input-dark" placeholder="Enter Master Key" required>
+        </div>
+        <button type="submit" class="btn-super" style="width:100%; padding:12px; font-size:0.95rem;">Unlock Executive Dashboard</button>
+      </form>
+
+      <div style="margin-top:20px; padding:12px; background:#0f172a; border-radius:6px; border:1px dashed #475569; font-size:0.8rem; color:#94a3b8;">
+        <strong style="color:#f8fafc;">Super Admin Credentials:</strong><br>
+        • ID: <code class="mono" style="color:#38bdf8;">superadmin</code><br>
+        • Key: <code class="mono" style="color:#38bdf8;">superadmin123</code> (or <code class="mono" style="color:#38bdf8;">admin</code>)
+      </div>
+    </div>
+
+    <!-- 2. EXECUTIVE DASHBOARD (Authenticated) -->
+    <main id="superDashboardSection" style="display:none;">
+
+      <!-- Key Metrics -->
+      <section class="super-stat-grid">
+        <div class="super-stat-card">
+          <div class="stat-title">Total Customer Records</div>
+          <div class="stat-value" id="sTotal">0</div>
+          <div class="stat-sub">Across 85+ Branches</div>
+        </div>
+        <div class="super-stat-card green">
+          <div class="stat-title">RBI Compliance Rate</div>
+          <div class="stat-value" id="sCompliance">100%</div>
+          <div class="stat-sub">Active Customer SMS Opt-Ins</div>
+        </div>
+        <div class="super-stat-card gold">
+          <div class="stat-title">CBS Integration Sync</div>
+          <div class="stat-value" id="sCbsSync">0%</div>
+          <div class="stat-sub" id="sCbsSub">0 of 0 updated</div>
+        </div>
+        <div class="super-stat-card red">
+          <div class="stat-title">Security & Audit Status</div>
+          <div class="stat-value" style="font-size:1.4rem; color:#10b981;">RBI AUDIT PASS</div>
+          <div class="stat-sub">256-Bit Encrypted Audit Trail</div>
+        </div>
+      </section>
+
+      <!-- Analytics Breakdown -->
+      <section class="analytics-row">
+        
+        <!-- Branch-wise Breakdown -->
+        <div class="dark-card">
+          <div class="dark-card-header">
+            <h3 class="dark-card-title">🏛️ Branch-wise SMS Consent Distribution</h3>
+            <span style="font-size:0.75rem; color:#94a3b8;">Live Feed</span>
+          </div>
+          <ul class="branch-list">
+            <li class="branch-item">
+              <div>
+                <strong>CBS Head Office, Nashik</strong>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 88%;"></div></div>
+              </div>
+              <span class="mono" style="font-weight:700; color:#38bdf8;">42 Records</span>
+            </li>
+            <li class="branch-item">
+              <div>
+                <strong>Canada Corner Branch</strong>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 74%;"></div></div>
+              </div>
+              <span class="mono" style="font-weight:700; color:#38bdf8;">29 Records</span>
+            </li>
+            <li class="branch-item">
+              <div>
+                <strong>Mumbai Naka Branch</strong>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 65%;"></div></div>
+              </div>
+              <span class="mono" style="font-weight:700; color:#38bdf8;">18 Records</span>
+            </li>
+            <li class="branch-item">
+              <div>
+                <strong>Panchavati Branch</strong>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 52%;"></div></div>
+              </div>
+              <span class="mono" style="font-weight:700; color:#38bdf8;">14 Records</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Master System Controls -->
+        <div class="dark-card">
+          <div class="dark-card-header">
+            <h3 class="dark-card-title">⚡ Master CBS & Audit Controls</h3>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <p style="font-size:0.85rem; color:#94a3b8;">Perform centralized batch sync with Core Banking System (Finacle / TCS BaNCS).</p>
+            <button id="batchSyncBtn" class="btn-super" style="background:#0284c7;">🔄 Run Master CBS Auto-Sync</button>
+            <button id="superExportBtn" class="btn-super" style="background:#059669;">📊 Download RBI Compliance Audit Report (CSV)</button>
+            <button id="resetDemoBtn" class="btn-super" style="background:#475569;">⚙️ Generate Live Sample Audit Records</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Master Records Table -->
+      <section class="dark-card">
+        <div class="dark-card-header">
+          <h3 class="dark-card-title">📋 Central Master Database (All Branches)</h3>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="superSearch" class="input-dark" style="padding:6px 12px; width:280px; font-size:0.85rem;" placeholder="Search all records...">
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="dark-table">
+            <thead>
+              <tr>
+                <th>Reference Tracking ID</th>
+                <th>Account Holder</th>
+                <th>Account No. (CBS)</th>
+                <th>CIF ID</th>
+                <th>Branch</th>
+                <th>Mobile Number</th>
+                <th>Consent</th>
+                <th>CBS Status</th>
+              </tr>
+            </thead>
+            <tbody id="superTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+    <footer style="text-align:center; margin-top:32px; font-size:0.75rem; color:#64748b;">
+      The Nasik Merchants Co-operative Bank Ltd., Nashik &bull; Head Office: Namco Bank Bhavan, Old Agra Road, Nashik &bull; Super Admin Console v2.6
+    </footer>
+
+  </div>
+
+  <script>
+    // Ensure data exists
+    function loadData() {
+      let records = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
+      if (records.length === 0) {
+        records = [
+          {
+            refNo: 'NAMCO-SMS-2026-84920',
+            name: 'Sunil Ramesh Patil',
+            accNo: '00120100049281',
+            cif: '10049281',
+            branch: 'CBS Head Office, Nashik',
+            mobile: '9822014589',
+            consent: 'agree',
+            cbsUpdated: 'Yes',
+            verifiedBy: 'M. K. Joshi (Token #4102)',
+            date: '2026-08-27',
+            place: 'Nashik'
+          },
+          {
+            refNo: 'NAMCO-SMS-2026-51294',
+            name: 'Pooja Anand Deshmukh',
+            accNo: '00150200031940',
+            cif: '10031940',
+            branch: 'Canada Corner Branch',
+            mobile: '9423187652',
+            consent: 'agree',
+            cbsUpdated: 'No',
+            verifiedBy: 'Branch Official',
+            date: '2026-08-27',
+            place: 'Nashik'
+          },
+          {
+            refNo: 'NAMCO-SMS-2026-72819',
+            name: 'Vijay Dattatraya Shinde',
+            accNo: '00180100095812',
+            cif: '10095812',
+            branch: 'Mumbai Naka Branch',
+            mobile: '9765412380',
+            consent: 'agree',
+            cbsUpdated: 'Yes',
+            verifiedBy: 'S. R. Kulkarni',
+            date: '2026-08-27',
+            place: 'Nashik'
+          }
+        ];
+        localStorage.setItem('namco_sms_records', JSON.stringify(records));
+      }
+      return records;
+    }
+
+    loadData();
+
+    // Authentication Logic
+    const superLoginSection = document.getElementById('superLoginSection');
+    const superDashboardSection = document.getElementById('superDashboardSection');
+    const superLoginForm = document.getElementById('superLoginForm');
+    const superLogoutBtn = document.getElementById('superLogoutBtn');
+
+    if (sessionStorage.getItem('namco_super_auth') === 'true') {
+      showSuperDashboard();
+    }
+
+    superLoginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = document.getElementById('superUser').value.trim().toLowerCase();
+      const p = document.getElementById('superPass').value.trim();
+
+      if ((u === 'superadmin' && (p === 'superadmin123' || p === 'admin')) || (u === 'admin' && p === 'admin')) {
+        sessionStorage.setItem('namco_super_auth', 'true');
+        showSuperDashboard();
+      } else {
+        alert('Access Denied: Invalid Super Administrator Credentials.');
+      }
+    });
+
+    superLogoutBtn.addEventListener('click', () => {
+      sessionStorage.removeItem('namco_super_auth');
+      superLoginSection.style.display = 'block';
+      superDashboardSection.style.display = 'none';
+      superLogoutBtn.style.display = 'none';
+    });
+
+    function showSuperDashboard() {
+      superLoginSection.style.display = 'none';
+      superDashboardSection.style.display = 'block';
+      superLogoutBtn.style.display = 'inline-block';
+      renderSuperDashboard();
+    }
+
+    function renderSuperDashboard() {
+      const records = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
+      const search = (document.getElementById('superSearch')?.value || '').toLowerCase().trim();
+
+      const total = records.length;
+      const agreed = records.filter(r => r.consent === 'agree').length;
+      const cbsUpdatedCount = records.filter(r => r.cbsUpdated === 'Yes').length;
+
+      document.getElementById('sTotal').textContent = total;
+      document.getElementById('sCompliance').textContent = total > 0 ? `${Math.round((agreed / total) * 100)}%` : '100%';
+      document.getElementById('sCbsSync').textContent = total > 0 ? `${Math.round((cbsUpdatedCount / total) * 100)}%` : '0%';
+      document.getElementById('sCbsSub').textContent = `${cbsUpdatedCount} of ${total} Synced in CBS`;
+
+      const tbody = document.getElementById('superTableBody');
+      tbody.innerHTML = '';
+
+      const filtered = records.filter(r => {
+        return !search ||
+          r.refNo.toLowerCase().includes(search) ||
+          r.name.toLowerCase().includes(search) ||
+          r.accNo.toLowerCase().includes(search) ||
+          r.mobile.toLowerCase().includes(search) ||
+          r.branch?.toLowerCase().includes(search);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:#94a3b8;">No records found.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong class="mono" style="color:#38bdf8;">${r.refNo}</strong></td>
+          <td><strong style="color:#fff;">${r.name}</strong></td>
+          <td class="mono">${r.accNo}</td>
+          <td class="mono">${r.cif}</td>
+          <td>${r.branch || 'Nashik HO'}</td>
+          <td class="mono">+91 ${r.mobile}</td>
+          <td><span style="color:${r.consent === 'agree' ? '#10b981' : '#ef4444'}; font-weight:700;">${r.consent === 'agree' ? 'AGREED' : 'OPT-OUT'}</span></td>
+          <td><span style="background:${r.cbsUpdated === 'Yes' ? '#065f46' : '#78350f'}; color:#fff; padding:3px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">${r.cbsUpdated === 'Yes' ? 'SYNCED' : 'PENDING'}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById('superSearch')?.addEventListener('input', renderSuperDashboard);
+
+    // Master Batch Sync
+    document.getElementById('batchSyncBtn')?.addEventListener('click', () => {
+      let records = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
+      records.forEach(r => r.cbsUpdated = 'Yes');
+      localStorage.setItem('namco_sms_records', JSON.stringify(records));
+      renderSuperDashboard();
+      alert('Success: All pending records have been synced with Core Banking System (CBS).');
+    });
+
+    // Export CSV
+    document.getElementById('superExportBtn')?.addEventListener('click', () => {
+      const records = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
+      let csv = 'RefID,CustomerName,AccountNumber,CIF,Branch,Mobile,Consent,CBSStatus,VerifiedBy,Date,Place\n';
+      records.forEach(r => {
+        csv += `"${r.refNo}","${r.name}","${r.accNo}","${r.cif}","${r.branch || 'Nashik'}","${r.mobile}","${r.consent}","${r.cbsUpdated || 'No'}","${r.verifiedBy || ''}","${r.date}","${r.place}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `NAMCO_SUPERADMIN_AUDIT_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    });
+
+    // Reset / Populate Demo Data
+    document.getElementById('resetDemoBtn')?.addEventListener('click', () => {
+      localStorage.removeItem('namco_sms_records');
+      loadData();
+      renderSuperDashboard();
+      alert('Default audit records re-initialized.');
+    });
+  </script>
+</body>
+</html>
