@@ -3,37 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Super Admin Executive Dashboard - Namco Bank</title>
-  <meta name="description" content="Central Super Administrator Control Panel & Analytics for The Nasik Merchants Co-operative Bank Ltd.">
+  <title>Super Admin Executive Governance & RBAC - Namco Bank</title>
+  <meta name="description" content="Central Super Administrator Control Panel, RBAC Branch Admin Management & RBI Audit Trail for The Nasik Merchants Co-operative Bank Ltd.">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
-      --super-primary: #0f172a;
+      --super-bg: #0b1120;
+      --super-card: #1e293b;
+      --super-card-hover: #24344d;
+      --super-border: #334155;
       --super-accent: #b91c1c;
-      --super-gold: #d97706;
-      --super-card: #ffffff;
-      --super-border: #e2e8f0;
+      --super-primary: #0284c7;
+      --super-success: #10b981;
+      --super-warning: #f59e0b;
+      --super-text: #f8fafc;
+      --super-muted: #94a3b8;
     }
     body {
-      background-color: #0b1120;
-      color: #f1f5f9;
+      background-color: var(--super-bg);
+      color: var(--super-text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 0;
     }
     .super-container {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 24px 16px;
+      padding: 20px 16px;
     }
     .super-nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #1e293b;
+      background: var(--super-card);
       padding: 16px 24px;
-      border-radius: 8px;
-      border: 1px solid #334155;
+      border-radius: 10px;
+      border: 1px solid var(--super-border);
       margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     }
     .super-badge {
       background: linear-gradient(135deg, #b91c1c, #dc2626);
@@ -47,19 +56,20 @@
     }
     .nav-links {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
     }
     .nav-link-btn {
-      color: #94a3b8;
+      color: var(--super-muted);
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 600;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 6px;
       border: 1px solid #475569;
       background: #0f172a;
       transition: all 0.2s ease;
+      cursor: pointer;
     }
     .nav-link-btn:hover {
       color: #fff;
@@ -68,12 +78,56 @@
     .super-login-card {
       max-width: 440px;
       margin: 60px auto;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 10px;
-      padding: 32px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      background: var(--super-card);
+      border: 1px solid var(--super-border);
+      border-radius: 12px;
+      padding: 36px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
     }
+    
+    /* Navigation Tabs */
+    .super-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--super-border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .super-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--super-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    .super-tab-btn:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.03);
+    }
+    .super-tab-btn.active {
+      color: #38bdf8;
+      border-bottom-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .badge-count {
+      background: #334155;
+      color: #f8fafc;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    /* Stats Grid */
     .super-stat-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -81,12 +135,13 @@
       margin-bottom: 24px;
     }
     .super-stat-card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
+      background: var(--super-card);
+      border: 1px solid var(--super-border);
+      border-radius: 10px;
       padding: 20px;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     .super-stat-card::before {
       content: '';
@@ -95,16 +150,16 @@
       top: 0;
       bottom: 0;
       width: 4px;
-      background: #3b82f6;
+      background: #38bdf8;
     }
-    .super-stat-card.red::before { background: #ef4444; }
-    .super-stat-card.green::before { background: #10b981; }
-    .super-stat-card.gold::before { background: #f59e0b; }
+    .super-stat-card.red::before { background: var(--super-accent); }
+    .super-stat-card.green::before { background: var(--super-success); }
+    .super-stat-card.gold::before { background: var(--super-warning); }
     .stat-title {
       font-size: 0.75rem;
       text-transform: uppercase;
       font-weight: 700;
-      color: #94a3b8;
+      color: var(--super-muted);
       letter-spacing: 0.5px;
       margin-bottom: 8px;
     }
@@ -119,56 +174,33 @@
       color: #64748b;
       margin-top: 4px;
     }
-    .analytics-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-    @media (max-width: 840px) {
-      .analytics-row { grid-template-columns: 1fr; }
-    }
+
     .dark-card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 20px;
+      background: var(--super-card);
+      border: 1px solid var(--super-border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
     }
     .dark-card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #334155;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--super-border);
+      flex-wrap: wrap;
+      gap: 12px;
     }
     .dark-card-title {
-      font-size: 0.95rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: #f8fafc;
-    }
-    .branch-list {
-      list-style: none;
-    }
-    .branch-item {
+      margin: 0;
       display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #334155;
-      font-size: 0.85rem;
-    }
-    .branch-item:last-child { border-bottom: none; }
-    .progress-bar-bg {
-      background: #334155;
-      height: 8px;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      background: #10b981;
-      border-radius: 4px;
+      align-items: center;
+      gap: 8px;
     }
     .dark-table {
       width: 100%;
@@ -179,20 +211,22 @@
       background: #0f172a;
       color: #94a3b8;
       text-align: left;
-      padding: 12px;
+      padding: 12px 14px;
       font-weight: 600;
-      border-bottom: 1px solid #334155;
+      border-bottom: 1px solid var(--super-border);
+      white-space: nowrap;
     }
     .dark-table td {
-      padding: 12px;
-      border-bottom: 1px solid #334155;
+      padding: 12px 14px;
+      border-bottom: 1px solid #2a374a;
       color: #e2e8f0;
+      vertical-align: middle;
     }
     .dark-table tr:hover {
-      background: #0f172a80;
+      background: rgba(255,255,255,0.02);
     }
     .btn-super {
-      background: #b91c1c;
+      background: var(--super-accent);
       color: #fff;
       border: none;
       padding: 8px 16px;
@@ -200,24 +234,120 @@
       font-weight: 700;
       cursor: pointer;
       font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
     }
     .btn-super:hover {
       background: #991b1b;
+    }
+    .btn-super.primary {
+      background: #0284c7;
+    }
+    .btn-super.primary:hover {
+      background: #0369a1;
+    }
+    .btn-super.success {
+      background: #059669;
+    }
+    .btn-super.success:hover {
+      background: #047857;
+    }
+    .btn-super-sm {
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #cbd5e1;
+      cursor: pointer;
+    }
+    .btn-super-sm:hover {
+      background: #1e293b;
+      color: #fff;
     }
     .input-dark {
       background: #0f172a;
       border: 1px solid #475569;
       color: #fff;
-      padding: 10px 14px;
+      padding: 9px 14px;
       border-radius: 6px;
-      width: 100%;
-      box-sizing: border-box;
       font-size: 0.9rem;
+      box-sizing: border-box;
     }
     .input-dark:focus {
       outline: none;
-      border-color: #ef4444;
+      border-color: #38bdf8;
     }
+    .tag-status {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .tag-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .tag-suspended { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .tag-action {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid #334155;
+    }
+    
+    /* Modal */
+    .super-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .super-modal {
+      background: #1e293b;
+      border: 1px solid #475569;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 540px;
+      padding: 28px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--super-border);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
+    .form-field {
+      margin-bottom: 14px;
+    }
+    .form-field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -231,14 +361,14 @@
         <div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <h1 style="font-size: 1.15rem; color: #fff; margin: 0;">Namco Bank Central Headquarters</h1>
-            <span class="super-badge">Super Admin</span>
+            <span class="super-badge">Super Admin RBAC</span>
           </div>
-          <span style="font-size: 0.75rem; color: #94a3b8;">RBI Electronic Banking Compliance & Governance Dashboard</span>
+          <span style="font-size: 0.75rem; color: var(--super-muted);">Multi-Branch Access Control & Central Audit Governance</span>
         </div>
       </div>
       <nav class="nav-links">
-        <a href="index.html" class="nav-link-btn">Customer Form</a>
-        <a href="admin.html" class="nav-link-btn">Officer Desk</a>
+        <a href="index.html" class="nav-link-btn">📱 Customer Portal</a>
+        <a href="admin.html" class="nav-link-btn">🛡️ Officer Desk</a>
         <button id="superLogoutBtn" class="nav-link-btn" style="display:none; color: #ef4444; border-color: #ef4444;">Logout</button>
       </nav>
     </header>
@@ -248,25 +378,25 @@
       <div style="text-align: center; margin-bottom: 24px;">
         <span class="super-badge" style="background:#b91c1c;">Executive Access</span>
         <h2 style="font-size: 1.3rem; margin-top: 12px; color: #fff;">Super Admin Portal</h2>
-        <p style="font-size: 0.8rem; color: #94a3b8;">Chief Information Security Officer & IT Auditor Access</p>
+        <p style="font-size: 0.8rem; color: var(--super-muted);">Chief Information Security Officer & IT Auditor Access</p>
       </div>
 
       <form id="superLoginForm">
         <div style="margin-bottom: 16px;">
           <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:6px; color:#cbd5e1;">Super Admin ID</label>
-          <input type="text" id="superUser" class="input-dark" placeholder="Enter Superadmin ID" required autofocus>
+          <input type="text" id="superUser" class="input-dark" style="width:100%;" placeholder="e.g. superadmin" value="superadmin" required autofocus>
         </div>
         <div style="margin-bottom: 20px;">
-          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:6px; color:#cbd5e1;">Master Key</label>
-          <input type="password" id="superPass" class="input-dark" placeholder="Enter Master Key" required>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:6px; color:#cbd5e1;">Master Key / Password</label>
+          <input type="password" id="superPass" class="input-dark" style="width:100%;" placeholder="Enter password" required>
         </div>
-        <button type="submit" class="btn-super" style="width:100%; padding:12px; font-size:0.95rem;">Unlock Executive Dashboard</button>
+        <button type="submit" class="btn-super" style="width:100%; padding:12px; font-size:0.95rem; justify-content:center;">Unlock Central Governance Dashboard</button>
       </form>
 
-      <div style="margin-top:20px; padding:12px; background:#0f172a; border-radius:6px; border:1px dashed #475569; font-size:0.8rem; color:#94a3b8;">
-        <strong style="color:#f8fafc;">Super Admin Credentials:</strong><br>
+      <div style="margin-top:20px; padding:12px; background:#0f172a; border-radius:6px; border:1px dashed #475569; font-size:0.8rem; color:var(--super-muted);">
+        <strong style="color:#f8fafc;">Default Super Admin Credentials:</strong><br>
         • ID: <code class="mono" style="color:#38bdf8;">superadmin</code><br>
-        • Key: <code class="mono" style="color:#38bdf8;">superadmin123</code> (or <code class="mono" style="color:#38bdf8;">admin</code>)
+        • Master Password: <code class="mono" style="color:#38bdf8;">namco@2026</code> (or <code class="mono" style="color:#38bdf8;">superadmin123</code> / <code class="mono" style="color:#38bdf8;">admin</code>)
       </div>
     </div>
 
@@ -276,113 +406,207 @@
       <!-- Key Metrics -->
       <section class="super-stat-grid">
         <div class="super-stat-card">
-          <div class="stat-title">Total Customer Records</div>
+          <div class="stat-title">Total Submissions</div>
           <div class="stat-value" id="sTotal">0</div>
-          <div class="stat-sub">Across 85+ Branches</div>
+          <div class="stat-sub">Across All Bank Branches</div>
         </div>
         <div class="super-stat-card green">
-          <div class="stat-title">RBI Compliance Rate</div>
-          <div class="stat-value" id="sCompliance">100%</div>
-          <div class="stat-sub">Active Customer SMS Opt-Ins</div>
+          <div class="stat-title">Active Branch Admins</div>
+          <div class="stat-value" id="sTotalAdmins">0</div>
+          <div class="stat-sub">Configured RBAC Accounts</div>
         </div>
         <div class="super-stat-card gold">
           <div class="stat-title">CBS Integration Sync</div>
           <div class="stat-value" id="sCbsSync">0%</div>
-          <div class="stat-sub" id="sCbsSub">0 of 0 updated</div>
+          <div class="stat-sub" id="sCbsSub">0 of 0 records updated</div>
         </div>
         <div class="super-stat-card red">
-          <div class="stat-title">Security & Audit Status</div>
-          <div class="stat-value" style="font-size:1.4rem; color:#10b981;">RBI AUDIT PASS</div>
-          <div class="stat-sub">256-Bit Encrypted Audit Trail</div>
+          <div class="stat-title">Audit Trail Actions</div>
+          <div class="stat-value" id="sAuditCount">0</div>
+          <div class="stat-sub">Central Activity Logs</div>
         </div>
       </section>
 
-      <!-- Analytics Breakdown -->
-      <section class="analytics-row">
-        
-        <!-- Branch-wise Breakdown -->
+      <!-- Navigation Tabs -->
+      <div class="super-tabs">
+        <button class="super-tab-btn active" data-tab="tabAdmins">
+          👥 Branch Admins (RBAC) <span class="badge-count" id="adminBadgeCount">0</span>
+        </button>
+        <button class="super-tab-btn" data-tab="tabAudit">
+          📜 Live Audit Trail & Logs <span class="badge-count" id="auditBadgeCount">0</span>
+        </button>
+        <button class="super-tab-btn" data-tab="tabConsents">
+          📋 Master Consents Database <span class="badge-count" id="consentBadgeCount">0</span>
+        </button>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 1: 👥 BRANCH ADMINS MANAGEMENT (RBAC) -->
+      <!-- ============================================================ -->
+      <section id="tabAdmins" class="tab-pane">
         <div class="dark-card">
           <div class="dark-card-header">
-            <h3 class="dark-card-title">🏛️ Branch-wise SMS Consent Distribution</h3>
-            <span style="font-size:0.75rem; color:#94a3b8;">Live Feed</span>
+            <div>
+              <h3 class="dark-card-title">👥 Multi-Branch Admin & Staff Management</h3>
+              <p style="font-size:0.8rem; color:var(--super-muted); margin:4px 0 0 0;">Create and configure role-based credentials for each bank branch officer</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button type="button" id="openAddAdminModalBtn" class="btn-super primary">➕ Create New Branch Admin</button>
+            </div>
           </div>
-          <ul class="branch-list">
-            <li class="branch-item">
-              <div>
-                <strong>CBS Head Office, Nashik</strong>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 88%;"></div></div>
-              </div>
-              <span class="mono" style="font-weight:700; color:#38bdf8;">42 Records</span>
-            </li>
-            <li class="branch-item">
-              <div>
-                <strong>Canada Corner Branch</strong>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 74%;"></div></div>
-              </div>
-              <span class="mono" style="font-weight:700; color:#38bdf8;">29 Records</span>
-            </li>
-            <li class="branch-item">
-              <div>
-                <strong>Mumbai Naka Branch</strong>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 65%;"></div></div>
-              </div>
-              <span class="mono" style="font-weight:700; color:#38bdf8;">18 Records</span>
-            </li>
-            <li class="branch-item">
-              <div>
-                <strong>Panchavati Branch</strong>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 52%;"></div></div>
-              </div>
-              <span class="mono" style="font-weight:700; color:#38bdf8;">14 Records</span>
-            </li>
-          </ul>
-        </div>
 
-        <!-- Master System Controls -->
-        <div class="dark-card">
-          <div class="dark-card-header">
-            <h3 class="dark-card-title">⚡ Master CBS & Audit Controls</h3>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <p style="font-size:0.85rem; color:#94a3b8;">Perform centralized batch sync with Core Banking System (Finacle / TCS BaNCS).</p>
-            <button id="batchSyncBtn" class="btn-super" style="background:#0284c7;">🔄 Run Master CBS Auto-Sync</button>
-            <button id="superExportBtn" class="btn-super" style="background:#059669;">📊 Download RBI Compliance Audit Report (CSV)</button>
-            <button id="resetDemoBtn" class="btn-super" style="background:#475569;">⚙️ Generate Live Sample Audit Records</button>
+          <div style="overflow-x:auto;">
+            <table class="dark-table">
+              <thead>
+                <tr>
+                  <th>Officer Name</th>
+                  <th>Username / ID</th>
+                  <th>Assigned Branch</th>
+                  <th>Branch Code</th>
+                  <th>Role</th>
+                  <th>Password</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="branchAdminsTableBody">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
           </div>
         </div>
-
       </section>
 
-      <!-- Master Records Table -->
-      <section class="dark-card">
-        <div class="dark-card-header">
-          <h3 class="dark-card-title">📋 Central Master Database (All Branches)</h3>
-          <div style="display:flex; gap:10px;">
-            <input type="text" id="superSearch" class="input-dark" style="padding:6px 12px; width:280px; font-size:0.85rem;" placeholder="Search all records...">
+      <!-- ============================================================ -->
+      <!-- TAB 2: 📜 LIVE AUDIT TRAIL & ACTIVITY LOGS -->
+      <!-- ============================================================ -->
+      <section id="tabAudit" class="tab-pane hidden">
+        <div class="dark-card">
+          <div class="dark-card-header">
+            <div>
+              <h3 class="dark-card-title">📜 Central System Audit Trail & Officer Activity Logs</h3>
+              <p style="font-size:0.8rem; color:var(--super-muted); margin:4px 0 0 0;">Real-time tamper-evident log of all actions performed across all branch admins</p>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <select id="auditActionFilter" class="input-dark" style="padding:6px 12px; font-size:0.85rem;">
+                <option value="ALL">All Actions</option>
+                <option value="ADMIN_LOGIN">Admin Logins</option>
+                <option value="CBS_STATUS_UPDATED">CBS Updates</option>
+                <option value="ADMIN_CREATED">Admin Account Created</option>
+                <option value="CSV_EXPORTED">CSV Exports</option>
+                <option value="CUSTOMER_SUBMISSION">Customer Submissions</option>
+              </select>
+              <input type="text" id="auditSearch" class="input-dark" style="padding:6px 12px; font-size:0.85rem; width:220px;" placeholder="Search audit logs...">
+              <button type="button" id="exportAuditLogsBtn" class="btn-super success">📥 Export Audit CSV</button>
+              <button type="button" id="clearAuditLogsBtn" class="btn-super-sm" style="color:#ef4444;">Clear Logs</button>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="dark-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Action Event</th>
+                  <th>Performed By</th>
+                  <th>Branch Location</th>
+                  <th>Action Details / Description</th>
+                </tr>
+              </thead>
+              <tbody id="auditLogsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
           </div>
         </div>
-        <div style="overflow-x:auto;">
-          <table class="dark-table">
-            <thead>
-              <tr>
-                <th>Reference Tracking ID</th>
-                <th>Account Holder</th>
-                <th>Account No. (CBS)</th>
-                <th>CIF ID</th>
-                <th>Branch</th>
-                <th>Mobile Number</th>
-                <th>Consent</th>
-                <th>CBS Status</th>
-              </tr>
-            </thead>
-            <tbody id="superTableBody">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TAB 3: 📋 MASTER CONSENTS DATABASE -->
+      <!-- ============================================================ -->
+      <section id="tabConsents" class="tab-pane hidden">
+        <div class="dark-card">
+          <div class="dark-card-header">
+            <h3 class="dark-card-title">📋 Central Master Database (All Branches)</h3>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <input type="text" id="superSearch" class="input-dark" style="padding:6px 12px; width:240px; font-size:0.85rem;" placeholder="Search all records...">
+              <button type="button" id="batchSyncBtn" class="btn-super primary">🔄 Run Master CBS Auto-Sync</button>
+              <button type="button" id="superExportBtn" class="btn-super success">📊 Download Master CSV</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="dark-table">
+              <thead>
+                <tr>
+                  <th>Reference ID</th>
+                  <th>Customer Name</th>
+                  <th>Account No.</th>
+                  <th>CIF ID</th>
+                  <th>Branch</th>
+                  <th>Mobile Number</th>
+                  <th>Consent</th>
+                  <th>CBS Status</th>
+                </tr>
+              </thead>
+              <tbody id="superTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
     </main>
+
+    <!-- CREATE BRANCH ADMIN MODAL -->
+    <div id="addAdminModal" class="super-modal-overlay hidden">
+      <div class="super-modal">
+        <div class="modal-header">
+          <h3 style="margin:0; font-size:1.15rem; color:#fff;">➕ Create Branch Admin Account</h3>
+          <button type="button" id="closeAddAdminModalBtn" style="background:none; border:none; color:#94a3b8; font-size:1.2rem; cursor:pointer;">&times;</button>
+        </div>
+        <form id="createAdminForm">
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Full Officer Name</label>
+              <input type="text" id="adminFullName" class="input-dark" style="width:100%;" placeholder="e.g. Ramesh Joshi" required>
+            </div>
+            <div class="form-field">
+              <label>Assigned Branch Name</label>
+              <input type="text" id="adminBranch" class="input-dark" style="width:100%;" placeholder="e.g. Pune Camp Branch" required>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Branch Code</label>
+              <input type="text" id="adminBranchCode" class="input-dark" style="width:100%;" placeholder="e.g. PUN-010" required>
+            </div>
+            <div class="form-field">
+              <label>Role</label>
+              <select id="adminRole" class="input-dark" style="width:100%;">
+                <option value="BRANCH_OFFICER">Branch Officer</option>
+                <option value="BRANCH_MANAGER">Branch Manager</option>
+                <option value="AUDITOR">Branch Compliance Auditor</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Login Username / ID</label>
+              <input type="text" id="adminNewUsername" class="input-dark" style="width:100%;" placeholder="e.g. pune_officer" required>
+            </div>
+            <div class="form-field">
+              <label>Login Password</label>
+              <input type="text" id="adminNewPassword" class="input-dark" style="width:100%;" placeholder="Enter secure password" required>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+            <button type="button" id="cancelAddAdminBtn" class="btn-super-sm" style="padding:8px 16px;">Cancel</button>
+            <button type="submit" class="btn-super primary" style="padding:8px 20px;">Save & Authorize Admin</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <footer style="text-align:center; margin-top:32px; font-size:0.75rem; color:#64748b;">
       The Nasik Merchants Co-operative Bank Ltd., Nashik &bull; Head Office: Namco Bank Bhavan, Old Agra Road, Nashik &bull; Super Admin Console v2.6
@@ -390,174 +614,302 @@
 
   </div>
 
+  <script src="config.js"></script>
+  <script src="api-service.js"></script>
   <script>
-    // Ensure data exists
-    function loadData() {
-      let records = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
-      if (records.length === 0) {
-        records = [
-          {
-            refNo: 'NAMCO-SMS-2026-84920',
-            name: 'Sunil Ramesh Patil',
-            accNo: '00120100049281',
-            cif: '10049281',
-            branch: 'CBS Head Office, Nashik',
-            mobile: '9822014589',
-            consent: 'agree',
-            cbsUpdated: 'Yes',
-            verifiedBy: 'M. K. Joshi (Token #4102)',
-            date: '2026-08-27',
-            place: 'Nashik'
-          },
-          {
-            refNo: 'NAMCO-SMS-2026-51294',
-            name: 'Pooja Anand Deshmukh',
-            accNo: '00150200031940',
-            cif: '10031940',
-            branch: 'Canada Corner Branch',
-            mobile: '9423187652',
-            consent: 'agree',
-            cbsUpdated: 'No',
-            verifiedBy: 'Branch Official',
-            date: '2026-08-27',
-            place: 'Nashik'
-          },
-          {
-            refNo: 'NAMCO-SMS-2026-72819',
-            name: 'Vijay Dattatraya Shinde',
-            accNo: '00180100095812',
-            cif: '10095812',
-            branch: 'Mumbai Naka Branch',
-            mobile: '9765412380',
-            consent: 'agree',
-            cbsUpdated: 'Yes',
-            verifiedBy: 'S. R. Kulkarni',
-            date: '2026-08-27',
-            place: 'Nashik'
-          }
-        ];
-        localStorage.setItem('namco_sms_records', JSON.stringify(records));
-      }
-      return records;
-    }
-
-    loadData();
-
-    // Authentication Logic
+    // Initialize & State
     const superLoginSection = document.getElementById('superLoginSection');
     const superDashboardSection = document.getElementById('superDashboardSection');
     const superLoginForm = document.getElementById('superLoginForm');
     const superLogoutBtn = document.getElementById('superLogoutBtn');
 
+    // Tab Switching
+    const tabBtns = document.querySelectorAll('.super-tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabPanes.forEach(p => p.classList.add('hidden'));
+
+        btn.classList.add('active');
+        const targetTab = document.getElementById(btn.dataset.tab);
+        if (targetTab) targetTab.classList.remove('hidden');
+      });
+    });
+
+    // Check existing Super Admin session
     if (sessionStorage.getItem('namco_super_auth') === 'true') {
       showSuperDashboard();
     }
 
-    superLoginForm.addEventListener('submit', (e) => {
+    // Login Form Submit
+    superLoginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const u = document.getElementById('superUser').value.trim().toLowerCase();
+      const u = document.getElementById('superUser').value.trim();
       const p = document.getElementById('superPass').value.trim();
 
-      if ((u === 'superadmin' && (p === 'superadmin123' || p === 'admin')) || (u === 'admin' && p === 'admin')) {
+      const result = await window.BankApi.login(u, p);
+      if (result.success && result.user?.role === 'SUPER_ADMIN') {
         sessionStorage.setItem('namco_super_auth', 'true');
         showSuperDashboard();
       } else {
-        alert('Access Denied: Invalid Super Administrator Credentials.');
+        alert('Invalid Super Admin credentials. Use superadmin / namco@2026');
       }
     });
 
+    // Logout
     superLogoutBtn.addEventListener('click', () => {
       sessionStorage.removeItem('namco_super_auth');
       superLoginSection.style.display = 'block';
       superDashboardSection.style.display = 'none';
       superLogoutBtn.style.display = 'none';
+      document.getElementById('superPass').value = '';
     });
 
     function showSuperDashboard() {
       superLoginSection.style.display = 'none';
       superDashboardSection.style.display = 'block';
       superLogoutBtn.style.display = 'inline-block';
-      renderSuperDashboard();
+      renderAll();
     }
 
-    function renderSuperDashboard() {
-      const records = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
-      const search = (document.getElementById('superSearch')?.value || '').toLowerCase().trim();
+    async function renderAll() {
+      await renderStats();
+      renderBranchAdmins();
+      renderAuditLogs();
+      renderConsents();
+    }
+
+    // 1. Render Stats
+    async function renderStats() {
+      const records = window.BankApi.getLocalRecords();
+      const admins = window.BankApi.getAdminUsers();
+      const auditLogs = window.BankApi.getAuditLogs();
 
       const total = records.length;
-      const agreed = records.filter(r => r.consent === 'agree').length;
-      const cbsUpdatedCount = records.filter(r => r.cbsUpdated === 'Yes').length;
+      const cbsUpdated = records.filter(r => r.cbsUpdated === 'Yes').length;
+      const syncRate = total > 0 ? Math.round((cbsUpdated / total) * 100) : 100;
 
       document.getElementById('sTotal').textContent = total;
-      document.getElementById('sCompliance').textContent = total > 0 ? `${Math.round((agreed / total) * 100)}%` : '100%';
-      document.getElementById('sCbsSync').textContent = total > 0 ? `${Math.round((cbsUpdatedCount / total) * 100)}%` : '0%';
-      document.getElementById('sCbsSub').textContent = `${cbsUpdatedCount} of ${total} Synced in CBS`;
+      document.getElementById('sTotalAdmins').textContent = admins.filter(a => a.isActive).length;
+      document.getElementById('sCbsSync').textContent = `${syncRate}%`;
+      document.getElementById('sCbsSub').textContent = `${cbsUpdated} of ${total} updated`;
+      document.getElementById('sAuditCount').textContent = auditLogs.length;
 
-      const tbody = document.getElementById('superTableBody');
+      document.getElementById('adminBadgeCount').textContent = admins.length;
+      document.getElementById('auditBadgeCount').textContent = auditLogs.length;
+      document.getElementById('consentBadgeCount').textContent = total;
+    }
+
+    // 2. Render Branch Admins (RBAC)
+    function renderBranchAdmins() {
+      const admins = window.BankApi.getAdminUsers();
+      const tbody = document.getElementById('branchAdminsTableBody');
       tbody.innerHTML = '';
 
-      const filtered = records.filter(r => {
-        return !search ||
-          r.refNo.toLowerCase().includes(search) ||
-          r.name.toLowerCase().includes(search) ||
-          r.accNo.toLowerCase().includes(search) ||
-          r.mobile.toLowerCase().includes(search) ||
-          r.branch?.toLowerCase().includes(search);
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:#94a3b8;">No records found.</td></tr>';
+      if (admins.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:#94a3b8;">No branch admins found. Click "Create New Branch Admin" above.</td></tr>';
         return;
       }
 
-      filtered.forEach(r => {
+      admins.forEach(a => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><strong class="mono" style="color:#38bdf8;">${r.refNo}</strong></td>
-          <td><strong style="color:#fff;">${r.name}</strong></td>
-          <td class="mono">${r.accNo}</td>
-          <td class="mono">${r.cif}</td>
-          <td>${r.branch || 'Nashik HO'}</td>
-          <td class="mono">+91 ${r.mobile}</td>
-          <td><span style="color:${r.consent === 'agree' ? '#10b981' : '#ef4444'}; font-weight:700;">${r.consent === 'agree' ? 'AGREED' : 'OPT-OUT'}</span></td>
-          <td><span style="background:${r.cbsUpdated === 'Yes' ? '#065f46' : '#78350f'}; color:#fff; padding:3px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">${r.cbsUpdated === 'Yes' ? 'SYNCED' : 'PENDING'}</span></td>
+          <td><strong>${a.fullName}</strong></td>
+          <td><code class="mono" style="color:#38bdf8;">${a.username}</code></td>
+          <td>${a.branch}</td>
+          <td><span class="tag-action">${a.branchCode || 'HO-001'}</span></td>
+          <td><span style="font-size:0.75rem; color:#cbd5e1; font-weight:600;">${a.role.replace('_', ' ')}</span></td>
+          <td><span class="mono" style="color:#94a3b8;">••••••••</span></td>
+          <td><span class="tag-status ${a.isActive ? 'tag-active' : 'tag-suspended'}">${a.isActive ? 'Active' : 'Suspended'}</span></td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-super-sm" onclick="toggleAdminStatus('${a.id || a.username}')" title="Toggle Active/Suspended">${a.isActive ? 'Suspend' : 'Activate'}</button>
+              <button class="btn-super-sm" style="color:#ef4444;" onclick="deleteAdmin('${a.id || a.username}')" title="Delete Admin">✕</button>
+            </div>
+          </td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    document.getElementById('superSearch')?.addEventListener('input', renderSuperDashboard);
+    // Admin Actions
+    window.toggleAdminStatus = function(id) {
+      window.BankApi.toggleAdminStatus(id);
+      renderAll();
+    };
 
-    // Master Batch Sync
-    document.getElementById('batchSyncBtn')?.addEventListener('click', () => {
-      let records = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
-      records.forEach(r => r.cbsUpdated = 'Yes');
-      localStorage.setItem('namco_sms_records', JSON.stringify(records));
-      renderSuperDashboard();
-      alert('Success: All pending records have been synced with Core Banking System (CBS).');
+    window.deleteAdmin = function(id) {
+      if (confirm('Are you sure you want to delete this branch admin?')) {
+        window.BankApi.deleteAdminUser(id);
+        renderAll();
+      }
+    };
+
+    // Modal Handlers
+    const addAdminModal = document.getElementById('addAdminModal');
+    document.getElementById('openAddAdminModalBtn').addEventListener('click', () => addAdminModal.classList.remove('hidden'));
+    document.getElementById('closeAddAdminModalBtn').addEventListener('click', () => addAdminModal.classList.add('hidden'));
+    document.getElementById('cancelAddAdminBtn').addEventListener('click', () => addAdminModal.classList.add('hidden'));
+
+    // Create Admin Submit
+    document.getElementById('createAdminForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fullName = document.getElementById('adminFullName').value;
+      const branch = document.getElementById('adminBranch').value;
+      const branchCode = document.getElementById('adminBranchCode').value;
+      const role = document.getElementById('adminRole').value;
+      const username = document.getElementById('adminNewUsername').value;
+      const password = document.getElementById('adminNewPassword').value;
+
+      const result = window.BankApi.createAdminUser({
+        fullName, branch, branchCode, role, username, password
+      });
+
+      if (result.success) {
+        addAdminModal.classList.add('hidden');
+        document.getElementById('createAdminForm').reset();
+        renderAll();
+        alert(`Branch Admin account for "${fullName}" created successfully!`);
+      } else {
+        alert(result.error || 'Failed to create admin.');
+      }
     });
 
-    // Export CSV
-    document.getElementById('superExportBtn')?.addEventListener('click', () => {
-      const records = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
-      let csv = 'RefID,CustomerName,AccountNumber,CIF,Branch,Mobile,Consent,CBSStatus,VerifiedBy,Date,Place\n';
-      records.forEach(r => {
-        csv += `"${r.refNo}","${r.name}","${r.accNo}","${r.cif}","${r.branch || 'Nashik'}","${r.mobile}","${r.consent}","${r.cbsUpdated || 'No'}","${r.verifiedBy || ''}","${r.date}","${r.place}"\n`;
+    // 3. Render Audit Logs
+    function renderAuditLogs() {
+      const actionFilter = document.getElementById('auditActionFilter').value;
+      const search = document.getElementById('auditSearch').value.trim();
+
+      const logs = window.BankApi.getAuditLogs({ action: actionFilter, search });
+      const tbody = document.getElementById('auditLogsTableBody');
+      tbody.innerHTML = '';
+
+      if (logs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:#94a3b8;">No audit trail events found.</td></tr>';
+        return;
+      }
+
+      logs.forEach(l => {
+        const tr = document.createElement('tr');
+        const formattedDate = new Date(l.timestamp).toLocaleString('en-IN', {
+          dateStyle: 'medium',
+          timeStyle: 'medium'
+        });
+
+        tr.innerHTML = `
+          <td class="mono" style="font-size:0.75rem; color:#94a3b8; white-space:nowrap;">${formattedDate}</td>
+          <td><span class="tag-action">${l.action}</span></td>
+          <td><strong style="color:#f8fafc;">${l.username}</strong></td>
+          <td style="color:#cbd5e1;">${l.branch || 'Head Office'}</td>
+          <td style="font-size:0.85rem; color:#e2e8f0;">${l.details}</td>
+        `;
+        tbody.appendChild(tr);
       });
+    }
+
+    document.getElementById('auditActionFilter').addEventListener('change', renderAuditLogs);
+    document.getElementById('auditSearch').addEventListener('input', renderAuditLogs);
+
+    // Export Audit Logs
+    document.getElementById('exportAuditLogsBtn').addEventListener('click', () => {
+      const logs = window.BankApi.getAuditLogs();
+      if (!logs.length) return alert('No logs to export');
+
+      let csv = 'Timestamp,Action,Username,Role,Branch,Details\n';
+      logs.forEach(l => {
+        csv += `"${l.timestamp}","${l.action}","${l.username}","${l.role || ''}","${l.branch || ''}","${(l.details || '').replace(/"/g, '""')}"\n`;
+      });
+
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `NAMCO_SUPERADMIN_AUDIT_${new Date().toISOString().split('T')[0]}.csv`;
+      a.download = `Namco_Bank_Audit_Trail_${new Date().toISOString().split('T')[0]}.csv`;
       a.click();
     });
 
-    // Reset / Populate Demo Data
-    document.getElementById('resetDemoBtn')?.addEventListener('click', () => {
-      localStorage.removeItem('namco_sms_records');
-      loadData();
-      renderSuperDashboard();
-      alert('Default audit records re-initialized.');
+    document.getElementById('clearAuditLogsBtn').addEventListener('click', () => {
+      if (confirm('Clear all audit logs?')) {
+        window.BankApi.clearAuditLogs();
+        renderAll();
+      }
+    });
+
+    // 4. Render Consents Database
+    async function renderConsents() {
+      const search = document.getElementById('superSearch').value.trim();
+      const response = await window.BankApi.getConsents({ search });
+      const records = response.records || [];
+      const tbody = document.getElementById('superTableBody');
+      tbody.innerHTML = '';
+
+      if (records.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px; color:#94a3b8;">No customer consent records found.</td></tr>';
+        return;
+      }
+
+      records.forEach(r => {
+        const tr = document.createElement('tr');
+        const isAgreed = r.consent === 'agree';
+        const isCbsYes = r.cbsUpdated === 'Yes';
+
+        tr.innerHTML = `
+          <td><strong class="mono" style="color:#38bdf8;">${r.refNo}</strong></td>
+          <td><strong>${r.name}</strong></td>
+          <td class="mono">${r.accNo}</td>
+          <td class="mono">${r.cif}</td>
+          <td>${r.branch || 'Nashik'}</td>
+          <td class="mono">+91 ${r.mobile}</td>
+          <td><span class="tag-status ${isAgreed ? 'tag-active' : 'tag-suspended'}">${isAgreed ? 'Agreed' : 'Opted Out'}</span></td>
+          <td><span class="tag-status ${isCbsYes ? 'tag-active' : 'tag-suspended'}">${isCbsYes ? 'Synced' : 'Pending'}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById('superSearch').addEventListener('input', renderConsents);
+
+    // Batch CBS Sync
+    document.getElementById('batchSyncBtn').addEventListener('click', () => {
+      const records = window.BankApi.getLocalRecords();
+      let updatedCount = 0;
+      records.forEach(r => {
+        if (r.cbsUpdated !== 'Yes') {
+          r.cbsUpdated = 'Yes';
+          updatedCount++;
+        }
+      });
+      localStorage.setItem('namco_sms_records', JSON.stringify(records));
+
+      window.BankApi.logAuditAction({
+        action: 'MASTER_CBS_BATCH_SYNC',
+        details: `Ran Master CBS batch sync. Updated ${updatedCount} pending consent records to CBS`,
+        branch: 'Central Headquarters',
+        username: 'superadmin'
+      });
+
+      renderAll();
+      alert(`Master CBS Sync Complete! ${updatedCount} records marked as Synced with Core Banking.`);
+    });
+
+    // Master Export CSV
+    document.getElementById('superExportBtn').addEventListener('click', () => {
+      const records = window.BankApi.getLocalRecords();
+      if (!records.length) return alert('No records to export');
+
+      let csv = 'Reference_No,Customer_Name,Account_No,CIF,Mobile,Branch,Consent,CBS_Updated,Verified_By,Date,Place\n';
+      records.forEach(r => {
+        csv += `"${r.refNo}","${r.name}","${r.accNo}","${r.cif}","${r.mobile}","${r.branch}","${r.consent}","${r.cbsUpdated || 'No'}","${r.verifiedBy || ''}","${r.date}","${r.place}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Namco_Master_Consents_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
     });
   </script>
 </body>
