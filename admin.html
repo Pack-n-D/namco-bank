@@ -198,6 +198,11 @@
     <!-- 2. DASHBOARD PANEL (Shown when authenticated) -->
     <div id="adminDashboardSection" style="display: none;">
       
+      <!-- Officer Identity Banner -->
+      <div id="officerBranchBadge" style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px 16px; border-radius: 6px; margin-bottom: 18px; font-size: 0.85rem; color: #166534; display: flex; align-items: center; justify-content: space-between;">
+        <span>👤 Branch Officer Desk &bull; 🏛️ Head Office</span>
+      </div>
+
       <!-- Top Stats -->
       <div class="stats-grid">
         <div class="stat-card">
@@ -330,21 +335,32 @@
       showDashboard();
     }
 
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const u = document.getElementById('adminUsername').value.trim().toLowerCase();
+      const u = document.getElementById('adminUsername').value.trim();
       const p = document.getElementById('adminPassword').value.trim();
 
-      if ((u === 'admin' && p === 'admin') || (u === 'officer' && p === 'namco123')) {
+      const result = await window.BankApi.login(u, p);
+      if (result.success) {
         sessionStorage.setItem('namco_admin_auth', 'true');
         showDashboard();
       } else {
-        alert('Invalid Staff Credentials. Try admin / admin');
+        alert(result.error || 'Invalid Staff Credentials. Check your username and password.');
       }
     });
 
     logoutBtn.addEventListener('click', () => {
+      const user = window.BankApi.getCurrentUser();
+      if (user) {
+        window.BankApi.logAuditAction({
+          action: 'ADMIN_LOGOUT',
+          details: `User ${user.username} logged out from ${user.branch}`,
+          branch: user.branch,
+          username: user.username
+        });
+      }
       sessionStorage.removeItem('namco_admin_auth');
+      window.BankApi.setCurrentUser(null);
       loginSection.style.display = 'block';
       dashboardSection.style.display = 'none';
       document.getElementById('adminPassword').value = '';
@@ -353,16 +369,15 @@
     function showDashboard() {
       loginSection.style.display = 'none';
       dashboardSection.style.display = 'block';
+
+      const user = window.BankApi.getCurrentUser();
+      const branchDisplay = document.getElementById('officerBranchBadge');
+      if (branchDisplay && user) {
+        branchDisplay.innerHTML = `👤 <strong>${user.fullName || user.username}</strong> &bull; 🏛️ ${user.branch || 'Head Office'} <span style="background:rgba(2,132,199,0.15); color:#0284c7; padding:2px 6px; border-radius:4px; font-size:0.75rem; font-weight:700;">${(user.role || 'BRANCH_OFFICER').replace('_', ' ')}</span>`;
+      }
+
       renderRecords();
     }
-
-    function getRecords() {
-      return JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
-    }
-
-    function saveRecords(records) {
-      localStorage.setItem('namco_sms_records', JSON.stringify(records));
-      renderRecords();
     }
 
     let activeRecordRef = null;

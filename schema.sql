@@ -56,3 +56,25 @@ VALUES
 ('admin', '$2b$12$e8YQd9...hashed...', 'Central Systems Admin', 'HO-001', 'SUPER_ADMIN'),
 ('officer', '$2b$12$e8YQd9...hashed...', 'Branch Verification Officer', 'NSK-002', 'BRANCH_OFFICER')
 ON DUPLICATE KEY UPDATE full_name=full_name;
+
+-- =====================================================================
+-- 3. Central System Audit Trail & Officer Activity Logs Table
+-- =====================================================================
+CREATE TABLE IF NOT EXISTS tbl_admin_audit_logs (
+    log_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    action_type VARCHAR(50) NOT NULL,             -- 'ADMIN_LOGIN', 'CBS_STATUS_UPDATED', 'ADMIN_CREATED', etc.
+    username VARCHAR(50) NOT NULL,                -- Performing Officer ID
+    officer_role VARCHAR(30) NULL,
+    branch_name VARCHAR(100) NOT NULL,
+    action_details TEXT NOT NULL,                 -- Tamper-evident detail string
+    account_no VARCHAR(20) NULL,
+    ref_no VARCHAR(64) NULL,
+    ip_address VARCHAR(45) NULL
+);
+
+CREATE INDEX idx_audit_timestamp ON tbl_admin_audit_logs(timestamp DESC);
+CREATE INDEX idx_audit_username ON tbl_admin_audit_logs(username);
+CREATE INDEX idx_audit_action ON tbl_admin_audit_logs(action_type);
+CREATE INDEX idx_audit_branch ON tbl_admin_audit_logs(branch_name);
+

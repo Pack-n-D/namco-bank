@@ -285,8 +285,119 @@ app.get('/api/v1/admin/consents/export', authenticateToken, (req, res) => {
     return res.status(200).send(csvContent);
   } catch (err) {
     console.error('Export error:', err);
-    return res.status(500).json({ success: false, message: 'Error generating CSV file.' });
+    return res.status(500).json({ success: false, message: 'Error generating CSV export' });
   }
+});
+// ==========================================
+// 6. RBAC: SUPER ADMIN CREATE & LIST BRANCH ADMINS
+// ==========================================
+let branchAdminsStore = [
+  { id: 'adm_001', username: 'admin', fullName: 'Suresh Patil (Lead Admin)', branch: 'CBS Head Office, Nashik', branchCode: 'HO-001', role: 'BRANCH_MANAGER', isActive: true },
+  { id: 'adm_002', username: 'officer', fullName: 'Ananya Deshmukh', branch: 'Canada Corner Branch', branchCode: 'NSK-002', role: 'BRANCH_OFFICER', isActive: true },
+  { id: 'adm_003', username: 'pune_officer', fullName: 'Rahul Kulkarni', branch: 'Pune Camp Branch', branchCode: 'PUN-010', role: 'BRANCH_OFFICER', isActive: true }
+];
+
+let auditLogsStore = [
+  { id: 'log_001', timestamp: new Date(Date.now() - 3600000 * 2).toISOString(), action: 'ADMIN_LOGIN', username: 'admin', branch: 'CBS Head Office, Nashik', details: 'Branch Admin Suresh Patil logged in for CBS Head Office, Nashik' },
+  { id: 'log_002', timestamp: new Date(Date.now() - 3600000).toISOString(), action: 'CBS_STATUS_UPDATED', username: 'admin', branch: 'CBS Head Office, Nashik', details: 'Marked CBS Update = Yes for Ref: NAMCO-SMS-2026-84920' },
+  { id: 'log_003', timestamp: new Date(Date.now() - 1800000).toISOString(), action: 'CSV_EXPORTED', username: 'officer', branch: 'Canada Corner Branch', details: 'Exported batch CSV consent report (3 records)' }
+];
+
+app.get('/api/v1/super/admins', authenticateToken, (req, res) => {
+  return res.json({ success: true, admins: branchAdminsStore });
+});
+
+app.post('/api/v1/super/admins', authenticateToken, (req, res) => {
+  const { username, password, fullName, branch, branchCode, role } = req.body;
+  if (!username || !password || !fullName || !branch) {
+    return res.status(400).json({ success: false, message: 'Missing required admin details' });
+  }
+
+  const cleanUser = username.trim().toLowerCase();
+  if (branchAdminsStore.some(a => a.username.toLowerCase() === cleanUser)) {
+    return res.status(409).json({ success: false, message: `Admin username ${cleanUser} already exists` });
+  }
+
+  const newAdmin = {
+    id: 'adm_' + Math.floor(1000 + Math.random() * 9000),
+    username: cleanUser,
+    fullName: fullName.trim(),
+    branch: branch.trim(),
+    branchCode: branchCode || 'BR-' + Math.floor(100 + Math.random() * 900),
+    role: role || 'BRANCH_OFFICER',
+    isActive: true,
+    createdAt: new Date().toISOString()
+  };
+
+  branchAdminsStore.unshift(newAdmin);
+
+  auditLogsStore.unshift({
+    id: 'log_' + Date.now(),
+    timestamp: new Date().toISOString(),
+    action: 'ADMIN_CREATED',
+    username: 'superadmin',
+    branch: 'Central Headquarters',
+    details: `Created new Branch Admin "${newAdmin.fullName}" (${newAdmin.username}) for branch "${newAdmin.branch}"`
+  });
+
+  return res.status(201).json({ success: true, admin: newAdmin });
+});
+
+app.delete('/api/v1/super/admins/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const target = branchAdminsStore.find(a => a.id === id || a.username === id);
+  if (!target) return res.status(404).json({ success: false, message: 'Admin not found' });
+
+  branchAdminsStore = branchAdminsStore.filter(a => a.id !== target.id);
+  auditLogsStore.unshift({
+    id: 'log_' + Date.now(),
+    timestamp: new Date().toISOString(),
+    action: 'ADMIN_DELETED',
+    username: 'superadmin',
+    branch: 'Central Headquarters',
+    details: `Deleted Branch Admin "${target.fullName}" (${target.username})`
+  });
+
+  return res.json({ success: true, message: 'Admin deleted successfully' });
+});
+
+// ==========================================
+// 7. AUDIT TRAIL LOGS
+// ==========================================
+app.get('/api/v1/super/audit-logs', authenticateToken, (req, res) => {
+  const { action, search } = req.query;
+  let logs = [...auditLogsStore];
+
+  if (action && action !== 'ALL') {
+    logs = logs.filter(l => l.action === action);
+  }
+  if (search) {
+    const q = search.toLowerCase();
+    logs = logs.filter(l => 
+      l.details.toLowerCase().includes(q) ||
+      l.username.toLowerCase().includes(q) ||
+      l.branch.toLowerCase().includes(q)
+    );
+  }
+
+  return res.json({ success: true, total: logs.length, logs });
+});
+
+app.post('/api/v1/audit/log', (req, res) => {
+  const { action, username, branch, details, refNo, accountNo } = req.body;
+  const logEntry = {
+    id: 'log_' + Date.now(),
+    timestamp: new Date().toISOString(),
+    action: action || 'EVENT',
+    username: username || 'Unknown',
+    branch: branch || 'General',
+    details: details || '',
+    refNo: refNo || null,
+    accountNo: accountNo || null
+  };
+  auditLogsStore.unshift(logEntry);
+  if (auditLogsStore.length > 2000) auditLogsStore.length = 2000;
+  return res.status(201).json({ success: true, log: logEntry });
 });
 
 // Start Server
