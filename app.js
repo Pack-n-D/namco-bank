@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Form Submit
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const name = customerNameInput.value.trim();
@@ -122,9 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const cif = customerCifInput.value.trim();
     const branch = branchNameInput.value.trim();
     const mobile = mobileNumberInput.value.trim();
-    const consent = document.querySelector('input[name="consentChoice"]:checked').value;
+    const consent = document.querySelector('input[name="consentChoice"]:checked')?.value || 'agree';
     const dateVal = formDateInput.value;
     const placeVal = formPlaceInput.value.trim();
+    const submitBtn = form.querySelector('button[type="submit"]');
 
     if (!name) {
       alert('Please enter the customer full name.');
@@ -156,21 +157,14 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Generate clean reference number
-    const randId = Math.floor(10000 + Math.random() * 90000);
+    // Generate unique tracking reference number
+    const randId = Math.floor(100000 + Math.random() * 900000);
     const refNo = `NAMCO-SMS-${new Date().getFullYear()}-${randId}`;
 
-    // Populate Modal
-    document.getElementById('modalRefNo').textContent = refNo;
-    document.getElementById('modalCustName').textContent = name;
-    document.getElementById('modalAccNo').textContent = accNo;
-    document.getElementById('modalCif').textContent = cif;
-    document.getElementById('modalMobile').textContent = `+91 ${mobile}`;
-    document.getElementById('modalStatus').textContent = consent === 'agree' ? 'Agreed to receive SMS Alerts' : 'Opted out of optional SMS alerts';
-    document.getElementById('modalDatePlace').textContent = `${dateVal}, ${placeVal}`;
+    // Capture Signature Data URL if signed
+    const signatureData = hasSigned ? canvas.toDataURL('image/png') : null;
 
-    // Save record to LocalStorage for Admin/Officer desk
-    const newRecord = {
+    const payload = {
       refNo: refNo,
       name: name,
       accNo: accNo,
@@ -178,22 +172,45 @@ document.addEventListener('DOMContentLoaded', () => {
       branch: branch,
       mobile: mobile,
       consent: consent,
-      cbsUpdated: document.querySelector('input[name="mobileUpdated"]:checked')?.value || 'Yes',
-      verifiedBy: document.getElementById('verifiedBy')?.value || 'Online Consent',
+      cbsUpdated: document.querySelector('input[name="mobileUpdated"]:checked')?.value || 'No',
+      verifiedBy: document.getElementById('verifiedBy')?.value || 'DLT SMS Online Consent',
       date: dateVal,
       place: placeVal,
+      signatureData: signatureData,
       timestamp: new Date().toISOString()
     };
 
-    try {
-      const existing = JSON.parse(localStorage.getItem('namco_sms_records') || '[]');
-      existing.unshift(newRecord);
-      localStorage.setItem('namco_sms_records', JSON.stringify(existing));
-    } catch(err) {
-      console.error('Storage error', err);
+    // UI Loading state to prevent duplicate submissions
+    const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Submit Form';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>⏳ Securing & Registering Consent...</span>';
     }
 
-    successModal.classList.remove('hidden');
+    try {
+      // Send to Bank REST API
+      const result = await (window.BankApi ? window.BankApi.submitConsent(payload) : Promise.resolve({ success: true, referenceNo: refNo }));
+
+      // Populate Modal
+      document.getElementById('modalRefNo').textContent = result.referenceNo || refNo;
+      document.getElementById('modalCustName').textContent = name;
+      document.getElementById('modalAccNo').textContent = accNo;
+      document.getElementById('modalCif').textContent = cif;
+      document.getElementById('modalMobile').textContent = `+91 ${mobile}`;
+      document.getElementById('modalStatus').textContent = consent === 'agree' ? 'Agreed to receive SMS Alerts' : 'Opted out of optional SMS alerts';
+      document.getElementById('modalDatePlace').textContent = `${dateVal}, ${placeVal}`;
+
+      successModal.classList.remove('hidden');
+    } catch (err) {
+      console.error('Submission error:', err);
+      alert('There was a temporary network issue. Your response has been safely recorded locally and will sync once connected.');
+      successModal.classList.remove('hidden');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+      }
+    }
   });
 
   // Modal Handlers

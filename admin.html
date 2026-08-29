@@ -279,6 +279,8 @@
 
   </div>
 
+  <script src="config.js"></script>
+  <script src="api-service.js"></script>
   <script>
     // Sample default data if empty
     function initSampleData() {
@@ -364,69 +366,62 @@
     }
 
     let activeRecordRef = null;
+    let currentLoadedRecords = [];
 
-    function renderRecords() {
-      const records = getRecords();
+    async function renderRecords() {
       const search = document.getElementById('tableSearchInput').value.toLowerCase().trim();
       const filter = document.getElementById('statusFilter').value;
-
-      // Stats
-      document.getElementById('totalRecords').textContent = records.length;
-      document.getElementById('agreedRecords').textContent = records.filter(r => r.consent === 'agree').length;
-      document.getElementById('cbsPendingRecords').textContent = records.filter(r => r.cbsUpdated === 'No' || !r.cbsUpdated).length;
-
       const tbody = document.getElementById('recordsTableBody');
-      tbody.innerHTML = '';
 
-      const filtered = records.filter(r => {
-        const matchesSearch = !search || 
-          r.refNo.toLowerCase().includes(search) ||
-          r.name.toLowerCase().includes(search) ||
-          r.accNo.toLowerCase().includes(search) ||
-          r.mobile.toLowerCase().includes(search) ||
-          r.cif.toLowerCase().includes(search);
+      try {
+        const response = await window.BankApi.getConsents({ search, status: filter });
+        const records = response.records || [];
+        currentLoadedRecords = records;
 
-        if (!matchesSearch) return false;
+        // Stats
+        const allRecords = window.BankApi.getLocalRecords();
+        const baseForStats = records.length ? records : allRecords;
+        document.getElementById('totalRecords').textContent = response.stats?.total ?? baseForStats.length;
+        document.getElementById('agreedRecords').textContent = response.stats?.agreed ?? baseForStats.filter(r => r.consent === 'agree').length;
+        document.getElementById('cbsPendingRecords').textContent = response.stats?.cbsPending ?? baseForStats.filter(r => r.cbsUpdated === 'No' || !r.cbsUpdated).length;
 
-        if (filter === 'AGREED') return r.consent === 'agree';
-        if (filter === 'DISAGREED') return r.consent === 'disagree';
-        if (filter === 'CBS_PENDING') return r.cbsUpdated === 'No' || !r.cbsUpdated;
-        return true;
-      });
+        tbody.innerHTML = '';
 
-      if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 24px;">No matching customer consent records found.</td></tr>';
-        return;
+        if (records.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 24px;">No matching customer consent records found.</td></tr>';
+          return;
+        }
+
+        records.forEach(r => {
+          const tr = document.createElement('tr');
+          const isAgreed = r.consent === 'agree';
+          const isCbsYes = r.cbsUpdated === 'Yes';
+
+          tr.innerHTML = `
+            <td><strong class="mono" style="color: var(--primary-color);">${r.refNo}</strong></td>
+            <td><strong>${r.name}</strong></td>
+            <td class="mono">${r.accNo}</td>
+            <td class="mono">+91 ${r.mobile}</td>
+            <td>${r.branch || 'Nashik'}</td>
+            <td><span class="badge-status ${isAgreed ? 'badge-agreed' : 'badge-disagreed'}">${isAgreed ? 'Agreed' : 'Opted Out'}</span></td>
+            <td><span class="badge-status ${isCbsYes ? 'badge-cbs-yes' : 'badge-cbs-no'}">${isCbsYes ? 'Updated' : 'Pending'}</span></td>
+            <td>
+              <div class="table-actions">
+                <button class="btn-sm" onclick="viewDetail('${r.refNo}')">View</button>
+                <button class="btn-sm" style="color: #dc2626;" onclick="deleteRecord('${r.refNo}')">✕</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Error rendering records:', err);
       }
-
-      filtered.forEach(r => {
-        const tr = document.createElement('tr');
-        const isAgreed = r.consent === 'agree';
-        const isCbsYes = r.cbsUpdated === 'Yes';
-
-        tr.innerHTML = `
-          <td><strong class="mono" style="color: var(--primary-color);">${r.refNo}</strong></td>
-          <td><strong>${r.name}</strong></td>
-          <td class="mono">${r.accNo}</td>
-          <td class="mono">+91 ${r.mobile}</td>
-          <td>${r.branch || 'Nashik'}</td>
-          <td><span class="badge-status ${isAgreed ? 'badge-agreed' : 'badge-disagreed'}">${isAgreed ? 'Agreed' : 'Opted Out'}</span></td>
-          <td><span class="badge-status ${isCbsYes ? 'badge-cbs-yes' : 'badge-cbs-no'}">${isCbsYes ? 'Updated' : 'Pending'}</span></td>
-          <td>
-            <div class="table-actions">
-              <button class="btn-sm" onclick="viewDetail('${r.refNo}')">View</button>
-              <button class="btn-sm" style="color: #dc2626;" onclick="deleteRecord('${r.refNo}')">✕</button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
     }
 
     window.viewDetail = function(refNo) {
       activeRecordRef = refNo;
-      const records = getRecords();
-      const r = records.find(x => x.refNo === refNo);
+      const r = currentLoadedRecords.find(x => x.refNo === refNo) || window.BankApi.getLocalRecords().find(x => x.refNo === refNo);
       if (!r) return;
 
       const content = `
@@ -449,20 +444,22 @@
 
     window.deleteRecord = function(refNo) {
       if (confirm(`Are you sure you want to delete consent record ${refNo}?`)) {
-        let records = getRecords();
+        let records = window.BankApi.getLocalRecords();
         records = records.filter(x => x.refNo !== refNo);
-        saveRecords(records);
+        localStorage.setItem('namco_sms_records', JSON.stringify(records));
+        renderRecords();
       }
     };
 
-    document.getElementById('toggleCbsBtn').addEventListener('click', () => {
+    document.getElementById('toggleCbsBtn').addEventListener('click', async () => {
       if (!activeRecordRef) return;
-      let records = getRecords();
-      const r = records.find(x => x.refNo === activeRecordRef);
+      const r = currentLoadedRecords.find(x => x.refNo === activeRecordRef) || window.BankApi.getLocalRecords().find(x => x.refNo === activeRecordRef);
       if (r) {
-        r.cbsUpdated = r.cbsUpdated === 'Yes' ? 'No' : 'Yes';
-        saveRecords(records);
+        const nextStatus = r.cbsUpdated === 'Yes' ? 'No' : 'Yes';
+        await window.BankApi.updateCbsStatus(activeRecordRef, nextStatus);
+        r.cbsUpdated = nextStatus;
         window.viewDetail(activeRecordRef);
+        renderRecords();
       }
     });
 
