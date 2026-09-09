@@ -8,24 +8,16 @@ This document outlines how the **SMS Alert Consent Web Portal** integrates direc
 ## 1. 🏗️ Architecture & High-Level Flow
 
 ```
-[Namco Bank DLT SMS Gateway]
+[SmartPing SMS Platform]  <─── Reads Opt-In / Opt-Out List from DB / Export
+           ▲
            │
-           │  Sends DLT Approved SMS with Link:
-           │  "Dear Customer, update your Namco Bank SMS Alert consent here: https://namcobank.com/sms"
-           ▼
-[Customer's Smartphone Browser]
+[Bank Central PostgreSQL Database]  <─── Stores Encrypted Consent Records
+           ▲
+           ├── [Customer Online Portal (index.html)] (256-Bit Encrypted Form Submission)
            │
-           │  Customer opens link, enters Account No, CIF, Mobile, signs digital consent
-           ▼
-[Bank REST API Endpoint] (e.g. POST /api/v1/consent/submit)
+           ├── [Branch Officer Portal (admin.html)] (Scanned Physical Form OCR + CBS Verification)
            │
-           │  Validates, sanitizes & writes to Bank SQL Database (Indexed for 300k+ records)
-           ▼
-[Bank Database (PostgreSQL / MySQL / MS SQL)]
-           │
-           ▼
-[Bank Admin / Branch Officer Portal]
-           │  Real-time search, CBS verification status, CSV/Excel export for Core Banking System (CBS)
+           └── [Super Admin Command (super-admin.html)] (80-Branch Multi-Tenant Control & Audit)
 ```
 
 ---

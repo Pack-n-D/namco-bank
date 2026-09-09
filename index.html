@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bank SMS Alert Consent Form - Namco Bank</title>
-  <meta name="description" content="Official SMS Alert Registration and Customer Consent Form for The Nasik Merchants Co-operative Bank Ltd. (Namco Bank).">
+  <meta name="description"
+    content="Official SMS Alert Registration and Customer Consent Form for The Nasik Merchants Co-operative Bank Ltd. (Namco Bank).">
   <!-- Clean Professional Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <div class="page-wrapper">
     <div class="form-container">
-      
+
       <!-- Bank Header with Official Banner Logo -->
       <div class="bank-header">
         <img src="assets/logo.png" alt="The Nasik Merchants Co-operative Bank Ltd. (Namco Bank)" class="banner-logo">
@@ -27,6 +32,23 @@
         <p>As per Reserve Bank of India (RBI) Guidelines for Electronic Banking Communications</p>
       </div>
 
+      <!-- Quick Action Utilities -->
+      <div class="form-utility-bar"
+        style="display: flex; justify-content: space-between; align-items: center; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px 16px; margin-bottom: 20px; flex-wrap: wrap; gap: 8px;">
+        <div style="font-size: 0.85rem; color: #166534; font-weight: 500;">
+          🔒 <strong>Secure Banking Gateway</strong> &bull; Complete the official electronic consent form below.
+        </div>
+        <div style="display: flex; gap: 14px; align-items: center;">
+          <button type="button" id="downloadBlankBtn" class="btn-text"
+            style="color: #15803d; font-weight: 600; text-decoration: underline; cursor: pointer; border: none; background: none; font-size: 0.85rem;">
+            📥 Download Blank Form (PDF)
+          </button>
+          <a href="login.html" style="color: #1e3a5f; font-weight: 600; font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 4px; background: rgba(30, 58, 95, 0.08);">
+            🔐 Officer Login
+          </a>
+        </div>
+      </div>
+
       <form id="smsConsentForm" novalidate>
 
         <!-- 1. Customer Details -->
@@ -35,25 +57,122 @@
           <div class="form-row">
             <div class="form-group full-width">
               <label for="customerName" class="form-label">Name of Customer <span class="req">*</span></label>
-              <input type="text" id="customerName" name="customerName" class="form-input" placeholder="Enter full name of account holder" required>
+              <input type="text" id="customerName" name="customerName" class="form-input"
+                placeholder="Enter full name of account holder" required>
             </div>
           </div>
 
           <div class="form-row two-col">
             <div class="form-group">
-              <label for="accountNumber" class="form-label">Account Number <span class="req">*</span></label>
-              <input type="text" id="accountNumber" name="accountNumber" class="form-input mono" placeholder="Enter bank account number" maxlength="16" required>
+              <label for="accountNumber" class="form-label">Enter Your Account Number <span class="req">*</span></label>
+              <input type="text" id="accountNumber" name="accountNumber" class="form-input mono"
+                placeholder="Enter bank account number" maxlength="18" required>
             </div>
             <div class="form-group">
               <label for="customerCif" class="form-label">Customer ID (CIF) <span class="req">*</span></label>
-              <input type="text" id="customerCif" name="customerCif" class="form-input mono" placeholder="Enter CIF / Customer ID" maxlength="12" required>
+              <input type="text" id="customerCif" name="customerCif" class="form-input mono"
+                placeholder="Enter CIF / Customer ID" maxlength="12" required>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group full-width">
-              <label for="branchName" class="form-label">Branch Name <span class="req">*</span></label>
-              <input type="text" id="branchName" name="branchName" class="form-input" placeholder="e.g. CBS Head Office / Canada Corner / Mumbai Naka" required>
+              <label for="branchName" class="form-label">Select Your Bank Branch <span class="req">*</span></label>
+              <select id="branchName" name="branchName" class="form-input" required style="font-weight: 500;">
+                <option value="" disabled selected>-- Select from Namco Bank 80 Branches --</option>
+                <optgroup label="Nashik City Branches">
+                  <option value="CBS Head Office, Nashik">CBS Head Office, Nashik (NSK-001)</option>
+                  <option value="Canada Corner Branch, Nashik">Canada Corner Branch, Nashik (NSK-002)</option>
+                  <option value="Mumbai Naka Branch, Nashik">Mumbai Naka Branch, Nashik (NSK-003)</option>
+                  <option value="Panchavati Branch, Nashik">Panchavati Branch, Nashik (NSK-004)</option>
+                  <option value="College Road Branch, Nashik">College Road Branch, Nashik (NSK-005)</option>
+                  <option value="Nashik Road Branch">Nashik Road Branch (NSK-006)</option>
+                  <option value="Satpur Industrial Branch, Nashik">Satpur Industrial Branch, Nashik (NSK-007)</option>
+                  <option value="Ambad Industrial Branch, Nashik">Ambad Industrial Branch, Nashik (NSK-008)</option>
+                  <option value="CIDCO Branch, Nashik">CIDCO Branch, Nashik (NSK-009)</option>
+                  <option value="Gangapur Road Branch, Nashik">Gangapur Road Branch, Nashik (NSK-010)</option>
+                  <option value="Deolali Camp Branch, Nashik">Deolali Camp Branch, Nashik (NSK-011)</option>
+                  <option value="Indira Nagar Branch, Nashik">Indira Nagar Branch, Nashik (NSK-012)</option>
+                  <option value="Govind Nagar Branch, Nashik">Govind Nagar Branch, Nashik (NSK-013)</option>
+                  <option value="Pathardi Phata Branch, Nashik">Pathardi Phata Branch, Nashik (NSK-014)</option>
+                  <option value="Pawan Nagar Branch, CIDCO, Nashik">Pawan Nagar Branch, CIDCO (NSK-015)</option>
+                  <option value="Upnagar Branch, Nashik Road">Upnagar Branch, Nashik Road (NSK-016)</option>
+                  <option value="Jail Road Branch, Nashik Road">Jail Road Branch, Nashik Road (NSK-017)</option>
+                  <option value="Old City Main Branch, Nashik">Old City Main Branch, Nashik (NSK-018)</option>
+                  <option value="Raviwar Peth Branch, Nashik">Raviwar Peth Branch, Nashik (NSK-019)</option>
+                  <option value="Bhadrakali Branch, Nashik">Bhadrakali Branch, Nashik (NSK-020)</option>
+                  <option value="Dwarka Circle Branch, Nashik">Dwarka Circle Branch, Nashik (NSK-021)</option>
+                  <option value="Dindori Road Branch, Panchavati">Dindori Road Branch, Panchavati (NSK-022)</option>
+                  <option value="Makhmlabad Branch, Nashik">Makhmlabad Branch, Nashik (NSK-023)</option>
+                  <option value="Adgaon Naka Branch, Nashik">Adgaon Naka Branch, Nashik (NSK-024)</option>
+                  <option value="Parijat Nagar Branch, Nashik">Parijat Nagar Branch, Nashik (NSK-025)</option>
+                  <option value="Untwadi Branch, Nashik">Untwadi Branch, Nashik (NSK-026)</option>
+                  <option value="Ashok Stambh Branch, Nashik">Ashok Stambh Branch, Nashik (NSK-027)</option>
+                  <option value="MG Road Branch, Nashik">MG Road Branch, Nashik (NSK-028)</option>
+                  <option value="Sharanpur Road Branch, Nashik">Sharanpur Road Branch, Nashik (NSK-029)</option>
+                  <option value="Tidke Colony Branch, Nashik">Tidke Colony Branch, Nashik (NSK-030)</option>
+                </optgroup>
+                <optgroup label="Nashik District Branches">
+                  <option value="Sinnar Main Branch">Sinnar Main Branch (NSK-031)</option>
+                  <option value="Sinnar MIDC Branch">Sinnar MIDC Branch (NSK-032)</option>
+                  <option value="Ozar Town Branch">Ozar Town Branch (NSK-033)</option>
+                  <option value="Ozar HAL Mig Township Branch">Ozar HAL Mig Township Branch (NSK-034)</option>
+                  <option value="Pimpalgaon Baswant Branch">Pimpalgaon Baswant Branch (NSK-035)</option>
+                  <option value="Lasalgaon APMC Branch">Lasalgaon APMC Branch (NSK-036)</option>
+                  <option value="Niphad Town Branch">Niphad Town Branch (NSK-037)</option>
+                  <option value="Yeola Paithani City Branch">Yeola Paithani City Branch (NSK-038)</option>
+                  <option value="Malegaon Camp Branch">Malegaon Camp Branch (NSK-039)</option>
+                  <option value="Malegaon City Branch">Malegaon City Branch (NSK-040)</option>
+                  <option value="Manmad Junction Branch">Manmad Junction Branch (NSK-041)</option>
+                  <option value="Satana Main Branch">Satana Main Branch (NSK-042)</option>
+                  <option value="Kalwan Branch">Kalwan Branch (NSK-043)</option>
+                  <option value="Deola Branch">Deola Branch (NSK-044)</option>
+                  <option value="Chandwad Branch">Chandwad Branch (NSK-045)</option>
+                  <option value="Dindori Town Branch">Dindori Town Branch (NSK-046)</option>
+                  <option value="Trimbakeshwar Temple Branch">Trimbakeshwar Temple Branch (NSK-047)</option>
+                  <option value="Igatpuri Hill City Branch">Igatpuri Hill City Branch (NSK-048)</option>
+                  <option value="Ghoti Market Branch">Ghoti Market Branch (NSK-049)</option>
+                  <option value="Surgana Tribal Area Branch">Surgana Tribal Area Branch (NSK-050)</option>
+                </optgroup>
+                <optgroup label="Pune & Western Maharashtra">
+                  <option value="Pune FC Road Branch, Shivajinagar">Pune FC Road Branch, Shivajinagar (PUN-051)</option>
+                  <option value="Pune Kothrud Branch">Pune Kothrud Branch (PUN-052)</option>
+                  <option value="Pune Camp Branch, MG Road">Pune Camp Branch, MG Road (PUN-053)</option>
+                  <option value="Pune Hadapsar Branch">Pune Hadapsar Branch (PUN-054)</option>
+                  <option value="Pune Baner Branch">Pune Baner Branch (PUN-055)</option>
+                  <option value="Pune Wakad Branch">Pune Wakad Branch (PUN-056)</option>
+                  <option value="Pune Pimpri-Chinchwad Branch">Pune Pimpri-Chinchwad Branch (PUN-057)</option>
+                  <option value="Pune Bhosari MIDC Branch">Pune Bhosari MIDC Branch (PUN-058)</option>
+                  <option value="Ahmednagar Main Branch">Ahmednagar Main Branch (PUN-059)</option>
+                  <option value="Ahmednagar MIDC Branch">Ahmednagar MIDC Branch (PUN-060)</option>
+                  <option value="Sangamner Branch">Sangamner Branch (PUN-061)</option>
+                  <option value="Shirdi Sai Nagar Branch">Shirdi Sai Nagar Branch (PUN-062)</option>
+                </optgroup>
+                <optgroup label="Mumbai & MMR Region">
+                  <option value="Mumbai Fort Corporate Branch">Mumbai Fort Corporate Branch (MUM-063)</option>
+                  <option value="Mumbai Dadar West Branch">Mumbai Dadar West Branch (MUM-064)</option>
+                  <option value="Mumbai Andheri East Branch">Mumbai Andheri East Branch (MUM-065)</option>
+                  <option value="Mumbai Borivali West Branch">Mumbai Borivali West Branch (MUM-066)</option>
+                  <option value="Mumbai Ghatkopar Branch">Mumbai Ghatkopar Branch (MUM-067)</option>
+                  <option value="Thane Naupada Branch">Thane Naupada Branch (MUM-068)</option>
+                  <option value="Thane Ghodbunder Road Branch">Thane Ghodbunder Road Branch (MUM-069)</option>
+                  <option value="Navi Mumbai Vashi Branch">Navi Mumbai Vashi Branch (MUM-070)</option>
+                  <option value="Kalyan West Branch">Kalyan West Branch (MUM-071)</option>
+                  <option value="Panvel Market Branch">Panvel Market Branch (MUM-072)</option>
+                </optgroup>
+                <optgroup label="North Maharashtra & Other Regions">
+                  <option value="Jalgaon City Branch">Jalgaon City Branch (KHD-073)</option>
+                  <option value="Jalgaon MIDC Branch">Jalgaon MIDC Branch (KHD-074)</option>
+                  <option value="Bhusawal Railway Town Branch">Bhusawal Railway Town Branch (KHD-075)</option>
+                  <option value="Dhule Main Agra Road Branch">Dhule Main Agra Road Branch (KHD-076)</option>
+                  <option value="Nandurbar Town Branch">Nandurbar Town Branch (KHD-077)</option>
+                  <option value="Chhatrapati Sambhajinagar Town Branch">Chhatrapati Sambhajinagar Town Branch (KHD-078)
+                  </option>
+                  <option value="Chhatrapati Sambhajinagar CIDCO Branch">Chhatrapati Sambhajinagar CIDCO Branch
+                    (KHD-079)</option>
+                  <option value="Solapur Textile City Branch">Solapur Textile City Branch (KHD-080)</option>
+                </optgroup>
+              </select>
             </div>
           </div>
         </fieldset>
@@ -66,7 +185,8 @@
               <label for="mobileNumber" class="form-label">Registered Mobile Number <span class="req">*</span></label>
               <div class="phone-input-wrap">
                 <span class="phone-prefix">+91</span>
-                <input type="tel" id="mobileNumber" name="mobileNumber" class="form-input mono phone-field" placeholder="10-digit mobile number" maxlength="10" required>
+                <input type="tel" id="mobileNumber" name="mobileNumber" class="form-input mono phone-field"
+                  placeholder="10-digit mobile number" maxlength="10" required>
               </div>
               <span class="field-hint">SMS alerts and OTPs will be delivered to this registered mobile number.</span>
             </div>
@@ -78,35 +198,39 @@
           <legend class="section-title">3. Consent Declaration</legend>
           <div class="declaration-box">
             <p class="declaration-main">
-              I hereby give my consent to <strong>The Nasik Merchants Co-operative Bank Ltd. (Namco Bank)</strong> to send SMS alerts regarding my bank account transactions, OTPs, service-related information, and other banking communications on my registered mobile number.
+              I hereby submit my consent choice to <strong>The Nasik Merchants Co-operative Bank Ltd. (Namco
+                Bank)</strong> regarding SMS alerts for my bank account, service-related information, and banking
+              communications on my registered mobile number.
             </p>
-            
+
             <p class="declaration-subtitle">I understand and agree to the following terms & guidelines:</p>
             <ul class="guidelines-list">
               <li>SMS alerts will be sent only to the registered mobile number provided by me.</li>
               <li>I am responsible for informing the bank immediately about any change in my mobile number.</li>
-              <li>The bank may charge applicable SMS alert service charges as per its rules.</li>
+              <li>The bank may charge applicable SMS alert service charges as per its approved rules.</li>
+              <li>I may revoke or update this consent at any time online or by submitting a physical request at my
+                branch.</li>
             </ul>
           </div>
         </fieldset>
 
         <!-- 4. Customer Consent & Authorization -->
         <fieldset class="form-section">
-          <legend class="section-title">4. Customer Consent</legend>
-          
+          <legend class="section-title">4. Customer Consent Selection</legend>
+
           <div class="consent-options-group">
             <label class="radio-option-card">
-              <input type="radio" name="consentChoice" value="agree" checked>
+              <input type="radio" name="consentChoice" value="YES" checked>
               <div class="radio-text">
-                <strong>I agree to receive SMS alerts from the bank.</strong>
-                <span>(Recommended: Stay notified of all account credits, debits & security OTPs)</span>
+                <strong style="color: #166534;">YES — I want to receive SMS alerts from the bank.</strong>
+                <span>(Recommended: Stay notified of all account credits, debits & security alerts)</span>
               </div>
             </label>
 
             <label class="radio-option-card">
-              <input type="radio" name="consentChoice" value="disagree">
+              <input type="radio" name="consentChoice" value="NO">
               <div class="radio-text">
-                <strong>I do not want to receive optional SMS alerts.</strong>
+                <strong style="color: #991b1b;">NO — I do not want to receive optional SMS alerts.</strong>
                 <span>(Note: Critical statutory alerts will still be delivered as mandated by RBI)</span>
               </div>
             </label>
@@ -114,8 +238,8 @@
 
           <div class="signature-block">
             <div class="sig-header">
-              <label class="form-label">Signature of Customer <span class="req">*</span></label>
-              <button type="button" id="clearSigBtn" class="btn-text">Clear</button>
+              <label class="form-label">Digital Signature of Customer <span class="req">*</span></label>
+              <button type="button" id="clearSigBtn" class="btn-text">Clear Signature</button>
             </div>
             <div class="signature-canvas-container">
               <canvas id="signatureCanvas" width="600" height="130"></canvas>
@@ -130,25 +254,8 @@
             </div>
             <div class="form-group">
               <label for="formPlace" class="form-label">Place <span class="req">*</span></label>
-              <input type="text" id="formPlace" name="formPlace" class="form-input" value="Nashik" placeholder="Enter city" required>
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- 5. For Bank Use Only -->
-        <fieldset class="form-section bank-only-section">
-          <legend class="section-title bank-title">5. For Bank Use Only</legend>
-          <div class="form-row two-col">
-            <div class="form-group">
-              <label class="form-label">Mobile Number Updated:</label>
-              <div class="bank-radio-row">
-                <label class="inline-label"><input type="radio" name="mobileUpdated" value="Yes" checked> Yes</label>
-                <label class="inline-label"><input type="radio" name="mobileUpdated" value="No"> No</label>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="verifiedBy" class="form-label">Verified By (Bank Official):</label>
-              <input type="text" id="verifiedBy" name="verifiedBy" class="form-input" placeholder="Staff Name / Token No.">
+              <input type="text" id="formPlace" name="formPlace" class="form-input" value="Nashik"
+                placeholder="Enter city" required>
             </div>
           </div>
         </fieldset>
@@ -159,7 +266,7 @@
             Print / Save as PDF
           </button>
           <button type="submit" id="submitBtn" class="btn btn-primary">
-            Submit Consent Form
+            Submit SMS Consent
           </button>
         </div>
 
@@ -197,7 +304,11 @@
               </tr>
               <tr>
                 <th>Consent Status</th>
-                <td id="modalStatus">--</td>
+                <td id="modalStatus" style="font-weight: 700;">--</td>
+              </tr>
+              <tr>
+                <th>Branch</th>
+                <td id="modalBranch">--</td>
               </tr>
               <tr>
                 <th>Date & Place</th>
@@ -216,7 +327,8 @@
 
     <!-- Footer -->
     <footer class="page-footer">
-      <p>&copy; The Nasik Merchants Co-operative Bank Ltd., Nashik (Namco Bank). All Rights Reserved. &bull; <a href="admin.html" style="color: var(--primary-color); text-decoration: none; font-weight: 500;">Officer Login</a> &bull; <a href="super-admin.html" style="color: #b91c1c; text-decoration: none; font-weight: 600;">Super Admin &rarr;</a></p>
+      <p>&copy; The Nasik Merchants Co-operative Bank Ltd., Nashik (Namco Bank). All Rights Reserved. &bull; RBI
+        Electronic Banking Consent Compliance</p>
     </footer>
   </div>
 
@@ -224,4 +336,5 @@
   <script src="api-service.js"></script>
   <script src="app.js"></script>
 </body>
+
 </html>

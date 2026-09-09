@@ -1,0 +1,8 @@
+Django>=4.2.0
+djangorestframework>=3.14.0
+django-cors-headers>=4.3.0
+psycopg2-binary>=2.9.9
+Pillow>=10.0.0
+pypdf>=3.17.0
+pytesseract>=0.3.10
+python-dotenv>=1.0.0

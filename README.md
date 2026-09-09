@@ -1,68 +1,69 @@
-# Namco Bank - Bank SMS Alert Consent & Registration Form
+# 🏦 Namco Bank - SMS Alert Consent Management & Governance System
 
-Official SMS Alert Registration and Customer Authorization Form web application for **The Nasik Merchants Co-operative Bank Ltd., Nashik (Namco Bank)**, compliant with Reserve Bank of India (RBI) electronic banking security guidelines.
+Enterprise Banking SMS Alert Consent, Physical Form OCR Auto-Fill Ingestion, and Central Multi-Branch Administrative Governance System for **The Nasik Merchants Co-operative Bank Ltd. (Namco Bank)**.
 
----
-
-## 🌟 Key Features
-
-1. **Official Bank Branding & Layout**:
-   - High-resolution Namco Bank logo, Marathi motto (*॥ संहतिः कार्यसाधिकाः ॥*), Estd. 1959, and Multi-State Scheduled Bank banner.
-   - Bank-grade corporate theme with rich navy blue, crimson red, gold highlights, and clean typography.
-2. **RBI Guideline Compliant Form Sections**:
-   - **Section 1: Customer Identification Details** (Full Name, 15-digit CBS Account Number, CIF / Customer ID, Branch selection, Account Type).
-   - **Section 2: Mobile Registration** (10-digit primary mobile number with OTP verification simulation, alternate number, email).
-   - **Section 3: RBI & Bank Terms Consent Declaration** (Transparent declaration text covering OTPs, transaction alerts, customer responsibility, and schedule of charges).
-   - **Section 4: Customer Consent & Digital Signature** (Interactive Canvas touch/mouse signature pad with clear/undo, typed signature option, or photo upload).
-   - **Section 5: Bank Officer Verification Module** (Branch code, Verified by, Mobile updated toggle, Application tracking ID).
-3. **Instant Acknowledgment & Receipts**:
-   - Auto-generates unique Reference Tracking Numbers (`NAMCO/SMS/2026/08/XXXXX`).
-   - Downloadable & Printable Instant Customer Acknowledgment Slip.
-4. **Official Physical A4 Form Printing**:
-   - Dedicated `@media print` layout for printing an official bank-ready A4 document on physical paper or PDF.
-5. **Branch Officer Desk (Local Persistence)**:
-   - Dedicated Officer review view with live submission counters and Core Banking System (CBS) update status toggles.
+> [!IMPORTANT]
+> **Purpose Limitation**: This system is strictly designed to **COLLECT, STORE, VERIFY, MANAGE, and REPORT** customer SMS alert consent. It **does NOT send SMS messages** and contains no SMS gateways or messaging dispatch engines.
 
 ---
 
-## 🚀 How to Deploy on GitHub Pages (Step-by-Step)
+## 🌟 Key Functional Roles & Capabilities
 
-This project consists of pure standard HTML5, CSS3, and Vanilla JavaScript with **zero build steps or dependencies required**.
+### 1. 👤 Role 1 — Customer Portal (`index.html`)
+- **Online Consent Submission**: Customers choose **YES** (Consented to SMS alerts) or **NO** (Declined optional alerts; statutory only).
+- **Mandatory Banking Fields**: Customer Name, Account Number, CIF Number, Mobile Number, Branch (all 80 branches), Form Date, Form Place.
+- **Digital E-Signature**: HTML5 interactive canvas for capturing digital signatures securely.
+- **Unique Tracking Reference**: Real-time generation of immutable reference numbers (e.g., `NAMCO-SMS-2026-000001`).
+- **Status Inquiry & Revocation**: Customers can check their status anytime or revoke previously granted consent online with mobile verification.
+- **Download Blank Physical Form (PDF)**: Clean ruled A4 pen-and-paper form generator for offline branch submissions.
 
-### Step 1: Create a GitHub Repository
-1. Go to [github.com](https://github.com) and click **New Repository**.
-2. Name your repository (e.g. `namco-bank-sms-consent`).
-3. Set the repository to **Public** and click **Create repository**.
+### 2. 🏢 Role 2 — Branch Admin Portal (`admin.html`)
+- **Strict Multi-Tenant Branch Isolation**: Branch Admins are locked strictly to their assigned branch. Backend authorization enforces that officers cannot access or modify records from any other branch.
+- **Branch Dashboard KPIs**: Real-time counters for **TOTAL**, **YES**, **NO**, **PENDING**, **REVOKED**, and **Online vs. Physical/OCR** submissions.
+- **Customer Search with Data Masking**: Search by Name, Account No, CIF, Mobile, Ref No, Status, and Source with automatic masking of sensitive numbers (`XXXXX1234`, `98XXXXXX83`).
+- **📄 AI / OCR Physical Form Ingestion & Verification**:
+  1. Branch Admin uploads scanned document (JPG, JPEG, PNG, PDF).
+  2. OCR engine automatically extracts Name, Account No, CIF, Branch, Mobile, and Consent.
+  3. Displays **Verification Screen** (`[Confirm & Save]` vs `[Edit]`) allowing the officer to verify against the paper copy and make corrections before saving.
+- **Filtered Branch Data Export**: 1-click export of `YES`, `NO`, `PENDING`, `REVOKED`, or `ALL` branch records in CSV format with automated audit logging.
 
-### Step 2: Push Your Code
-Repository is connected and pushed to:
-`https://github.com/Pack-n-D/namco-bank.git`
-
-### Step 3: Enable GitHub Pages
-1. Open your repository at [https://github.com/Pack-n-D/namco-bank](https://github.com/Pack-n-D/namco-bank).
-2. Click on **Settings** (tab at the top).
-3. In the left sidebar, click on **Pages** (under the "Code and automation" section).
-4. Under **Build and deployment** > **Source**, choose **Deploy from a branch**.
-5. Under **Branch**, select `main` and keep the folder as `/ (root)`.
-6. Click **Save**.
-7. In about 1–2 minutes, your live site will be published at:
-   👉 **`https://pack-n-d.github.io/namco-bank/`**
+### 3. 🛡️ Role 3 — Super Admin Central Governance (`super-admin.html`)
+- **Bank-Wide Analytics**: Aggregated KPIs across all 80 branches.
+- **Branch-Wise Performance Table**: Full breakdown by branch showing Total, YES, NO, PENDING, REVOKED, and Compliance Percentage.
+- **Multi-Branch Admin Manager**: Create, edit, assign branch, activate/deactivate, and reset passwords for Branch Admins across all 80 branches.
+- **📜 Central Tamper-Evident Audit Trail**: Real-time immutable audit logs capturing all authentications, consent submissions, revocations, OCR uploads, OCR verifications, admin modifications, and report exports.
+- **Bank-Wide Reports Export**: Export bank-wide datasets with audit logging.
 
 ---
 
-## 📂 Project Structure
+## 🗄️ Database Architecture (PostgreSQL & Django ORM)
 
+- `tbl_bank_branches`: All 80 official Namco Bank branches with branch codes and cities.
+- `tbl_bank_officers`: RBAC (`SUPER_ADMIN`, `BRANCH_ADMIN`), PBKDF2 password hashing, and brute-force account lockout (5 failed attempts $\rightarrow$ 15-minute lockout).
+- `tbl_customers`: Master bank customer population supporting accurate `PENDING` vs `YES`/`NO` consent states.
+- `tbl_sms_consents`: Consent records with status (`YES`, `NO`, `PENDING`, `REVOKED`), source (`ONLINE`, `PHYSICAL_OCR`, `ADMIN_ENTRY`), and references.
+- `tbl_consent_history`: Immutable chronological audit log of consent status transitions over time.
+- `tbl_physical_forms`: Original uploaded scans, raw OCR texts, extracted JSON, and verifying officer timestamps.
+- `tbl_admin_audit_logs`: Bank-wide immutable audit trail.
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Opening the Web Portals Directly in Any Browser
+- **Public Customer Form & Status**: [index.html](file:///c:/Users/DELL/Desktop/Namco%20Bank/index.html)
+- **Branch Admin Portal**: [admin.html](file:///c:/Users/DELL/Desktop/Namco%20Bank/admin.html)
+- **Super Admin Governance**: [super-admin.html](file:///c:/Users/DELL/Desktop/Namco%20Bank/super-admin.html)
+
+### 2. Running Django + PostgreSQL Backend (Optional)
+```bash
+cd backend
+pip install -r requirements.txt
+python manage.py makemigrations consent_portal
+python manage.py migrate
+python manage.py runserver 8000
 ```
-Namco Bank/
-├── index.html        # Main portal, modals & official A4 print template
-├── style.css         # Modern styling, responsive design system & @media print rules
-├── app.js            # Validation, canvas signature, OTP simulation & local storage
-├── assets/
-│   └── logo.png      # Official Namco Bank logo
-└── README.md         # Deployment & documentation guide
-```
 
----
-
-## 🛠️ Testing Locally
-Simply double-click `index.html` to open it in any web browser (Chrome, Edge, Firefox, Safari) or use VS Code Live Server.
+*Default credentials:*
+- **Super Admin**: `admin` / `admin123`
+- **Branch Officer (Canada Corner)**: `officer` / `officer123`
