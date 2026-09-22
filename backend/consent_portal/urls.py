@@ -4,10 +4,15 @@ from .views import (
     CustomerConsentSubmitView,
     CustomerConsentRevokeView,
     CustomerConsentStatusView,
+    CustomerLoginInitView,
+    CustomerVerifyOtpView,
+    CustomerUpdateConsentView,
+    CustomerCompleteOnboardingView,
     OfficerLoginView,
     OfficerVerify2FAView,
     OfficerResend2FAView,
     OfficerLogoutView,
+    OfficerChangePasswordView,
     ConsentRecordsView,
     CBSStatusUpdateView,
     UploadPhysicalFormView,
@@ -18,11 +23,23 @@ from .views import (
     SuperAdminAuditLogsView,
     DashboardMetricsView,
     BankBranchesListView,
+    BankBranchDetailView,
+    FlushTestDataView,
 )
 
 urlpatterns = [
     # API Root
     path('', ApiRootView.as_view(), name='api-root'),
+
+    # Customer Self-Service Profile & 2FA Login
+    path('customer/login-init', CustomerLoginInitView.as_view(), name='customer-login-init-no-slash'),
+    path('customer/login-init/', CustomerLoginInitView.as_view(), name='customer-login-init'),
+    path('customer/verify-otp', CustomerVerifyOtpView.as_view(), name='customer-verify-otp-no-slash'),
+    path('customer/verify-otp/', CustomerVerifyOtpView.as_view(), name='customer-verify-otp'),
+    path('customer/update-consent', CustomerUpdateConsentView.as_view(), name='customer-update-consent-no-slash'),
+    path('customer/update-consent/', CustomerUpdateConsentView.as_view(), name='customer-update-consent'),
+    path('customer/complete-onboarding', CustomerCompleteOnboardingView.as_view(), name='customer-complete-onboarding-no-slash'),
+    path('customer/complete-onboarding/', CustomerCompleteOnboardingView.as_view(), name='customer-complete-onboarding'),
 
     # Customer Consent Submission, Status, & Revocation
     path('consent/submit', CustomerConsentSubmitView.as_view(), name='consent-submit-no-slash'),
@@ -41,6 +58,8 @@ urlpatterns = [
     path('admin/resend-2fa/', OfficerResend2FAView.as_view(), name='officer-resend-2fa'),
     path('admin/logout', OfficerLogoutView.as_view(), name='officer-logout-no-slash'),
     path('admin/logout/', OfficerLogoutView.as_view(), name='officer-logout'),
+    path('admin/change-password', OfficerChangePasswordView.as_view(), name='officer-change-password-no-slash'),
+    path('admin/change-password/', OfficerChangePasswordView.as_view(), name='officer-change-password'),
     
     # Branch Consent Records Management
     path('admin/records', ConsentRecordsView.as_view(), name='consent-records-no-slash'),
@@ -65,6 +84,8 @@ urlpatterns = [
     # Branches
     path('branches', BankBranchesListView.as_view(), name='branches-list-no-slash'),
     path('branches/', BankBranchesListView.as_view(), name='branches-list'),
+    path('branches/<str:branch_code>', BankBranchDetailView.as_view(), name='branch-detail-no-slash'),
+    path('branches/<str:branch_code>/', BankBranchDetailView.as_view(), name='branch-detail'),
     
     # Super Admin Multi-Branch Admin & Governance
     path('superadmin/officers', SuperAdminOfficersView.as_view(), name='superadmin-officers-no-slash'),
@@ -77,4 +98,8 @@ urlpatterns = [
     path('admin/audit-logs/', SuperAdminAuditLogsView.as_view(), name='admin-audit-logs'),
     path('superadmin/audit-logs', SuperAdminAuditLogsView.as_view(), name='superadmin-audit-logs-no-slash'),
     path('superadmin/audit-logs/', SuperAdminAuditLogsView.as_view(), name='superadmin-audit-logs'),
+
+    # Super Admin Maintenance & Purge Operations
+    path('superadmin/flush-test-data', FlushTestDataView.as_view(), name='superadmin-flush-test-data-no-slash'),
+    path('superadmin/flush-test-data/', FlushTestDataView.as_view(), name='superadmin-flush-test-data'),
 ]

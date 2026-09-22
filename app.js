@@ -128,6 +128,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const accBoxes = Array(16).fill('<div class="char-box"></div>').join('');
       const cifBoxes = Array(11).fill('<div class="char-box"></div>').join('');
+      const panBoxes = Array(10).fill('<div class="char-box"></div>').join('');
+      const aadhaarBoxes = `
+        <div style="display:inline-flex;align-items:center;flex-shrink:0;">
+          <div class="char-box"></div><div class="char-box"></div><div class="char-box"></div><div class="char-box"></div>
+        </div>
+        <span style="margin: 0 4px; font-weight: bold; color: #4b5563; flex-shrink: 0;">-</span>
+        <div style="display:inline-flex;align-items:center;flex-shrink:0;">
+          <div class="char-box"></div><div class="char-box"></div><div class="char-box"></div><div class="char-box"></div>
+        </div>
+        <span style="margin: 0 4px; font-weight: bold; color: #4b5563; flex-shrink: 0;">-</span>
+        <div style="display:inline-flex;align-items:center;flex-shrink:0;">
+          <div class="char-box"></div><div class="char-box"></div><div class="char-box"></div><div class="char-box"></div>
+        </div>
+      `;
       const mobBoxes = Array(10).fill('<div class="char-box"></div>').join('');
 
       printWin.document.write(`
@@ -135,56 +149,112 @@ document.addEventListener('DOMContentLoaded', () => {
         <html lang="en">
         <head>
           <meta charset="UTF-8">
-          <title>Namco Bank - Blank Physical SMS Alert Consent Form</title>
+          <title>Namco Bank - Bank SMS Alert Registration / Consent Form</title>
           <style>
-            @page { size: A4 portrait; margin: 12mm 15mm; }
+            @page { size: A4 portrait; margin: 6mm 12mm 6mm 12mm; }
             * { box-sizing: border-box; }
-            body { font-family: Arial, sans-serif; color: #111827; font-size: 12px; line-height: 1.4; padding: 0; margin: 0; }
-            .bank-header { text-align: center; border-bottom: 2px solid #0f2b48; padding-bottom: 8px; margin-bottom: 12px; }
-            .marathi-title { color: #831843; font-size: 15px; font-weight: bold; margin-bottom: 2px; }
-            .english-title { color: #0f2b48; font-size: 17px; font-weight: bold; }
-            .form-badge { background: #0f2b48; color: #fff; padding: 4px 10px; font-size: 12px; font-weight: bold; text-align: center; text-transform: uppercase; margin: 8px 0 14px 0; border-radius: 3px; }
-            .sec-box { border: 1px solid #9ca3af; border-radius: 4px; padding: 10px 12px; margin-bottom: 12px; }
-            .sec-title { font-weight: bold; font-size: 12px; color: #0f2b48; margin-bottom: 8px; }
-            .box-row { display: flex; align-items: center; margin-bottom: 8px; gap: 8px; }
-            .char-box { width: 22px; height: 26px; border: 1px solid #4b5563; display: inline-block; margin-right: 2px; }
-            .char-container { display: flex; flex-wrap: wrap; }
-            .rule-line { border-bottom: 1px dotted #6b7280; flex: 1; height: 18px; }
-            .footer-note { font-size: 10px; color: #6b7280; text-align: center; margin-top: 15px; }
+            body { font-family: Arial, Helvetica, sans-serif; color: #111827; font-size: 10.5px; line-height: 1.35; padding: 0; margin: 0; background: #fff; }
+            .bank-header { text-align: center; border-bottom: 1.5px solid #111827; padding-bottom: 4px; margin-bottom: 6px; }
+            .marathi-top-sub { font-size: 12px; color: #831843; font-weight: bold; text-align: center; margin-bottom: 2px; letter-spacing: 0.3px; }
+            .logo-img { height: 44px; object-fit: contain; margin: 0 auto 2px auto; display: block; }
+            .marathi-title { color: #831843; font-size: 12.5px; font-weight: bold; margin-bottom: 1px; letter-spacing: 0.2px; }
+            .english-title { color: #0f2b48; font-size: 13.5px; font-weight: 800; letter-spacing: 0.3px; }
+            .sub-title { font-size: 9.5px; color: #4b5563; margin-top: 1px; font-weight: 500; }
+            .form-title-main { font-size: 12.5px; font-weight: 800; color: #0f2b48; text-align: center; text-transform: uppercase; margin: 4px 0 1px 0; letter-spacing: 0.5px; }
+            .form-subtitle-rbi { font-size: 9px; color: #64748b; text-align: center; margin-bottom: 6px; font-style: italic; }
+            .sec-box { border: 1px solid #374151; border-radius: 4px; padding: 6px 10px; margin-bottom: 6px; background: #fff; }
+            .sec-title { font-weight: bold; font-size: 10.5px; color: #0f2b48; margin-bottom: 5px; letter-spacing: 0.2px; }
+            .box-row { display: flex; align-items: center; margin-bottom: 4px; gap: 8px; flex-wrap: nowrap; }
+            .row-lbl { width: 125px; min-width: 125px; flex-shrink: 0; font-size: 10px; font-weight: 600; color: #1f2937; }
+            .char-box { width: 18px; height: 20px; border: 1px solid #1f2937; display: inline-flex; align-items: center; justify-content: center; margin-right: 2px; flex-shrink: 0; background: #fff; }
+            .char-container { display: inline-flex; align-items: center; flex-wrap: nowrap; }
+            .rule-line { border-bottom: 1px dotted #374151; flex: 1; height: 16px; }
+            .decl-text { margin: 2px 0 4px 0; font-size: 9.5px; line-height: 1.35; color: #1f2937; }
+            .guidelines-list { margin: 0; padding-left: 15px; line-height: 1.3; font-size: 9px; color: #374151; }
+            .guidelines-list li { margin-bottom: 1px; }
+            .print-square-box { display: inline-block; width: 13px; height: 13px; border: 1.2px solid #111827; border-radius: 2px; flex-shrink: 0; margin-top: 1.5px; background: #fff; }
+            .opt-subtext { font-size: 8.5px; color: #4b5563; margin-top: 1px; }
+            .dotted-line-inline { display: inline-block; width: 100px; border-bottom: 1px dotted #111827; height: 14px; }
+            .bank-use-box { border: 1px dashed #4b5563; border-radius: 4px; padding: 6px 10px; margin-bottom: 5px; background: #fafafa; }
+            .bank-use-title { font-weight: bold; font-size: 9.5px; color: #111827; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.3px; }
+            .bank-use-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px; }
+            .bank-use-cell { display: flex; align-items: center; gap: 6px; font-size: 9px; font-weight: 500; color: #111827; }
+            .bank-use-cell span { flex-shrink: 0; }
+            .footer-note { font-size: 8.5px; color: #6b7280; text-align: center; margin-top: 5px; font-style: italic; }
           </style>
         </head>
         <body>
           <div class="bank-header">
-            <div class="marathi-title">द नाशिक मर्चंट्स को-ऑपरेटिव्ह बँक लि. (नामको बँक)</div>
+            <div class="marathi-top-sub">दि नाशिक मर्चंटस् को- ऑपरेटिव्ह बँक लि., नाशिक</div>
+            <img src="/logo.png" alt="The Nasik Merchants Co-operative Bank Ltd." class="logo-img" onerror="this.style.display='none'" />
+            <div class="marathi-title">द नाशिक मर्चंटस् को-ऑपरेटिव्ह बँक लि. (नामको बँक)</div>
             <div class="english-title">THE NASIK MERCHANTS CO-OPERATIVE BANK LTD. (NAMCO BANK)</div>
-            <div style="font-size: 11px; color: #4b5563;">Multi-State Scheduled Bank &bull; Head Office: Nashik</div>
+            <div class="sub-title">Multi-State Scheduled Bank &bull; Head Office: Nashik &bull; Estd. 1949</div>
           </div>
-          <div class="form-badge">BANK SMS ALERT REGISTRATION / CONSENT FORM</div>
+          <div class="form-title-main">BANK SMS ALERT REGISTRATION / CONSENT FORM</div>
+          <div class="form-subtitle-rbi">As per Reserve Bank of India (RBI) Guidelines for Electronic Banking Communications</div>
+
           <div class="sec-box">
-            <div class="sec-title">1. CUSTOMER DETAILS (Fill in CAPITAL Letters)</div>
-            <div class="box-row"><span>Customer Name:</span><div class="rule-line"></div></div>
-            <div class="box-row"><span>Account No:</span><div class="char-container">${accBoxes}</div></div>
-            <div class="box-row"><span>Customer ID (CIF):</span><div class="char-container">${cifBoxes}</div></div>
-            <div class="box-row"><span>Branch Name:</span><div class="rule-line"></div></div>
+            <div class="sec-title">1. Customer Details <span style="font-weight: normal; color: #4b5563; text-transform: none;">(Fill in Capital Letters)</span></div>
+            <div class="box-row"><span class="row-lbl">Customer Name:</span><div class="rule-line"></div></div>
+            <div class="box-row"><span class="row-lbl">Account No:</span><div class="char-container">${accBoxes}</div></div>
+            <div class="box-row"><span class="row-lbl">Customer ID (CIF):</span><div class="char-container">${cifBoxes}</div></div>
+            <div class="box-row"><span class="row-lbl">PAN Card No:</span><div class="char-container">${panBoxes}</div></div>
+            <div class="box-row"><span class="row-lbl">Aadhaar Card No:</span><div class="char-container">${aadhaarBoxes}</div></div>
+            <div class="box-row"><span class="row-lbl">Branch Name:</span><div class="rule-line"></div></div>
           </div>
+
           <div class="sec-box">
-            <div class="sec-title">2. REGISTERED MOBILE NUMBER</div>
-            <div class="box-row"><span>Mobile No: <strong>+91</strong></span><div class="char-container">${mobBoxes}</div></div>
+            <div class="sec-title">2. Mobile Number Registration</div>
+            <div class="box-row"><span class="row-lbl">Registered Mobile No: &nbsp;&nbsp; <strong>+91</strong></span><div class="char-container">${mobBoxes}</div></div>
+            <div style="font-size: 9px; color: #4b5563; margin-top: 2px; font-style: italic;">
+              SMS alerts and OTPs will be delivered to this registered mobile number.
+            </div>
           </div>
+
           <div class="sec-box">
-            <div class="sec-title">3. CONSENT DECLARATION</div>
-            <p style="margin: 4px 0 8px 0; font-size: 11px;">
-              I hereby submit my consent choice regarding SMS alerts on my registered mobile number.
+            <div class="sec-title">3. Consent Declaration</div>
+            <p class="decl-text">
+              I hereby submit my consent choice to <strong>The Nasik Merchants Co-operative Bank Ltd. (Namco Bank)</strong> regarding SMS alerts for my bank account, service-related information, and banking communications on my registered mobile number. I understand and agree to the following terms &amp; guidelines:
             </p>
-            <div style="margin: 8px 0;">
-              <div>[ &nbsp; ] <strong>YES</strong> — I agree to receive SMS alerts.</div>
-              <div style="margin-top: 4px;">[ &nbsp; ] <strong>NO</strong> — I do not want optional SMS alerts.</div>
+            <ul class="guidelines-list">
+              <li>SMS alerts will be sent only to the registered mobile number provided by me.</li>
+              <li>I am responsible for informing the bank immediately about any change in my mobile number.</li>
+              <li>The bank may charge applicable SMS alert service charges as per its approved rules.</li>
+              <li>I may revoke or update this consent at any time online or by submitting a physical request at my branch.</li>
+            </ul>
+            <div style="margin: 5px 0;">
+              <div style="display: flex; align-items: flex-start; gap: 7px; margin-bottom: 4px;">
+                <span class="print-square-box"></span>
+                <div>
+                  <div><strong>YES</strong> — I want to receive SMS alerts from the bank.</div>
+                  <div class="opt-subtext">(Recommended: Stay notified of all account credits, debits &amp; security alerts)</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: flex-start; gap: 7px;">
+                <span class="print-square-box"></span>
+                <div>
+                  <div><strong>NO</strong> — I do not want to receive optional SMS alerts.</div>
+                  <div class="opt-subtext">(Note: Critical statutory alerts will still be delivered as mandated by RBI)</div>
+                </div>
+              </div>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 25px;">
-              <div>Date: __________________ &bull; Place: __________________</div>
-              <div style="text-align: center; border-top: 1px solid #111; width: 180px; padding-top: 4px;">Customer Signature</div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px;">
+              <div style="font-size: 9.5px;">Date: <span class="dotted-line-inline"></span> &nbsp;&nbsp;&nbsp;&nbsp; Place: <span class="dotted-line-inline"></span></div>
+              <div style="text-align: center; border-top: 1px solid #111; width: 170px; padding-top: 2px; font-size: 9.5px; font-weight: 600;">Customer Signature</div>
             </div>
           </div>
+
+          <div class="bank-use-box">
+            <div class="bank-use-title">FOR BANK USE ONLY</div>
+            <div class="bank-use-grid">
+              <div class="bank-use-cell"><span>Verified By:</span><div class="rule-line"></div></div>
+              <div class="bank-use-cell"><span>Employee ID:</span><div class="rule-line"></div></div>
+              <div class="bank-use-cell"><span>Branch Code:</span><div class="rule-line"></div></div>
+              <div class="bank-use-cell"><span>Entry Date:</span><div class="rule-line"></div></div>
+            </div>
+          </div>
+
           <div class="footer-note">&copy; Namco Bank &bull; Customer Copy &bull; Hand over signed form to Branch Officer</div>
         </body>
         </html>

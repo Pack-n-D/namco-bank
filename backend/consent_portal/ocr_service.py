@@ -44,30 +44,38 @@ def extract_text_from_pdf_stream(file_bytes):
 
 
 def extract_images_from_pdf(file_bytes):
-    """Extract all image byte streams from PDF pages."""
+    """Extract all image byte streams from PDF pages safely."""
     images = []
     try:
         import pypdf
         reader = pypdf.PdfReader(io.BytesIO(file_bytes))
         for page in reader.pages:
-            # Method 1: pypdf page.images
+            # Method 1: pypdf page.images (built-in iterator)
             try:
                 if hasattr(page, 'images') and page.images:
                     for img in page.images:
-                        images.append(img.data)
-            except Exception:
-                pass
+                        if hasattr(img, 'data') and img.data:
+                            images.append(img.data)
+            except Exception as img_err:
+                logger.debug(f"pypdf page.images extract note: {img_err}")
 
-            # Method 2: Inspect raw XObject dictionaries if method 1 returned nothing
+            # Method 2: Inspect raw XObject dictionaries if method 1 found no images
             if not images:
                 try:
-                    if '/Resources' in page and '/XObject' in page['/Resources']:
-                        xObject = page['/Resources']['/XObject'].get_object()
-                        for obj in xObject:
-                            if xObject[obj]['/Subtype'] == '/Image':
-                                images.append(xObject[obj].get_data())
-                except Exception:
-                    pass
+                    resources = page.get('/Resources')
+                    if resources is not None:
+                        res_dict = resources.get_object() if hasattr(resources, 'get_object') else resources
+                        if isinstance(res_dict, dict) and '/XObject' in res_dict:
+                            xobject_ref = res_dict['/XObject']
+                            xobject_dict = xobject_ref.get_object() if hasattr(xobject_ref, 'get_object') else xobject_ref
+                            if isinstance(xobject_dict, dict):
+                                for obj_key, obj_val in xobject_dict.items():
+                                    obj_data = obj_val.get_object() if hasattr(obj_val, 'get_object') else obj_val
+                                    if isinstance(obj_data, dict) and obj_data.get('/Subtype') == '/Image':
+                                        if hasattr(obj_data, 'get_data'):
+                                            images.append(obj_data.get_data())
+                except Exception as xobj_err:
+                    logger.debug(f"pypdf xobject fallback note: {xobj_err}")
     except Exception as e:
         logger.warning(f"PDF image extract: {e}")
     return images
@@ -135,18 +143,24 @@ def run_ocr_on_image(img_bytes):
     return "\n".join(raw_lines)
 
 
+import datetime
+
 def intelligent_field_extraction(raw_text):
     """
-    Parses scanned physical text and extracts customer fields.
+    Parses scanned physical text and extracts customer fields with high precision.
+    Tuned specifically for The Nasik Merchants Co-operative Bank physical consent form.
     """
+    today_iso = datetime.date.today().isoformat()
     data = {
         "customerName": "",
         "accountNumber": "",
         "customerCif": "",
+        "panNumber": "",
+        "aadhaarNumber": "",
         "branchName": "CBS Head Office, Nashik",
         "mobileNumber": "",
-        "consentChoice": "agree",
-        "formDate": "2026-08-31",
+        "consentChoice": "YES",
+        "formDate": today_iso,
         "formPlace": "Nashik",
         "confidence": 0.5,
         "rawTextSample": raw_text[:500] if raw_text else "",
@@ -157,53 +171,78 @@ def intelligent_field_extraction(raw_text):
 
     text_clean = raw_text.replace('\r', '\n')
 
-    # 1. Mobile Number (10 digits starting with 6,7,8,9)
-    # Search for standard e.g. 7262805075
-    mob_match = re.search(r'(?:(?:\+91|91|0)?[\s\-]?)?([6-9]\d{9})\b', text_clean)
-    if mob_match:
-        data["mobileNumber"] = mob_match.group(1)
-    else:
-        # Check spaced / hyphenated: e.g. 72628 05075, 72628-05075, 7 2 6 2 8 0 5 0 7 5
-        spaced_mob = re.search(r'\b([6-9][\d\s\-]{9,20})\b', text_clean)
-        if spaced_mob:
-            cleaned = re.sub(r'\D', '', spaced_mob.group(1))
-            if len(cleaned) == 10 and cleaned.startswith(('6', '7', '8', '9')):
-                data["mobileNumber"] = cleaned
+    # 1. Mobile Number (10 digits, handling space-separated box characters e.g. +91 9 8 2 2 ...)
+    mob_box_match = re.search(r'(?:Mobile\s*(?:No)?[\s\:\.\-_]*(?:\+91|91)?[\s\-]*)((?:[6-9][\s\-]*\d[\s\-]*){9}\d)', text_clean, re.IGNORECASE)
+    if mob_box_match:
+        cleaned_mob = re.sub(r'\D', '', mob_box_match.group(1))
+        if len(cleaned_mob) == 10:
+            data["mobileNumber"] = cleaned_mob
+    if not data["mobileNumber"]:
+        mob_match = re.search(r'(?:(?:\+91|91|0)?[\s\-]?)?([6-9]\d{9})\b', text_clean)
+        if mob_match:
+            data["mobileNumber"] = mob_match.group(1)
+        else:
+            spaced_mob = re.search(r'\b([6-9][\d\s\-]{9,20})\b', text_clean)
+            if spaced_mob:
+                cleaned = re.sub(r'\D', '', spaced_mob.group(1))
+                if len(cleaned) == 10 and cleaned.startswith(('6', '7', '8', '9')):
+                    data["mobileNumber"] = cleaned
 
-    # 2. Account Number
-    # Look for account number near Account label or 6-18 digit numbers
-    acc_match = re.search(r'(?:Account\s*Number|Acc\s*No|Account\s*No|A/c|Enter\s*bank\s*account\s*number)[\s\:\.\-_]*([0-9\s]{6,20})', text_clean, re.IGNORECASE)
+    # 2. Account Number (handles 6-18 digits, continuous or spaced boxes)
+    acc_match = re.search(r'(?:Account\s*(?:No|Number|A\/c)[\s\:\.\-_]*)([\d\s]{6,25})', text_clean, re.IGNORECASE)
     if acc_match:
         cleaned_acc = re.sub(r'\D', '', acc_match.group(1))
         if 6 <= len(cleaned_acc) <= 18:
             data["accountNumber"] = cleaned_acc
     if not data["accountNumber"]:
-        # Look for standalone numbers that aren't the mobile number
         nums = re.findall(r'\b\d{6,16}\b', text_clean)
         for n in nums:
             if n != data.get("mobileNumber"):
                 data["accountNumber"] = n
                 break
 
-    # 3. Customer ID (CIF)
-    cif_match = re.search(r'(?:Customer\s*ID|CIF\s*\(CIF\)|CIF\s*No|CIF)[\s\:\.\-_]*([A-Za-z0-9\s]{1,12})', text_clean, re.IGNORECASE)
+    # 3. Customer ID (CIF) (e.g. CIF892104 or 11 box digits)
+    cif_match = re.search(r'(?:Customer\s*ID\s*(?:\(CIF\))?|CIF\s*(?:No|ID)?|CIF)[\s\:\.\-_]*([A-Za-z0-9\s]{4,20})', text_clean, re.IGNORECASE)
     if cif_match:
-        cif_val = cif_match.group(1).strip()
-        cleaned_cif = re.sub(r'^(CIF|ID|Customer|\:|\-)', '', cif_val, flags=re.IGNORECASE).strip()
-        cleaned_cif = re.sub(r'[^A-Za-z0-9]', '', cleaned_cif)
-        if cleaned_cif and cleaned_cif != data.get("accountNumber"):
+        cif_val = re.sub(r'^(CIF|ID|Customer|\:|\-)', '', cif_match.group(1), flags=re.IGNORECASE).strip()
+        cleaned_cif = re.sub(r'[^A-Za-z0-9]', '', cif_val)
+        if cleaned_cif and cleaned_cif != data.get("accountNumber") and len(cleaned_cif) >= 4:
             data["customerCif"] = cleaned_cif
 
-    # 4. Customer Full Name
-    # Captures e.g. "Karan Mundade"
-    name_match = re.search(r'(?:Name\s*of\s*Customer|Customer\s*Name|Enter\s*full\s*name\s*of\s*account\s*holder)[\s\:\.\-_]*([A-Za-z\s\.\,\'\-]{3,50})', text_clean, re.IGNORECASE)
+    # 4. PAN Card Number (10 alphanumeric chars e.g. ABCDE1234F or spaced boxes)
+    pan_match = re.search(r'\b([A-Z]{5}[\s]?[0-9]{4}[\s]?[A-Z]{1})\b', text_clean)
+    if pan_match:
+        data["panNumber"] = re.sub(r'\s', '', pan_match.group(1)).upper()
+    else:
+        pan_labeled = re.search(r'(?:PAN|PAN\s*Card|Permanent\s*Account\s*Number)[\s\:\.\-_]*([A-Za-z0-9\s]{10,16})', text_clean, re.IGNORECASE)
+        if pan_labeled:
+            cleaned_pan = re.sub(r'[^A-Za-z0-9]', '', pan_labeled.group(1)).upper()
+            if len(cleaned_pan) == 10:
+                data["panNumber"] = cleaned_pan
+
+    # 5. Aadhaar Card Number (12 digits, grouped 4-4-4 or continuous)
+    aadh_match = re.search(r'\b(\d{4}[\s\-]?\d{4}[\s\-]?\d{4})\b', text_clean)
+    if aadh_match:
+        cleaned_aadh = re.sub(r'\D', '', aadh_match.group(1))
+        if len(cleaned_aadh) == 12:
+            data["aadhaarNumber"] = cleaned_aadh
+    else:
+        aadh_labeled = re.search(r'(?:Aadhaar|Aadhar|UID)[\s\:\.\-_]*([0-9\s]{12,18})', text_clean, re.IGNORECASE)
+        if aadh_labeled:
+            cleaned_aadh = re.sub(r'\D', '', aadh_labeled.group(1))
+            if len(cleaned_aadh) == 12:
+                data["aadhaarNumber"] = cleaned_aadh
+
+    # 6. Customer Full Name
+    name_match = re.search(r'(?:Customer\s*Name|Name\s*of\s*Customer)[\s\:\.\-_]*([A-Za-z\s\.\,\'\-]{2,60})', text_clean, re.IGNORECASE)
     if name_match:
         raw_name = name_match.group(1).strip()
-        raw_name = re.sub(r'(Enter|Full|Name|Account|Number|CIF|Mobile|Branch|Date|Place).*$', '', raw_name, flags=re.IGNORECASE).strip()
-        if len(raw_name) >= 3:
+        raw_name = re.split(r'[\r\n]|Account\s*No|CIF|Customer\s*ID|PAN|Aadhaar|Branch|Mobile', raw_name, flags=re.IGNORECASE)[0].strip()
+        raw_name = re.sub(r'[\._\-]+$', '', raw_name).strip()
+        if len(raw_name) >= 3 and not re.match(r'^(Account|CIF|Branch|Fill|In|Capital)', raw_name, re.IGNORECASE):
             data["customerName"] = raw_name.title()
 
-    # 5. Branch Name Matching
+    # 7. Branch Name Matching
     for b in NAMCO_80_BRANCHES:
         b_name = b["branch_name"]
         short_kw = b_name.split(',')[0].replace('Branch', '').strip().lower()
@@ -213,16 +252,27 @@ def intelligent_field_extraction(raw_text):
     if "nashik central" in text_clean.lower() or "central" in text_clean.lower():
         data["branchName"] = "Old City Main Branch, Nashik"
 
-    # 6. Consent Choice
-    if re.search(r'do not want|disagree|decline|option\s*b', text_clean, re.IGNORECASE):
-        data["consentChoice"] = "disagree"
+    # 8. Consent Choice (YES / NO)
+    if re.search(r'(?:\[\s*[xX✓✔]\s*\]|\(\s*[xX✓✔]\s*\)|☑|✓|✔)\s*(?:NO|I\s*do\s*not\s*want)', text_clean, re.IGNORECASE) or \
+       re.search(r'\b(?:do\s*not\s*want\s*optional\s*sms|decline\s*sms|disagree)\b', text_clean, re.IGNORECASE):
+        data["consentChoice"] = "NO"
+    elif re.search(r'(?:\[\s*[xX✓✔]\s*\]|\(\s*[xX✓✔]\s*\)|☑|✓|✔)\s*(?:YES|I\s*agree)', text_clean, re.IGNORECASE):
+        data["consentChoice"] = "YES"
     else:
-        data["consentChoice"] = "agree"
+        data["consentChoice"] = "YES"
 
-    # 7. Date
-    date_match = re.search(r'\b(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})\b', text_clean)
+    # 9. Form Date & Place
+    date_match = re.search(r'(?:Date[\s\:\.\-_]*)(\d{4}[\-\/\.]\d{1,2}[\-\/\.]\d{1,2}|\d{1,2}[\-\/\.]\d{1,2}[\-\/\.]\d{2,4})', text_clean, re.IGNORECASE)
     if date_match:
         data["formDate"] = date_match.group(1)
+    else:
+        data["formDate"] = today_iso
+
+    place_match = re.search(r'(?:Place[\s\:\.\-_]*)([A-Za-z\s]{3,20})', text_clean, re.IGNORECASE)
+    if place_match:
+        clean_place = place_match.group(1).strip()
+        if len(clean_place) >= 3:
+            data["formPlace"] = clean_place.title()
 
     # Calculate realistic confidence score
     filled = sum(1 for k in ["customerName", "accountNumber", "customerCif", "mobileNumber"] if data[k])

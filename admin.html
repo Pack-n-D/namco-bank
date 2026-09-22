@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Bootstrap Icons & Chart.js -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Bootstrap Icons & Chart.js (Air-Gapped On-Premise Local Vendor Assets) -->
+  <link rel="stylesheet" href="assets/vendor/bootstrap-icons.min.css">
+  <script src="assets/vendor/chart.umd.min.js"></script>
   
   <link rel="stylesheet" href="style.css">
 </head>
@@ -552,38 +552,110 @@
 
 
       <!-- =====================================================================
-           VIEW 6: OFFICER ACCOUNT
+           VIEW 6: OFFICER ACCOUNT & SECURITY SETTINGS
            ===================================================================== -->
       <section id="view-account" class="admin-page-view">
-        <div class="enterprise-card" style="max-width: 600px; margin: 0 auto;">
-          <div class="enterprise-card-header">
-            <div class="enterprise-card-title-group">
-              <h3>Officer Security Profile</h3>
-              <p>Active authenticated administrative session details</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
+          
+          <!-- Card 1: Officer Security Profile -->
+          <div class="enterprise-card" style="margin: 0;">
+            <div class="enterprise-card-header">
+              <div class="enterprise-card-title-group">
+                <h3>Officer Security Profile</h3>
+                <p>Active authenticated administrative session details</p>
+              </div>
+              <i class="bi bi-shield-lock-fill" style="font-size: 1.4rem; color: #0284c7;"></i>
+            </div>
+            <div style="padding: 24px;">
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Full Name</span>
+                <span class="drawer-field-val" id="profileFullName">Branch Officer</span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Username</span>
+                <span class="drawer-field-val" id="profileUsername">officer</span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Assigned Branch</span>
+                <span class="drawer-field-val" id="profileBranch">Canada Corner Branch, Nashik</span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Security Role</span>
+                <span class="drawer-field-val"><span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 600;">BRANCH_ADMIN</span></span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Authentication Token</span>
+                <span class="drawer-field-val" style="font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: #059669;">2FA Verified Active</span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Brute-Force Shield</span>
+                <span class="drawer-field-val" style="color: #059669; font-weight: 600;"><i class="bi bi-check-circle-fill"></i> Enabled (5-Attempt Lockout)</span>
+              </div>
             </div>
           </div>
-          <div style="padding: 24px;">
-            <div class="drawer-field-row">
-              <span class="drawer-field-label">Full Name</span>
-              <span class="drawer-field-val" id="profileFullName">Branch Officer</span>
+
+          <!-- Card 2: Change Account Password -->
+          <div class="enterprise-card" style="margin: 0;">
+            <div class="enterprise-card-header">
+              <div class="enterprise-card-title-group">
+                <h3>Change Account Password</h3>
+                <p>Update your administrative login credentials securely</p>
+              </div>
+              <i class="bi bi-key-fill" style="font-size: 1.4rem; color: #d97706;"></i>
             </div>
-            <div class="drawer-field-row">
-              <span class="drawer-field-label">Username</span>
-              <span class="drawer-field-val" id="profileUsername">officer</span>
-            </div>
-            <div class="drawer-field-row">
-              <span class="drawer-field-label">Assigned Branch</span>
-              <span class="drawer-field-val" id="profileBranch">Canada Corner Branch, Nashik</span>
-            </div>
-            <div class="drawer-field-row">
-              <span class="drawer-field-label">Security Role</span>
-              <span class="drawer-field-val">BRANCH_ADMIN</span>
-            </div>
-            <div class="drawer-field-row">
-              <span class="drawer-field-label">Authentication Token</span>
-              <span class="drawer-field-val" style="font-family: 'JetBrains Mono', monospace; font-size: 0.74rem;">JWT Signed Active</span>
+            <div style="padding: 24px;">
+              <form id="officerChangePasswordForm">
+                
+                <div class="form-group-compact" style="margin-bottom: 14px;">
+                  <label for="officerCurrentPassword">Current Password <span class="text-danger">*</span></label>
+                  <div style="position: relative;">
+                    <input type="password" id="officerCurrentPassword" class="form-control-compact" placeholder="Enter current password" required style="padding-right: 36px;">
+                    <button type="button" class="btn-toggle-pwd" data-target="officerCurrentPassword" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px;">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-group-compact" style="margin-bottom: 14px;">
+                  <label for="officerNewPassword">New Password <span class="text-danger">*</span></label>
+                  <div style="position: relative;">
+                    <input type="password" id="officerNewPassword" class="form-control-compact" placeholder="Min. 6 characters" required minlength="6" style="padding-right: 36px;">
+                    <button type="button" class="btn-toggle-pwd" data-target="officerNewPassword" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px;">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  <!-- Strength Indicator -->
+                  <div id="officerPwdStrengthWrap" style="margin-top: 6px; display: none;">
+                    <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;">
+                      <div id="officerPwdStrengthBar" style="width: 0%; height: 100%; transition: all 0.3s ease;"></div>
+                    </div>
+                    <span id="officerPwdStrengthLabel" style="font-size: 0.72rem; color: #64748b; margin-top: 2px; display: block;"></span>
+                  </div>
+                </div>
+
+                <div class="form-group-compact" style="margin-bottom: 16px;">
+                  <label for="officerConfirmPassword">Confirm New Password <span class="text-danger">*</span></label>
+                  <div style="position: relative;">
+                    <input type="password" id="officerConfirmPassword" class="form-control-compact" placeholder="Re-enter new password" required minlength="6" style="padding-right: 36px;">
+                    <button type="button" class="btn-toggle-pwd" data-target="officerConfirmPassword" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px;">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  <div id="officerPwdMatchFeedback" style="font-size: 0.72rem; margin-top: 4px; display: none;"></div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.74rem; color: #64748b;">
+                  <i class="bi bi-shield-check text-primary"></i> Passwords are encrypted with PBKDF2 SHA-256 and logged into the bank audit trail.
+                </div>
+
+                <button type="submit" class="btn-primary-bank" id="changePasswordBtn" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem;">
+                  <i class="bi bi-shield-lock-fill"></i>
+                  <span>Update Password</span>
+                </button>
+              </form>
             </div>
           </div>
+
         </div>
       </section>
 
@@ -722,6 +794,9 @@
           breadcrumbEl.textContent = titles[targetKey].crumb;
         }
 
+        if (targetKey === 'audit') {
+          loadBranchAuditLogs();
+        }
         if (targetKey === 'dashboard') renderCharts();
       }
 
@@ -742,6 +817,15 @@
         return;
       }
       const user = window.bankApi.getCurrentUser() || { fullName: 'Branch Verification Officer', username: 'officer', branchName: 'Canada Corner Branch, Nashik' };
+      
+      // Support Super-Admin drill-down via URL query parameter: ?branch=...
+      const urlParams = new URLSearchParams(window.location.search);
+      const requestedBranch = urlParams.get('branch');
+      if (requestedBranch) {
+        user.branchName = decodeURIComponent(requestedBranch);
+        user.fullName = `Officer (${user.branchName.split(',')[0]})`;
+      }
+
       document.getElementById('sidebarUserName').textContent = user.fullName || 'Branch Officer';
       document.getElementById('sidebarBranchName').textContent = user.branchName || 'Canada Corner Branch';
       document.getElementById('bannerBranchName').textContent = user.branchName || 'Canada Corner Branch';
@@ -772,7 +856,33 @@
           ]);
 
           currentMetrics = (metricsData && metricsData.metrics) ? metricsData.metrics : (metricsData || {});
-          currentRecords = Array.isArray(recordsData) ? recordsData : ((recordsData && recordsData.data) ? recordsData.data : []);
+          let fetchedRecords = Array.isArray(recordsData) ? recordsData : ((recordsData && recordsData.data) ? recordsData.data : []);
+
+          if (requestedBranch) {
+            const cleanTarget = requestedBranch.trim().toLowerCase();
+            const branchSpecific = fetchedRecords.filter(r => {
+              const b = (r.branch || '').trim().toLowerCase();
+              return b.includes(cleanTarget) || cleanTarget.includes(b);
+            });
+            if (branchSpecific.length > 0) {
+              currentRecords = branchSpecific;
+              const yesCount = currentRecords.filter(r => r.consent === 'agree' || r.consent === 'YES').length;
+              const noCount = currentRecords.filter(r => r.consent === 'disagree' || r.consent === 'NO').length;
+              const pendingCount = currentRecords.filter(r => r.status === 'PENDING' || r.cbsUpdated !== 'Yes').length;
+              const revokedCount = currentRecords.filter(r => r.status === 'REVOKED').length;
+              currentMetrics = {
+                totalRecords: currentRecords.length,
+                yesCount: yesCount,
+                noCount: noCount,
+                pendingCount: pendingCount,
+                revokedCount: revokedCount
+              };
+            } else {
+              currentRecords = fetchedRecords;
+            }
+          } else {
+            currentRecords = fetchedRecords;
+          }
 
           // Update KPIs
           document.getElementById('kpiTotal').textContent = (currentMetrics.totalRecords || currentRecords.length).toLocaleString();
@@ -901,7 +1011,9 @@
           return;
         }
 
-        tbody.innerHTML = records.map(r => `
+        tbody.innerHTML = records.map(r => {
+          const cbsText = typeof r.cbsUpdated === 'object' && r.cbsUpdated ? (r.cbsUpdated.cbsUpdated || 'No') : (r.cbsUpdated || 'No');
+          return `
           <tr>
             <td style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.76rem; color: #0284c7;">${r.refNo || r.referenceNumber}</td>
             <td style="font-weight: 600;">${r.customerName || r.name}</td>
@@ -911,14 +1023,15 @@
             <td>${getStatusBadge(r.status || r.consent)}</td>
             <td><span style="font-size: 0.74rem; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #334155;">${r.source || 'ONLINE'}</span></td>
             <td><span style="font-size: 0.76rem; color: #64748b;">${r.date || 'Today'}</span></td>
-            <td><span style="font-size: 0.76rem; font-weight: 600; color: ${r.cbsUpdated === 'Yes' ? '#059669' : '#d97706'};">${r.cbsUpdated || 'No'}</span></td>
+            <td><span style="font-size: 0.76rem; font-weight: 600; color: ${cbsText === 'Yes' ? '#059669' : '#d97706'};">${cbsText}</span></td>
             <td>
               <button type="button" class="btn-action-view" onclick="openDrawerRecord('${r.refNo || r.referenceNumber}')">
                 <i class="bi bi-eye"></i> View
               </button>
             </td>
           </tr>
-        `).join('');
+        `;
+        }).join('');
       }
 
       // 7. Search & Filter Handlers
@@ -1009,7 +1122,7 @@
         const next = current === 'Yes' ? 'No' : 'Yes';
 
         try {
-          await window.bankApi.updateCBSStatus(refNo, { cbsUpdated: next });
+          await window.bankApi.updateCBSStatus(refNo, next);
           activeDrawerRecord.cbsUpdated = next;
           document.getElementById('drawerCbsStatus').textContent = next;
           document.getElementById('drawerCbsStatus').style.color = next === 'Yes' ? '#059669' : '#d97706';
@@ -1127,11 +1240,69 @@
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generating CSV...';
 
         try {
+          const token = (window.bankApi && window.bankApi.token) || localStorage.getItem('namco_auth_token') || '';
           const url = `${window.BANK_CONFIG.API_BASE_URL}/admin/export/?status=${status}&branch=${encodeURIComponent(user.branchName)}`;
-          window.location.href = url;
-          showToast(`Export generated successfully for ${status} records.`);
+          
+          const res = await fetch(url, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'X-Namco-Auth-Token': token
+            }
+          });
+
+          if (!res.ok) {
+            throw new Error(`Server returned HTTP ${res.status}`);
+          }
+
+          const blob = await res.blob();
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const cleanBranch = (user.branchName || 'Branch').split(',')[0].trim().replace(/\s+/g, '_');
+          a.href = downloadUrl;
+          a.download = `Namco_SMS_Consent_${status}_${cleanBranch}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(downloadUrl);
+
+          showToast(`Export generated and downloaded successfully for ${status} records.`);
+          window.bankApi.logLocalAudit('DATA_EXPORT', user.username || 'officer', 'BRANCH_ADMIN', user.branchName, `Branch Admin exported ${status} compliance records to CSV for branch [${user.branchName}]`);
         } catch (err) {
-          showToast('Export failed: ' + err.message, false);
+          console.warn('Server export fallback to local records:', err);
+          window.bankApi.logLocalAudit('DATA_EXPORT', user.username || 'officer', 'BRANCH_ADMIN', user.branchName, `Branch Admin exported ${status} compliance records to CSV for branch [${user.branchName}]`);
+          // Resilient Fallback: Export directly from active loaded records
+          let exportData = currentRecords || [];
+          if (status !== 'ALL') {
+            exportData = exportData.filter(r => (r.status || r.consent || '').toUpperCase() === status);
+          }
+          const csvRows = [
+            ['Ref No', 'Name', 'Acc No', 'CIF', 'Mobile', 'Branch', 'Status', 'Source', 'Submitted']
+          ];
+          exportData.forEach(r => {
+            csvRows.push([
+              r.refNo || r.referenceNumber || '',
+              r.customerName || r.name || '',
+              r.maskedAccNo || r.accNo || '',
+              r.cif || r.cifNumber || '',
+              r.rawMobile || r.mobileNumber || r.mobile || '',
+              r.branch || r.branchName || user.branchName || '',
+              r.status || r.consent || 'PENDING',
+              r.source || 'ONLINE',
+              r.date || new Date().toISOString().split('T')[0]
+            ]);
+          });
+          const csvContent = csvRows.map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const cleanBranch = (user.branchName || 'Branch').split(',')[0].trim().replace(/\s+/g, '_');
+          a.href = downloadUrl;
+          a.download = `Namco_SMS_Consent_${status}_${cleanBranch}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(downloadUrl);
+          showToast(`Exported ${exportData.length} records successfully for ${status}.`);
         } finally {
           btn.disabled = false;
           btn.innerHTML = origText;
@@ -1139,32 +1310,165 @@
       });
 
       // 11. Branch Audit Logs Table
+      function getAuditBadgeStyle(action) {
+        const act = (action || '').toUpperCase();
+        if (act.includes('LOGIN') || act.includes('2FA')) return 'background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0;';
+        if (act.includes('LOGOUT')) return 'background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;';
+        if (act.includes('OCR')) return 'background: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe;';
+        if (act.includes('CBS') || act.includes('SYNC')) return 'background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc;';
+        if (act.includes('EXPORT')) return 'background: #fef3c7; color: #92400e; border: 1px solid #fde68a;';
+        if (act.includes('PASSWORD') || act.includes('RESET')) return 'background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa;';
+        if (act.includes('DELETE') || act.includes('REVOKE')) return 'background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;';
+        return 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;';
+      }
+
       async function loadBranchAuditLogs() {
         const tbody = document.getElementById('branchAuditTableBody');
         if (!tbody) return;
         try {
-          // Fetch logs with proper auth headers
-          const logs = await window.bankApi.getAuditLogs({ branch: user.branchName });
+          // Fetch branch-isolated logs (or bank-wide if logged in as Super Admin)
+          const targetBranch = (user.isSuperAdmin || user.role === 'SUPER_ADMIN') ? 'ALL' : user.branchName;
+          const logs = await window.bankApi.fetchAuditLogs({ branch: targetBranch });
           if (!logs || !logs.length) {
             tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 24px;">No audit events recorded for this branch yet.</td></tr>`;
             return;
           }
-          tbody.innerHTML = logs.map(l => `
+          tbody.innerHTML = logs.map(l => {
+            const actionStr = l.actionType || l.action || 'ACTIVITY';
+            return `
             <tr>
               <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: #64748b;">${new Date(l.timestamp).toLocaleString()}</td>
-              <td><span style="font-weight: 600; font-size: 0.78rem; background: #e0f2fe; color: #0369a1; padding: 2px 7px; border-radius: 4px;">${l.actionType || l.action}</span></td>
+              <td><span style="font-weight: 600; font-size: 0.76rem; padding: 2px 7px; border-radius: 4px; ${getAuditBadgeStyle(actionStr)}">${actionStr}</span></td>
               <td style="font-weight: 500;">${l.username}</td>
               <td>${l.branchName || l.branch}</td>
               <td style="font-size: 0.78rem; color: #334155;">${l.actionDetails || l.details}</td>
               <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: #64748b;">${l.ipAddress || '127.0.0.1'}</td>
             </tr>
-          `).join('');
+          `;
+          }).join('');
         } catch (e) {
           console.log('Audit load note:', e);
         }
       }
 
-      // 12. Refresh & Logout
+      // 12. Password Visibility Toggles & Strength Meters
+      document.querySelectorAll('.btn-toggle-pwd').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const input = document.getElementById(targetId);
+          if (!input) return;
+          const isPassword = input.type === 'password';
+          input.type = isPassword ? 'text' : 'password';
+          const icon = btn.querySelector('i');
+          if (icon) {
+            icon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+          }
+        });
+      });
+
+      const newPwdInput = document.getElementById('officerNewPassword');
+      const confirmPwdInput = document.getElementById('officerConfirmPassword');
+      const strengthWrap = document.getElementById('officerPwdStrengthWrap');
+      const strengthBar = document.getElementById('officerPwdStrengthBar');
+      const strengthLabel = document.getElementById('officerPwdStrengthLabel');
+      const matchFeedback = document.getElementById('officerPwdMatchFeedback');
+
+      if (newPwdInput) {
+        newPwdInput.addEventListener('input', () => {
+          const val = newPwdInput.value;
+          if (!val) {
+            strengthWrap.style.display = 'none';
+            return;
+          }
+          strengthWrap.style.display = 'block';
+          let score = 0;
+          if (val.length >= 6) score += 25;
+          if (val.length >= 10) score += 25;
+          if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score += 25;
+          if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) score += 25;
+
+          strengthBar.style.width = score + '%';
+          if (score <= 25) {
+            strengthBar.style.background = '#ef4444';
+            strengthLabel.textContent = 'Weak (Minimum 6 characters required)';
+            strengthLabel.style.color = '#ef4444';
+          } else if (score <= 50) {
+            strengthBar.style.background = '#f59e0b';
+            strengthLabel.textContent = 'Fair (Add uppercase letters & numbers)';
+            strengthLabel.style.color = '#d97706';
+          } else if (score <= 75) {
+            strengthBar.style.background = '#3b82f6';
+            strengthLabel.textContent = 'Good (Add special symbols for high security)';
+            strengthLabel.style.color = '#2563eb';
+          } else {
+            strengthBar.style.background = '#10b981';
+            strengthLabel.textContent = 'Strong bank-grade password';
+            strengthLabel.style.color = '#059669';
+          }
+          checkMatch();
+        });
+      }
+
+      function checkMatch() {
+        if (!confirmPwdInput || !matchFeedback) return;
+        const val1 = newPwdInput ? newPwdInput.value : '';
+        const val2 = confirmPwdInput.value;
+        if (!val2) {
+          matchFeedback.style.display = 'none';
+          return;
+        }
+        matchFeedback.style.display = 'block';
+        if (val1 === val2) {
+          matchFeedback.textContent = '✓ Passwords match';
+          matchFeedback.style.color = '#059669';
+        } else {
+          matchFeedback.textContent = '✗ Passwords do not match';
+          matchFeedback.style.color = '#ef4444';
+        }
+      }
+
+      if (confirmPwdInput) {
+        confirmPwdInput.addEventListener('input', checkMatch);
+      }
+
+      // Change Password Form Submission
+      document.getElementById('officerChangePasswordForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const currentPassword = document.getElementById('officerCurrentPassword').value;
+        const newPassword = document.getElementById('officerNewPassword').value;
+        const confirmPassword = document.getElementById('officerConfirmPassword').value;
+        const btn = document.getElementById('changePasswordBtn');
+
+        if (newPassword !== confirmPassword) {
+          showToast('New passwords do not match!', false);
+          return;
+        }
+
+        if (newPassword.length < 6) {
+          showToast('New password must be at least 6 characters long.', false);
+          return;
+        }
+
+        const origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Updating Password...';
+
+        try {
+          const res = await window.bankApi.changePassword({ currentPassword, newPassword, confirmPassword });
+          showToast(res.message || 'Password updated successfully!');
+          document.getElementById('officerChangePasswordForm').reset();
+          if (strengthWrap) strengthWrap.style.display = 'none';
+          if (matchFeedback) matchFeedback.style.display = 'none';
+          loadBranchAuditLogs();
+        } catch (err) {
+          showToast(err.message || 'Failed to update password', false);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      });
+
+      // 13. Refresh & Logout
       document.getElementById('refreshDataBtn')?.addEventListener('click', () => {
         loadDashboardAndRecords();
         showToast('Dashboard data refreshed.');

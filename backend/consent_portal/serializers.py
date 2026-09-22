@@ -25,6 +25,27 @@ def mask_mobile(mob):
         return mob_str
     return mob_str[:2] + "XXXXXX" + mob_str[-2:]
 
+def mask_cif(cif):
+    if not cif:
+        return ""
+    cif_str = str(cif).strip()
+    if len(cif_str) <= 4:
+        return "CIFXXXX"
+    prefix = "CIF" if cif_str.upper().startswith("CIF") else ""
+    num_part = cif_str[len(prefix):]
+    if len(num_part) <= 3:
+        return (prefix or "CIF") + "XXXX" + num_part
+    return (prefix or "CIF") + "X" * max(3, len(num_part) - 3) + num_part[-3:]
+
+def mask_reference(ref):
+    if not ref:
+        return "NAMCO-XXXX"
+    ref_str = str(ref).strip()
+    parts = ref_str.split('-')
+    if len(parts) >= 3:
+        return f"{parts[0]}-XXXX-{parts[-1]}"
+    return "NAMCO-XXXX" + ref_str[-4:] if len(ref_str) > 4 else "NAMCO-XXXX"
+
 
 class BankBranchSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,14 +59,16 @@ class BankOfficerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankOfficer
         fields = [
-            'id', 'username', 'full_name', 'employee_id', 'email', 'mobile',
+            'id', 'username', 'full_name', 'employee_id', 'account_number', 'email', 'mobile',
             'branch_name', 'branch_code', 'role', 'is_active', 'failed_login_attempts',
             'locked_until', 'last_login', 'created_at', 'password'
         ]
         read_only_fields = ['id', 'failed_login_attempts', 'locked_until', 'last_login', 'created_at']
 
     def create(self, validated_data):
-        password = validated_data.pop('password', 'Admin@123')
+        password = validated_data.pop('password', None)
+        if not password:
+            raise serializers.ValidationError({'password': 'Password is required for new officer accounts.'})
         officer = BankOfficer(**validated_data)
         officer.set_password(password)
         officer.save()

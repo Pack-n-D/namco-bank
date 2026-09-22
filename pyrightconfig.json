@@ -1,0 +1,11 @@
+{
+  "extraPaths": [
+    "backend",
+    "backend/consent_portal"
+  ],
+  "typeCheckingMode": "basic",
+  "reportIncompatibleVariableOverride": false,
+  "reportIncompatibleMethodOverride": false,
+  "reportMissingTypeStubs": false,
+  "reportAttributeAccessIssue": false
+}

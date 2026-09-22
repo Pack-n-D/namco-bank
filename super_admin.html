@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Admin Central Governance - Namco Bank SMS Consent Management</title>
+  <meta name="description"
+    content="Central Super Administrator Control & Multi-Branch Governance Portal - The Nasik Merchants Co-operative Bank Ltd.">
+
+  <!-- Google Fonts Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Bootstrap Icons & Chart.js (Air-Gapped On-Premise Local Vendor Assets) -->
+  <link rel="stylesheet" href="assets/vendor/bootstrap-icons.min.css">
+  <script src="assets/vendor/chart.umd.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="admin-app-layout">
+
+  <!-- =========================================================================
+       1. FIXED DARK LEFT SIDEBAR (Width: 260px)
+       ========================================================================= -->
+  <aside class="admin-sidebar">
+    <!-- Brand Logo Header -->
+    <div class="sidebar-brand">
+      <img src="assets/logo.png" alt="Namco Bank" class="sidebar-logo">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-title">NAMCO BANK</span>
+        <span class="sidebar-brand-subtitle" style="color: #f87171;">Super Admin Central</span>
+      </div>
+    </div>
+
+    <!-- Active User Profile Card -->
+    <div class="sidebar-user-card">
+      <div class="sidebar-user-avatar super-avatar" id="superUserAvatar">SA</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="superUserName">Super Admin</div>
+        <div class="sidebar-user-role">Central Governance</div>
+        <span class="sidebar-branch-badge" style="color: #fca5a5; background: rgba(220, 38, 38, 0.18);">Head Office
+          (HO)</span>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="sidebar-menu">
+      <div class="sidebar-nav-header">Central Oversight</div>
+
+      <a href="#dashboard" class="sidebar-nav-item active" data-nav="dashboard">
+        <i class="bi bi-speedometer2 sidebar-nav-icon"></i>
+        <span>Bank-Wide Dashboard</span>
+      </a>
+
+      <a href="#branches" class="sidebar-nav-item" data-nav="branches">
+        <i class="bi bi-building sidebar-nav-icon"></i>
+        <span>Branches Directory</span>
+      </a>
+
+      <a href="#officers" class="sidebar-nav-item" data-nav="officers">
+        <i class="bi bi-people-fill sidebar-nav-icon"></i>
+        <span>Branch Admins</span>
+      </a>
+
+      <div class="sidebar-nav-header" style="margin-top: 10px;">Consent & Ingestion</div>
+
+      <a href="#consents" class="sidebar-nav-item" data-nav="consents">
+        <i class="bi bi-database-check sidebar-nav-icon"></i>
+        <span>Master Consent Registry</span>
+      </a>
+
+      <a href="#audit" class="sidebar-nav-item" data-nav="audit">
+        <i class="bi bi-shield-lock-fill sidebar-nav-icon"></i>
+        <span>Central Audit Trail</span>
+      </a>
+
+      <a href="#reports" class="sidebar-nav-item" data-nav="reports">
+        <i class="bi bi-file-earmark-spreadsheet-fill sidebar-nav-icon"></i>
+        <span>Bank-Wide Reports</span>
+      </a>
+
+      <a href="#settings" class="sidebar-nav-item" data-nav="settings">
+        <i class="bi bi-gear-fill sidebar-nav-icon"></i>
+        <span>System Governance</span>
+      </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <button type="button" id="superLogoutBtn" class="sidebar-logout-btn">
+        <i class="bi bi-box-arrow-left"></i>
+        <span>Secure Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       2. MAIN CONTENT WRAPPER & TOPBAR
+       ========================================================================= -->
+  <div class="admin-main-wrapper">
+
+    <!-- Top Navigation Header -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <h1 class="topbar-page-title" id="topbarPageTitle">Central Bank-Wide Dashboard</h1>
+        <div class="topbar-breadcrumb" id="topbarBreadcrumb">
+          <span>Namco Bank</span> / <span>Head Office</span> / <span id="breadcrumbActive">Governance Overview</span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Badge -->
+        <div class="topbar-session-badge" style="background: #fef2f2; border-color: #fecaca; color: #991b1b;">
+          <span class="session-dot" style="background-color: #ef4444;"></span>
+          <span>Central Executive Level &bull; Branches Scoped</span>
+        </div>
+
+        <div class="topbar-clock" id="topbarClock">--:--:--</div>
+
+        <!-- User Quick Pill -->
+        <div class="topbar-user-pill" id="topbarUserPill">
+          <i class="bi bi-shield-shaded text-danger"></i>
+          <span style="font-size: 0.8rem; font-weight: 600;">Head Office Administrator</span>
+          <i class="bi bi-arrow-clockwise" style="color: #64748b; font-size: 0.85rem;" id="refreshDataBtn"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Canvas Views -->
+    <main class="admin-canvas">
+
+      <!-- =====================================================================
+           VIEW 1: SUPER ADMIN DASHBOARD
+           ===================================================================== -->
+      <section id="view-dashboard" class="admin-page-view active">
+
+        <!-- Executive Hero Banner -->
+        <div class="super-hero-panel">
+          <div class="super-hero-top">
+            <div class="super-hero-title-group">
+              <h2 id="dashHeroTitle">
+                <i class="bi bi-shield-shaded" style="color: #38bdf8;"></i>
+                <span>Namco Bank Central Executive Governance Center</span>
+              </h2>
+              <p id="dashHeroSubtitle">Enterprise Electronic SMS Alert Consent Control & Multi-Branch Regulatory
+                Governance Portal across all Branches</p>
+            </div>
+            <div class="super-hero-actions">
+              <button type="button" class="btn-primary-bank" id="dashAddOfficerBtn"
+                style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border: none; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);">
+                <i class="bi bi-person-plus-fill"></i>
+                <span>+ Add Branch Admin</span>
+              </button>
+              <button type="button" class="btn-secondary-bank" id="dashExportAllBtn"
+                style="background: rgba(255, 255, 255, 0.15); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.25);">
+                <i class="bi bi-download"></i>
+                <span id="dashExportBtnLabel">Export Bank Report</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- System Status Ticker -->
+          <div class="super-hero-ticker">
+            <div class="ticker-item">
+              <span class="ticker-dot"></span>
+              <span>All Bank Branches Scoped & Monitored</span>
+            </div>
+            <div class="ticker-item">
+              <span class="ticker-dot"></span>
+              <span>RBI & TRAI DLT 2FA SMS Gateway: Operational</span>
+            </div>
+            <div class="ticker-item">
+              <span class="ticker-dot"></span>
+              <span>Core Banking System (CBS) Direct Sync Ready</span>
+            </div>
+            <div class="ticker-item">
+              <span class="ticker-dot"></span>
+              <span>Air-Gapped On-Premise Datacenter Isolation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- =====================================================================
+             PROMINENT  -BRANCH CONTROL & DASHBOARD SCOPE SWITCHER BAR
+             ===================================================================== -->
+        <div class="branch-selector-panel">
+          <div class="branch-selector-header">
+            <div class="branch-selector-label">
+              <i class="bi bi-diagram-3-fill"></i>
+              <span>Select Branch Dashboard Scope</span>
+            </div>
+            <div class="scope-badge-live" id="superScopeBadge">
+              <span class="pulse-indicator"></span>
+              <span id="superScopeBadgeText">Central Executive Level &bull; Branches Scoped</span>
+            </div>
+          </div>
+
+          <!-- Controls Row: Dropdown, Search Input, and Action Buttons -->
+          <div class="branch-controls-row">
+            <div class="branch-select-wrap">
+              <select id="superActiveBranchSelect" class="branch-select-control" aria-label="Select Branch Scope">
+                <option value="ALL" selected>🌐 Central Bank-Wide Overview (All Branches)</option>
+              </select>
+            </div>
+
+            <div class="branch-search-wrap">
+              <i class="bi bi-search"></i>
+              <input type="text" id="branchQuickSearchInput" class="branch-search-input"
+                placeholder="Type branch name or code (e.g. NSK-002, Canada)...">
+            </div>
+
+            <div class="branch-btn-group">
+              <button type="button" id="btnLaunchBranchPortal" class="btn-open-portal"
+                title="Open Standalone Branch Officer Portal for the selected branch">
+                <i class="bi bi-box-arrow-up-right"></i>
+                <span>Open Branch Portal</span>
+              </button>
+              <button type="button" id="btnResetScopeBankwide" class="btn-reset-scope"
+                title="Reset view to all   branches">
+                <i class="bi bi-arrow-counterclockwise"></i>
+                <span>Bank-Wide View</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Jump Regional Hub Chips -->
+          <div class="branch-chips-bar">
+            <span class="chip-label">Quick Jump:</span>
+            <button type="button" class="branch-chip active" data-branch="ALL">
+              <i class="bi bi-globe2"></i> All Branches
+            </button>
+            <button type="button" class="branch-chip" data-branch="CBS Head Office, Nashik">
+              <i class="bi bi-building"></i> Head Office
+            </button>
+            <button type="button" class="branch-chip" data-branch="Canada Corner Branch, Nashik">
+              <i class="bi bi-geo-alt-fill"></i> Canada Corner
+            </button>
+            <button type="button" class="branch-chip" data-branch="Mumbai Naka Branch, Nashik">
+              <i class="bi bi-geo-alt-fill"></i> Mumbai Naka
+            </button>
+            <button type="button" class="branch-chip" data-branch="Panchavati Branch, Nashik">
+              <i class="bi bi-geo-alt-fill"></i> Panchavati
+            </button>
+            <button type="button" class="branch-chip" data-branch="College Road Branch, Nashik">
+              <i class="bi bi-geo-alt-fill"></i> College Road
+            </button>
+            <button type="button" class="branch-chip" data-branch="Pune FC Road Branch, Shivajinagar">
+              <i class="bi bi-geo-alt-fill"></i> Pune FC Road
+            </button>
+            <button type="button" class="branch-chip" data-branch="Mumbai Fort Corporate Branch">
+              <i class="bi bi-geo-alt-fill"></i> Mumbai Fort
+            </button>
+          </div>
+        </div>
+
+        <!-- =====================================================================
+             DYNAMIC BRANCH EXECUTIVE DOSSIER CARD (Visible when branch selected)
+             ===================================================================== -->
+        <div class="branch-dossier-card" id="branchDossierCard">
+          <div class="dossier-grid">
+            <div class="dossier-stat-item">
+              <span class="dossier-stat-label">Active Branch Focus</span>
+              <div class="dossier-stat-value" style="color: #0284c7;">
+                <i class="bi bi-bank2"></i>
+                <span id="dossierBranchName">Canada Corner Branch, Nashik</span>
+              </div>
+            </div>
+
+            <div class="dossier-stat-item">
+              <span class="dossier-stat-label">Branch Code & City</span>
+              <div class="dossier-stat-value">
+                <span id="dossierBranchCode"
+                  style="font-family: 'JetBrains Mono', monospace; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem;">NSK-002</span>
+                <span id="dossierBranchCity" style="color: #475569; font-weight: 500;">Nashik</span>
+              </div>
+            </div>
+
+            <div class="dossier-stat-item">
+              <span class="dossier-stat-label">Branch In-Charge / Officer</span>
+              <div class="dossier-stat-value">
+                <i class="bi bi-person-badge text-primary"></i>
+                <span id="dossierOfficerName">Rajesh Deshmukh (BO)</span>
+              </div>
+            </div>
+
+            <div class="dossier-stat-item">
+              <span class="dossier-stat-label">Regulatory Compliance</span>
+              <div class="dossier-stat-value" style="color: #059669; font-size: 0.85rem;">
+                <i class="bi bi-shield-check"></i>
+                <span>RBI & TRAI DLT Compliant</span>
+              </div>
+            </div>
+
+            <div class="dossier-actions">
+              <button type="button" class="btn-open-portal" id="dossierLaunchBtn"
+                style="height: 38px; padding: 0 14px; font-size: 0.8rem;">
+                <i class="bi bi-box-arrow-up-right"></i>
+                <span>Launch Branch View</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Enhanced KPI Metric Cards with Progress Indicators -->
+        <div class="kpi-grid-5">
+          <!-- Total Records -->
+          <div class="kpi-card kpi-total">
+            <div class="kpi-card-header">
+              <span class="kpi-card-label" id="labelKpiTotal">Bank-Wide Records</span>
+              <div class="kpi-card-icon"><i class="bi bi-database-fill"></i></div>
+            </div>
+            <div class="kpi-card-value" id="superKpiTotal">0</div>
+            <div class="kpi-card-subtext" id="subtextKpiTotal"><i class="bi bi-building"></i> Across Bank Branches
+            </div>
+            <div class="kpi-progress-bar-wrap">
+              <div class="kpi-progress-bar-fill" id="progressKpiTotal" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <!-- Total YES -->
+          <div class="kpi-card kpi-yes">
+            <div class="kpi-card-header">
+              <span class="kpi-card-label">Total YES (Consented)</span>
+              <div class="kpi-card-icon"><i class="bi bi-check-circle-fill"></i></div>
+            </div>
+            <div class="kpi-card-value" id="superKpiYes">0</div>
+            <div class="kpi-card-subtext text-success"><i class="bi bi-bell-fill"></i> SMS Enabled &bull; <span
+                id="superKpiAgreeRate">100%</span></div>
+            <div class="kpi-progress-bar-wrap">
+              <div class="kpi-progress-bar-fill" id="progressKpiYes" style="width: 40%;"></div>
+            </div>
+          </div>
+
+          <!-- Total NO -->
+          <div class="kpi-card kpi-no">
+            <div class="kpi-card-header">
+              <span class="kpi-card-label">Total NO (Declined)</span>
+              <div class="kpi-card-icon"><i class="bi bi-x-circle-fill"></i></div>
+            </div>
+            <div class="kpi-card-value" id="superKpiNo">0</div>
+            <div class="kpi-card-subtext text-danger"><i class="bi bi-shield-x"></i> Statutory Alerts Only</div>
+            <div class="kpi-progress-bar-wrap">
+              <div class="kpi-progress-bar-fill" id="progressKpiNo" style="width: 20%;"></div>
+            </div>
+          </div>
+
+          <!-- Total Pending -->
+          <div class="kpi-card kpi-pending">
+            <div class="kpi-card-header">
+              <span class="kpi-card-label">Pending Submissions</span>
+              <div class="kpi-card-icon"><i class="bi bi-hourglass-split"></i></div>
+            </div>
+            <div class="kpi-card-value" id="superKpiPending">0</div>
+            <div class="kpi-card-subtext text-warning"><i class="bi bi-clock-history"></i> Awaiting Intake</div>
+            <div class="kpi-progress-bar-wrap">
+              <div class="kpi-progress-bar-fill" id="progressKpiPending" style="width: 20%;"></div>
+            </div>
+          </div>
+
+          <!-- Total Revoked -->
+          <div class="kpi-card kpi-revoked">
+            <div class="kpi-card-header">
+              <span class="kpi-card-label">Revoked Consents</span>
+              <div class="kpi-card-icon"><i class="bi bi-shield-slash-fill"></i></div>
+            </div>
+            <div class="kpi-card-value" id="superKpiRevoked">0</div>
+            <div class="kpi-card-subtext" style="color: #9333ea;"><i class="bi bi-arrow-counterclockwise"></i> Opted-Out
+              History</div>
+            <div class="kpi-progress-bar-wrap">
+              <div class="kpi-progress-bar-fill" id="progressKpiRevoked" style="width: 20%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Charts Grid -->
+        <div class="analytics-grid-2">
+          <!-- Donut Chart -->
+          <div class="analytics-card">
+            <div class="analytics-card-header">
+              <div>
+                <div class="analytics-card-title" id="donutChartTitle">Bank-Wide Consent Ratio</div>
+                <div class="analytics-card-sub" id="donutChartSub">Customer distribution breakdown</div>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="superDonutChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Bar Chart -->
+          <div class="analytics-card">
+            <div class="analytics-card-header">
+              <div>
+                <div class="analytics-card-title" id="barChartTitle">Branch-Wise Intake Performance</div>
+                <div class="analytics-card-sub" id="barChartSub">Top branches by registered consent count</div>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="superBranchBarChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!--  -Branch Performance Breakdown Matrix Table (Bank-Wide Mode) -->
+        <div class="enterprise-card" id="branchMatrixContainer">
+          <div class="enterprise-card-header">
+            <div class="enterprise-card-title-group">
+              <h3>Branch-Wise Performance Breakdown Matrix</h3>
+              <p>Real-time consent intake status across all Namco Bank branches</p>
+            </div>
+            <input type="text" id="branchMatrixSearch" class="search-box-input" style="max-width: 260px;"
+              placeholder="Filter branches by name/code...">
+          </div>
+          <div class="table-responsive-wrap">
+            <table class="enterprise-data-table">
+              <thead>
+                <tr>
+                  <th>Branch Code</th>
+                  <th>Branch Name</th>
+                  <th>City / Region</th>
+                  <th>Total Population</th>
+                  <th>YES (Consented)</th>
+                  <th>NO (Declined)</th>
+                  <th>Pending</th>
+                  <th>Consent Rate</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="branchMatrixTableBody">
+                <tr>
+                  <td colspan="9" style="text-align: center; color: #94a3b8; padding: 24px;">Loading branches
+                    matrix...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- =====================================================================
+             BRANCH CONSENT RECORDS PREVIEW (Visible when branch is selected)
+             ===================================================================== -->
+        <div class="branch-preview-panel" id="branchRecordsPreviewPanel">
+          <div class="branch-preview-header">
+            <div>
+              <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a;" id="branchPreviewTitle">Branch Customer
+                Consent Records</h3>
+              <p style="font-size: 0.78rem; color: #64748b;" id="branchPreviewSub">Recent submissions registered
+                specifically at this branch</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn-secondary-bank" id="btnExportBranchFiltered"
+                style="font-size: 0.78rem; padding: 6px 12px;">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Export Branch CSV
+              </button>
+              <button type="button" class="btn-primary-bank" onclick="switchView('consents')"
+                style="font-size: 0.78rem; padding: 6px 12px;">
+                <i class="bi bi-box-arrow-up-right"></i> View in Master Registry
+              </button>
+            </div>
+          </div>
+          <div class="table-responsive-wrap">
+            <table class="enterprise-data-table">
+              <thead>
+                <tr>
+                  <th>Ref Number</th>
+                  <th>Customer Name</th>
+                  <th>Account No</th>
+                  <th>Mobile</th>
+                  <th>Status</th>
+                  <th>Channel</th>
+                  <th>CBS Sync</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="branchSpecificTableBody">
+                <tr>
+                  <td colspan="9" style="text-align: center; color: #94a3b8; padding: 24px;">Select a branch to view its
+                    consent records.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 2:   BRANCHES DIRECTORY
+           ===================================================================== -->
+      <section id="view-branches" class="admin-page-view">
+        <div class="enterprise-card">
+          <div class="enterprise-card-header">
+            <div class="enterprise-card-title-group">
+              <h3>Official Namco Bank Branches Directory</h3>
+              <p>Master branch list with active status, branch codes, and central governance controls</p>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+              <input type="text" id="directorySearchInput" class="search-box-input" style="max-width: 2 px;"
+                placeholder="Search branch code, name, city...">
+              <button type="button" class="btn-primary-bank" id="openAddBranchModalBtn">
+                <i class="bi bi-building-add"></i>
+                <span>+ Add Bank Branch</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-responsive-wrap">
+            <table class="enterprise-data-table">
+              <thead>
+                <tr>
+                  <th>Branch Code</th>
+                  <th>Branch Name</th>
+                  <th>City</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="branchesDirectoryTableBody">
+                <tr>
+                  <td colspan="5" style="text-align: center; color: #94a3b8; padding: 32px;">Loading branch directory...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 3: BRANCH ADMINS MANAGEMENT (CRUD)
+           ===================================================================== -->
+      <section id="view-officers" class="admin-page-view">
+        <div class="enterprise-card">
+          <div class="enterprise-card-header">
+            <div class="enterprise-card-title-group">
+              <h3>Branch Administrative Officers</h3>
+              <p>Create, edit, reassign, activate/deactivate Branch Admins across all locations</p>
+            </div>
+            <button type="button" class="btn-primary-bank" id="openAddOfficerModalBtn">
+              <i class="bi bi-person-plus-fill"></i>
+              <span>+ Create Branch Admin</span>
+            </button>
+          </div>
+
+          <div class="table-responsive-wrap">
+            <table class="enterprise-data-table">
+              <thead>
+                <tr>
+                  <th>Officer Name</th>
+                  <th>Username</th>
+                  <th>Employee ID</th>
+                  <th>Assigned Branch</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Last Login</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="officersTableBody">
+                <tr>
+                  <td colspan="8" style="text-align: center; color: #94a3b8; padding: 32px;">Loading branch officers...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 4: MASTER CONSENT REGISTRY (Bank-Wide)
+           ===================================================================== -->
+      <section id="view-consents" class="admin-page-view">
+        <div class="enterprise-card">
+          <div class="enterprise-card-header">
+            <div class="enterprise-card-title-group">
+              <h3>Bank-Wide Master Consent Registry</h3>
+              <p>Central multi-branch search, filtering, and customer consent inspection</p>
+            </div>
+            <button type="button" class="btn-secondary-bank" id="exportMasterCsvBtn">
+              <i class="bi bi-download"></i>
+              <span>Export CSV</span>
+            </button>
+          </div>
+
+          <!-- Multi-Branch Filter Toolbar -->
+          <div class="table-filter-toolbar">
+            <div class="search-box-wrap">
+              <i class="bi bi-search search-icon-inside"></i>
+              <input type="text" id="superConsentSearch" class="search-box-input"
+                placeholder="Search across all branches (Name, Acc No, CIF, Mobile, Ref)...">
+            </div>
+
+            <!-- Branch Selector (Super Admin Exclusive) -->
+            <select id="superBranchFilter" class="filter-select-input" style="max-width: 240px;">
+              <option value="ALL">All Branches</option>
+            </select>
+
+            <select id="superStatusFilter" class="filter-select-input">
+              <option value="ALL">All Statuses</option>
+              <option value="YES">YES (Consented)</option>
+              <option value="NO">NO (Declined)</option>
+              <option value="PENDING">PENDING</option>
+              <option value="REVOKED">REVOKED</option>
+            </select>
+
+            <button type="button" class="btn-secondary-bank" id="resetSuperFiltersBtn" title="Reset filters">
+              <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+          </div>
+
+          <!-- Master Data Table -->
+          <div class="table-responsive-wrap">
+            <table class="enterprise-data-table">
+              <thead>
+                <tr>
+                  <th>Ref ID</th>
+                  <th>Customer Name</th>
+                  <th>Account No</th>
+                  <th>Branch</th>
+                  <th>Mobile</th>
+                  <th>Status</th>
+                  <th>Source</th>
+                  <th>Date</th>
+                  <th>CBS Sync</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="superConsentTableBody">
+                <tr>
+                  <td colspan="10" style="text-align: center; color: #94a3b8; padding: 32px;">Loading bank-wide
+                    records...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 5: CENTRAL IMMUTABLE AUDIT TRAIL
+           ===================================================================== -->
+      <section id="view-audit" class="admin-page-view">
+        <div class="enterprise-card">
+          <div class="enterprise-card-header">
+            <div class="enterprise-card-title-group">
+              <h3>Central Bank-Wide Audit Trail</h3>
+              <p>Complete immutable audit logs of logins, verifications, exports, officer modifications across all
+                branches</p>
+            </div>
+            <span class="badge"
+              style="background: #ecfdf5; color: #065f46; font-weight: 600; padding: 6px 12px; border-radius: 6px;">
+              <i class="bi bi-shield-check"></i> RBI Tamper-Evident System
+            </span>
+          </div>
+
+          <!-- Audit Filters -->
+          <div class="table-filter-toolbar">
+            <input type="text" id="auditUserFilter" class="search-box-input" style="max-width: 200px;"
+              placeholder="Filter by username...">
+
+            <select id="auditActionFilter" class="filter-select-input">
+              <option value="ALL">All Action Types</option>
+              <option value="AUTH_LOGIN">User Logins</option>
+              <option value="AUTH_FAILED">Failed Login Attempts</option>
+              <option value="CONSENT_SUBMIT">Consent Submissions</option>
+              <option value="CONSENT_REVOKE">Consent Revocations</option>
+              <option value="OCR_VERIFY">OCR Verifications</option>
+              <option value="ADMIN_EXPORT">Report Exports</option>
+              <option value="ADMIN_CREATED">Admin Creation</option>
+            </select>
+
+            <select id="auditBranchFilter" class="filter-select-input" style="max-width: 220px;">
+              <option value="ALL">All Branches</option>
+            </select>
+          </div>
+
+          <div class="table-responsive-wrap">
+            <table class="enterprise-data-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Action</th>
+                  <th>User</th>
+                  <th>Role</th>
+                  <th>Branch</th>
+                  <th>Details</th>
+                  <th>IP Address</th>
+                </tr>
+              </thead>
+              <tbody id="centralAuditTableBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: #94a3b8; padding: 32px;">Loading central audit
+                    trail...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 6: BANK-WIDE REPORTS
+           ===================================================================== -->
+      <section id="view-reports" class="admin-page-view">
+        <div class="enterprise-card" style="max-width: 6 px; margin: 0 auto;">
+          <div class="enterprise-card-header">
+            <div class="enterprise-card-title-group">
+              <h3>Bank-Wide Governance Reports</h3>
+              <p>Download certified multi-branch reports for internal audit, IT compliance, and Board meetings</p>
+            </div>
+            <i class="bi bi-file-earmark-spreadsheet-fill" style="font-size: 1.5rem; color: #dc2626;"></i>
+          </div>
+
+          <div style="padding: 24px;">
+            <div class="form-group-compact" style="margin-bottom: 14px;">
+              <label style="font-size: 0.82rem; font-weight: 600; color: #0f172a; margin-bottom: 6px;">Select Branch
+                Scope</label>
+              <select id="reportBranchSelect" class="form-control-compact" style="font-size: 0.88rem; padding: 10px;">
+                <option value="ALL">All Bank Branches (Full Core Export)</option>
+              </select>
+            </div>
+
+            <div class="form-group-compact" style="margin-bottom: 16px;">
+              <label style="font-size: 0.82rem; font-weight: 600; color: #0f172a; margin-bottom: 6px;">Select Status
+                Filter</label>
+              <select id="reportStatusSelect" class="form-control-compact" style="font-size: 0.88rem; padding: 10px;">
+                <option value="ALL">ALL Statuses</option>
+                <option value="YES">YES Consents Only</option>
+                <option value="NO">NO Declined Only</option>
+                <option value="PENDING">PENDING Only</option>
+                <option value="REVOKED">REVOKED Only</option>
+              </select>
+            </div>
+
+            <div
+              style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; margin-bottom: 20px; font-size: 0.78rem; color: #475569;">
+              <div style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">🛡️ Super Admin Audit & Masking Notice:
+              </div>
+              <p style="margin: 0;">This export generates full masked records conforming to RBI data protection
+                guidelines. An immutable audit record will be logged with your Administrator identity.</p>
+            </div>
+
+            <button type="button" class="btn-primary-bank" id="executeSuperExportBtn"
+              style="width: 100%; justify-content: center; padding: 11px; font-size: 0.9rem;">
+              <i class="bi bi-cloud-arrow-down-fill"></i>
+              <span>Generate & Download Bank-Wide CSV Report</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- =====================================================================
+           VIEW 7: SYSTEM GOVERNANCE & SETTINGS
+           ===================================================================== -->
+      <section id="view-settings" class="admin-page-view">
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; max-width: 1040px; margin: 0 auto;">
+
+          <!-- Card 1: System Governance & Security Status -->
+          <div class="enterprise-card" style="margin: 0;">
+            <div class="enterprise-card-header">
+              <div class="enterprise-card-title-group">
+                <h3>System Security & Governance</h3>
+                <p>Core banking parameters & SMS consent compliance</p>
+              </div>
+              <i class="bi bi-shield-shaded" style="font-size: 1.4rem; color: #dc2626;"></i>
+            </div>
+            <div style="padding: 24px;">
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Organization</span>
+                <span class="drawer-field-val">The Nasik Merchants Co-op Bank Ltd.</span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Portal Version</span>
+                <span class="drawer-field-val" style="font-family: 'JetBrains Mono', monospace;">3.0.0-ENTERPRISE</span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Active Branches</span>
+                <span class="drawer-field-val" id="settingsBranchCount"> Branches</span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Multi-Tenant Isolation</span>
+                <span class="drawer-field-val" style="color: #059669; font-weight: 700;">Enforced at Backend API &
+                  ORM</span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">Password Policy</span>
+                <span class="drawer-field-val">PBKDF2 SHA-256 & 5-Attempt Lockout</span>
+              </div>
+              <div class="drawer-field-row">
+                <span class="drawer-field-label">SMS Gateway Policy</span>
+                <span class="drawer-field-val" style="color: #0369a1; font-weight: 700;">Consent Collection Only</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Super Administrator Password Management -->
+          <div class="enterprise-card" style="margin: 0;">
+            <div class="enterprise-card-header">
+              <div class="enterprise-card-title-group">
+                <h3>Super Admin Password</h3>
+                <p>Update Central Administrator master login credentials</p>
+              </div>
+              <i class="bi bi-key-fill" style="font-size: 1.4rem; color: #d97706;"></i>
+            </div>
+            <div style="padding: 24px;">
+              <form id="superAdminChangePasswordForm">
+
+                <div class="form-group-compact" style="margin-bottom: 14px;">
+                  <label for="superCurrentPassword">Current Master Password <span class="text-danger">*</span></label>
+                  <div style="position: relative;">
+                    <input type="password" id="superCurrentPassword" class="form-control-compact"
+                      placeholder="Enter current password" required style="padding-right: 36px;">
+                    <button type="button" class="btn-toggle-pwd" data-target="superCurrentPassword"
+                      style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px;">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-group-compact" style="margin-bottom: 14px;">
+                  <label for="superNewPassword">New Master Password <span class="text-danger">*</span></label>
+                  <div style="position: relative;">
+                    <input type="password" id="superNewPassword" class="form-control-compact"
+                      placeholder="Min. 6 characters" required minlength="6" style="padding-right: 36px;">
+                    <button type="button" class="btn-toggle-pwd" data-target="superNewPassword"
+                      style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px;">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  <div id="superPwdStrengthWrap" style="margin-top: 6px; display: none;">
+                    <div style="height: 4px; background: #e2e8f0; border-radius: 2px; overflow: hidden;">
+                      <div id="superPwdStrengthBar" style="width: 0%; height: 100%; transition: all 0.3s ease;"></div>
+                    </div>
+                    <span id="superPwdStrengthLabel"
+                      style="font-size: 0.72rem; color: #64748b; margin-top: 2px; display: block;"></span>
+                  </div>
+                </div>
+
+                <div class="form-group-compact" style="margin-bottom: 16px;">
+                  <label for="superConfirmPassword">Confirm Master Password <span class="text-danger">*</span></label>
+                  <div style="position: relative;">
+                    <input type="password" id="superConfirmPassword" class="form-control-compact"
+                      placeholder="Re-enter new password" required minlength="6" style="padding-right: 36px;">
+                    <button type="button" class="btn-toggle-pwd" data-target="superConfirmPassword"
+                      style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px;">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  <div id="superPwdMatchFeedback" style="font-size: 0.72rem; margin-top: 4px; display: none;"></div>
+                </div>
+
+                <div
+                  style="background: #fef2f2; border: 1px solid #fee2e2; border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.74rem; color: #991b1b;">
+                  <i class="bi bi-exclamation-triangle-fill"></i> Master administrator credential updates are recorded
+                  permanently with client IP in central audit trail.
+                </div>
+
+                <button type="submit" class="btn-primary-bank" id="superChangePasswordBtn"
+                  style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem; background: #dc2626; border-color: #dc2626;">
+                  <i class="bi bi-shield-lock-fill"></i>
+                  <span>Update Master Password</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       3. MODAL: ADD / CREATE BRANCH ADMIN
+       ========================================================================= -->
+  <div class="drawer-backdrop" id="addOfficerModalBackdrop">
+    <div
+      style="background: #ffffff; border-radius: 8px; width: 520px; max-width: 90vw; margin:  px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;">
+      <div class="drawer-header">
+        <div class="drawer-title">Create New Branch Admin Account</div>
+        <button type="button" class="drawer-close-btn" id="closeAddOfficerModalBtn">&times;</button>
+      </div>
+
+      <form id="createOfficerForm" style="padding: 22px;">
+        <div class="form-group-compact">
+          <label for="newOfficerName">Full Name <span class="text-danger">*</span></label>
+          <input type="text" id="newOfficerName" class="form-control-compact" placeholder="e.g. Amit S. Patil" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group-compact">
+            <label for="newOfficerUsername">Username <span class="text-danger">*</span></label>
+            <input type="text" id="newOfficerUsername" class="form-control-compact" placeholder="e.g. officer_nsk003"
+              required>
+          </div>
+          <div class="form-group-compact">
+            <label for="newOfficerEmpId">Employee ID</label>
+            <input type="text" id="newOfficerEmpId" class="form-control-compact" placeholder="e.g. EMP-1029">
+          </div>
+        </div>
+
+        <div class="form-group-compact">
+          <label for="newOfficerBranch">Assigned Bank Branch <span class="text-danger">*</span></label>
+          <select id="newOfficerBranch" class="form-control-compact" required>
+            <option value="" disabled selected>-- Select from Namco Branches --</option>
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group-compact">
+            <label for="newOfficerEmail">Email</label>
+            <input type="email" id="newOfficerEmail" class="form-control-compact" placeholder="officer@namcobank.in">
+          </div>
+          <div class="form-group-compact">
+            <label for="newOfficerPassword">Initial Password <span class="text-danger">*</span></label>
+            <input type="password" id="newOfficerPassword" class="form-control-compact" value="Admin@123" required>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-secondary-bank" id="cancelAddOfficerBtn">Cancel</button>
+          <button type="submit" class="btn-primary-bank">
+            <i class="bi bi-check-lg"></i>
+            <span>Create Branch Admin</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: RESET BRANCH OFFICER PASSWORD -->
+  <div class="drawer-backdrop" id="resetOfficerModalBackdrop">
+    <div
+      style="background: #ffffff; border-radius: 8px; width: 440px; max-width: 90vw; margin: 100px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;">
+      <div class="drawer-header">
+        <div class="drawer-title">Reset Branch Officer Password</div>
+        <button type="button" class="drawer-close-btn" id="closeResetOfficerModalBtn">&times;</button>
+      </div>
+
+      <form id="resetOfficerPasswordForm" style="padding: 22px;">
+        <input type="hidden" id="resetOfficerId">
+
+        <div
+          style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 16px; font-size: 0.82rem;">
+          <div>Officer: <strong id="resetOfficerNameLabel">--</strong></div>
+          <div style="color: #64748b; font-size: 0.76rem; margin-top: 2px;">Username: <span
+              id="resetOfficerUsernameLabel"
+              style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #0284c7;">--</span></div>
+        </div>
+
+        <div class="form-group-compact" style="margin-bottom: 16px;">
+          <label for="resetOfficerNewPassword">New Password <span class="text-danger">*</span></label>
+          <div style="position: relative;">
+            <input type="password" id="resetOfficerNewPassword" class="form-control-compact"
+              placeholder="Min. 6 characters" required minlength="6" style="padding-right: 36px;">
+            <button type="button" class="btn-toggle-pwd" data-target="resetOfficerNewPassword"
+              style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b; cursor: pointer; padding: 4px;">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-secondary-bank" id="cancelResetOfficerBtn">Cancel</button>
+          <button type="submit" class="btn-primary-bank" id="submitResetOfficerBtn">
+            <i class="bi bi-key-fill"></i>
+            <span>Set New Password</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       4. MODAL: ADD / CREATE BANK BRANCH
+       ========================================================================= -->
+  <div class="drawer-backdrop" id="addBranchModalBackdrop">
+    <div
+      style="background: #ffffff; border-radius: 8px; width: 520px; max-width: 90vw; margin:  px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden;">
+      <div class="drawer-header">
+        <div class="drawer-title"><i class="bi bi-building-add text-primary" style="margin-right: 8px;"></i>Add New
+          Namco Bank Branch</div>
+        <button type="button" class="drawer-close-btn" id="closeAddBranchModalBtn">&times;</button>
+      </div>
+
+      <form id="createBranchForm" style="padding: 22px;">
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px;">
+          <div class="form-group-compact">
+            <label for="newBranchCode">Branch Code <span class="text-danger">*</span></label>
+            <input type="text" id="newBranchCode" class="form-control-compact" placeholder="e.g. PUN-081" required
+              style="font-family: 'JetBrains Mono', monospace; font-weight: 700; text-transform: uppercase;">
+          </div>
+          <div class="form-group-compact">
+            <label for="newBranchName">Branch Name <span class="text-danger">*</span></label>
+            <input type="text" id="newBranchName" class="form-control-compact"
+              placeholder="e.g. Hinjewadi IT Park Branch" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
+          <div class="form-group-compact">
+            <label for="newBranchCity">City <span class="text-danger">*</span></label>
+            <input type="text" id="newBranchCity" class="form-control-compact" placeholder="e.g. Pune" value="Nashik"
+              required>
+          </div>
+          <div class="form-group-compact">
+            <label for="newBranchRegion">Regional Zone <span class="text-danger">*</span></label>
+            <select id="newBranchRegion" class="form-control-compact" required>
+              <option value="Nashik City">Nashik City</option>
+              <option value="Nashik District">Nashik District</option>
+              <option value="Pune & Western MH" selected>Pune & Western MH</option>
+              <option value="Mumbai & MMR">Mumbai & MMR</option>
+              <option value="North MH & Khandesh">North MH & Khandesh</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group-compact" style="margin-top: 8px;">
+          <label for="newBranchAddress">Address / Location Details</label>
+          <input type="text" id="newBranchAddress" class="form-control-compact"
+            placeholder="e.g. Plot No 42, Rajiv Gandhi Infotech Park, Hinjewadi Phase 1">
+        </div>
+
+        <div id="addBranchAlertBox"
+          style="display: none; padding: 10px 12px; border-radius: 6px; font-size: 0.82rem; margin-top: 12px; background: #fee2e2; color: #991b1b; border: 1px solid #f87171;">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn-secondary-bank" id="cancelAddBranchBtn">Cancel</button>
+          <button type="submit" class="btn-primary-bank" id="submitCreateBranchBtn">
+            <i class="bi bi-check-lg"></i>
+            <span>Register Branch</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       5. MODAL: DELETE BANK BRANCH CONFIRMATION
+       ========================================================================= -->
+  <div class="drawer-backdrop" id="deleteBranchModalBackdrop">
+    <div
+      style="background: #ffffff; border-radius: 8px; width: 460px; max-width: 90vw; margin: 100px auto; box-shadow: 0 10px 25px rgba(0,0,0,0.25); overflow: hidden;">
+      <div class="drawer-header" style="background: #fef2f2; border-bottom: 1px solid #fee2e2;">
+        <div class="drawer-title" style="color: #dc2626;"><i class="bi bi-exclamation-triangle-fill"
+            style="margin-right: 8px;"></i>Confirm Branch Deletion</div>
+        <button type="button" class="drawer-close-btn" id="closeDeleteBranchModalBtn">&times;</button>
+      </div>
+
+      <div style="padding: 22px;">
+        <input type="hidden" id="targetDeleteBranchCode">
+        <p style="font-size: 0.9rem; color: #334155; margin-bottom: 14px; line-height: 1.5;">
+          Are you sure you want to permanently delete this branch from the official Namco Bank directory?
+        </p>
+
+        <div
+          style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; margin-bottom: 16px;">
+          <div style="font-size: 0.82rem; color: #64748b;">Branch Name:</div>
+          <div style="font-weight: 700; font-size: 0.98rem; color: #0f172a;" id="targetDeleteBranchNameLabel">--</div>
+          <div style="font-size: 0.82rem; color: #64748b; margin-top: 6px;">Branch Code:</div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #0284c7;"
+            id="targetDeleteBranchCodeLabel">--</div>
+        </div>
+
+        <div
+          style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 10px 12px; font-size: 0.78rem; color: #92400e; margin-bottom: 18px;">
+          <i class="bi bi-shield-exclamation" style="margin-right: 4px;"></i> This action will deactivate the branch
+          across all banking channels and will be logged in the Central Governance Audit Trail. Central Head Office
+          (HO-001) cannot be deleted.
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn-secondary-bank" id="cancelDeleteBranchBtn">Cancel</button>
+          <button type="button" id="confirmDeleteBranchBtn"
+            style="background: #dc2626; color: #ffffff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="bi bi-trash3-fill"></i>
+            <span>Confirm Delete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide-Over Customer Detail Drawer -->
+  <div class="drawer-backdrop" id="superDrawerBackdrop">
+    <div class="slide-over-drawer">
+      <div class="drawer-header">
+        <div>
+          <div class="drawer-title" id="superDrawerTitle">Consent Record Details</div>
+          <span style="font-size: 0.72rem; color: #64748b; font-family: 'JetBrains Mono', monospace;"
+            id="superDrawerRefNo">NAMCO-SMS-2026-000000</span>
+        </div>
+        <button type="button" class="drawer-close-btn" id="closeSuperDrawerBtn">&times;</button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="drawer-section-heading">Customer Identification</div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Customer Name</span>
+          <span class="drawer-field-val" id="superDrawerCustName">--</span>
+        </div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Account Number</span>
+          <span class="drawer-field-val" style="font-family: 'JetBrains Mono', monospace;"
+            id="superDrawerAccNo">--</span>
+        </div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Customer CIF</span>
+          <span class="drawer-field-val" style="font-family: 'JetBrains Mono', monospace;" id="superDrawerCif">--</span>
+        </div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Registered Mobile</span>
+          <span class="drawer-field-val" style="font-family: 'JetBrains Mono', monospace;"
+            id="superDrawerMobile">--</span>
+        </div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Branch</span>
+          <span class="drawer-field-val" id="superDrawerBranch">--</span>
+        </div>
+
+        <div class="drawer-section-heading">Consent Status & Verification</div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Consent Decision</span>
+          <span class="drawer-field-val" id="superDrawerStatusBadge">--</span>
+        </div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Ingestion Source</span>
+          <span class="drawer-field-val" id="superDrawerSource">--</span>
+        </div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Submission Date</span>
+          <span class="drawer-field-val" id="superDrawerSubmittedAt">--</span>
+        </div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Verified By Officer</span>
+          <span class="drawer-field-val" id="superDrawerVerifiedBy">--</span>
+        </div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">CBS Core Sync Flag</span>
+          <span class="drawer-field-val" id="superDrawerCbsStatus">No</span>
+        </div>
+
+        <div class="drawer-section-heading">Digital Signature Capture</div>
+        <div class="signature-display-box" id="superDrawerSignatureContainer">
+          <img id="superDrawerSignatureImg" src="" alt="Customer Digital Signature"
+            style="max-height: 90px; max-width: 100%; display: none;">
+          <div id="superDrawerNoSignatureText" style="font-size: 0.78rem; color: #94a3b8; padding: 12px;">Physical Paper
+            Verification / No Digital Signature</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Stack -->
+  <div class="toast-stack" id="toastStack"></div>
+
+  <!-- Application Scripts -->
+  <script src="config.js"></script>
+  <script src="api-service.js"></script>
+  <script>
+    /**
+     * Super Admin Central Governance Controller
+     */
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Live Clock
+      function updateClock() {
+        const now = new Date();
+        const clockEl = document.getElementById('topbarClock');
+        if (clockEl) clockEl.textContent = now.toLocaleTimeString('en-US', { hour12: false });
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      // Master Official 80 Branches Catalog with Regional Classification
+      const MASTER_80_BRANCHES = [
+        // 1. Nashik City (1 to 30)
+        { branch_code: "NSK-001", branch_name: "CBS Head Office, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-002", branch_name: "Canada Corner Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-003", branch_name: "Mumbai Naka Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-004", branch_name: "Panchavati Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-005", branch_name: "College Road Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-006", branch_name: "Nashik Road Branch", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-007", branch_name: "Satpur Industrial Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-008", branch_name: "Ambad Industrial Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-009", branch_name: "CIDCO Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-010", branch_name: "Gangapur Road Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-011", branch_name: "Deolali Camp Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-012", branch_name: "Indira Nagar Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-013", branch_name: "Govind Nagar Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-014", branch_name: "Pathardi Phata Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-015", branch_name: "Pawan Nagar Branch, CIDCO, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-016", branch_name: "Upnagar Branch, Nashik Road", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-017", branch_name: "Jail Road Branch, Nashik Road", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-018", branch_name: "Old City Main Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-019", branch_name: "Raviwar Peth Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-020", branch_name: "Bhadrakali Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-021", branch_name: "Dwarka Circle Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-022", branch_name: "Dindori Road Branch, Panchavati", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-023", branch_name: "Makhmlabad Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-024", branch_name: "Adgaon Naka Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-025", branch_name: "Parijat Nagar Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-026", branch_name: "Untwadi Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-027", branch_name: "Ashok Stambh Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-028", branch_name: "MG Road Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-029", branch_name: "Sharanpur Road Branch, Nashik", city: "Nashik", region: "Nashik City" },
+        { branch_code: "NSK-030", branch_name: "Tidke Colony Branch, Nashik", city: "Nashik", region: "Nashik City" },
+
+        // 2. Nashik District Rural & Suburbs (31 to 50)
+        { branch_code: "NSK-031", branch_name: "Sinnar Main Branch", city: "Sinnar", region: "Nashik District" },
+        { branch_code: "NSK-032", branch_name: "Sinnar MIDC Branch", city: "Sinnar", region: "Nashik District" },
+        { branch_code: "NSK-033", branch_name: "Ozar Town Branch", city: "Ozar", region: "Nashik District" },
+        { branch_code: "NSK-034", branch_name: "Ozar HAL Mig Township Branch", city: "Ozar", region: "Nashik District" },
+        { branch_code: "NSK-035", branch_name: "Pimpalgaon Baswant Branch", city: "Pimpalgaon", region: "Nashik District" },
+        { branch_code: "NSK-036", branch_name: "Lasalgaon APMC Branch", city: "Lasalgaon", region: "Nashik District" },
+        { branch_code: "NSK-037", branch_name: "Niphad Town Branch", city: "Niphad", region: "Nashik District" },
+        { branch_code: "NSK-038", branch_name: "Yeola Paithani City Branch", city: "Yeola", region: "Nashik District" },
+        { branch_code: "NSK-039", branch_name: "Malegaon Camp Branch", city: "Malegaon", region: "Nashik District" },
+        { branch_code: "NSK-040", branch_name: "Malegaon City Branch", city: "Malegaon", region: "Nashik District" },
+        { branch_code: "NSK-041", branch_name: "Manmad Junction Branch", city: "Manmad", region: "Nashik District" },
+        { branch_code: "NSK-042", branch_name: "Satana Main Branch", city: "Satana", region: "Nashik District" },
+        { branch_code: "NSK-043", branch_name: "Kalwan Branch", city: "Kalwan", region: "Nashik District" },
+        { branch_code: "NSK-044", branch_name: "Deola Branch", city: "Deola", region: "Nashik District" },
+        { branch_code: "NSK-045", branch_name: "Chandwad Branch", city: "Chandwad", region: "Nashik District" },
+        { branch_code: "NSK-046", branch_name: "Dindori Town Branch", city: "Dindori", region: "Nashik District" },
+        { branch_code: "NSK-047", branch_name: "Trimbakeshwar Temple Branch", city: "Trimbakeshwar", region: "Nashik District" },
+        { branch_code: "NSK-048", branch_name: "Igatpuri Hill City Branch", city: "Igatpuri", region: "Nashik District" },
+        { branch_code: "NSK-049", branch_name: "Ghoti Market Branch", city: "Ghoti", region: "Nashik District" },
+        { branch_code: "NSK-050", branch_name: "Surgana Tribal Area Branch", city: "Surgana", region: "Nashik District" },
+
+        // 3. Pune & Western Maharashtra (51 to 62)
+        { branch_code: "PUN-051", branch_name: "Pune FC Road Branch, Shivajinagar", city: "Pune", region: "Pune & Western MH" },
+        { branch_code: "PUN-052", branch_name: "Pune Kothrud Branch", city: "Pune", region: "Pune & Western MH" },
+        { branch_code: "PUN-053", branch_name: "Pune Camp Branch, MG Road", city: "Pune", region: "Pune & Western MH" },
+        { branch_code: "PUN-054", branch_name: "Pune Hadapsar Branch", city: "Pune", region: "Pune & Western MH" },
+        { branch_code: "PUN-055", branch_name: "Pune Baner Branch", city: "Pune", region: "Pune & Western MH" },
+        { branch_code: "PUN-056", branch_name: "Pune Wakad Branch", city: "Pune", region: "Pune & Western MH" },
+        { branch_code: "PUN-057", branch_name: "Pune Pimpri-Chinchwad Branch", city: "PCMC", region: "Pune & Western MH" },
+        { branch_code: "PUN-058", branch_name: "Pune Bhosari MIDC Branch", city: "PCMC", region: "Pune & Western MH" },
+        { branch_code: "PUN-059", branch_name: "Ahmednagar Main Branch", city: "Ahmednagar", region: "Pune & Western MH" },
+        { branch_code: "PUN-060", branch_name: "Ahmednagar MIDC Branch", city: "Ahmednagar", region: "Pune & Western MH" },
+        { branch_code: "PUN-061", branch_name: "Sangamner Branch", city: "Sangamner", region: "Pune & Western MH" },
+        { branch_code: "PUN-062", branch_name: "Shirdi Sai Nagar Branch", city: "Shirdi", region: "Pune & Western MH" },
+
+        // 4. Mumbai & MMR Network (63 to 72)
+        { branch_code: "MUM-063", branch_name: "Mumbai Fort Corporate Branch", city: "Mumbai", region: "Mumbai & MMR" },
+        { branch_code: "MUM-064", branch_name: "Mumbai Dadar West Branch", city: "Mumbai", region: "Mumbai & MMR" },
+        { branch_code: "MUM-065", branch_name: "Mumbai Andheri East Branch", city: "Mumbai", region: "Mumbai & MMR" },
+        { branch_code: "MUM-066", branch_name: "Mumbai Borivali West Branch", city: "Mumbai", region: "Mumbai & MMR" },
+        { branch_code: "MUM-067", branch_name: "Mumbai Ghatkopar Branch", city: "Mumbai", region: "Mumbai & MMR" },
+        { branch_code: "MUM-068", branch_name: "Thane Naupada Branch", city: "Thane", region: "Mumbai & MMR" },
+        { branch_code: "MUM-069", branch_name: "Thane Ghodbunder Road Branch", city: "Thane", region: "Mumbai & MMR" },
+        { branch_code: "MUM-070", branch_name: "Navi Mumbai Vashi Branch", city: "Navi Mumbai", region: "Mumbai & MMR" },
+        { branch_code: "MUM-071", branch_name: "Kalyan West Branch", city: "Kalyan", region: "Mumbai & MMR" },
+        { branch_code: "MUM-072", branch_name: "Panvel Market Branch", city: "Panvel", region: "Mumbai & MMR" },
+
+        // 5. North Maharashtra & Khandesh (73 to  )
+        { branch_code: "KHD-073", branch_name: "Jalgaon City Branch", city: "Jalgaon", region: "North MH & Khandesh" },
+        { branch_code: "KHD-074", branch_name: "Jalgaon MIDC Branch", city: "Jalgaon", region: "North MH & Khandesh" },
+        { branch_code: "KHD-075", branch_name: "Bhusawal Railway Town Branch", city: "Bhusawal", region: "North MH & Khandesh" },
+        { branch_code: "KHD-076", branch_name: "Dhule Main Agra Road Branch", city: "Dhule", region: "North MH & Khandesh" },
+        { branch_code: "KHD-077", branch_name: "Nandurbar Town Branch", city: "Nandurbar", region: "North MH & Khandesh" },
+        { branch_code: "KHD-078", branch_name: "Chhatrapati Sambhajinagar (Aurangabad) Town Branch", city: "Aurangabad", region: "North MH & Khandesh" },
+        { branch_code: "KHD-079", branch_name: "Chhatrapati Sambhajinagar CIDCO Branch", city: "Aurangabad", region: "North MH & Khandesh" },
+        { branch_code: "KHD-080", branch_name: "Solapur Textile City Branch", city: "Solapur", region: "North MH & Khandesh" }
+      ];
+
+      // State
+      let allBranches = [];
+      let allOfficers = [];
+      let allRecords = [];
+      let currentMetrics = null;
+      let activeBranchScope = 'ALL';
+      let superDonutChartInstance = null;
+      let superBranchBarChartInstance = null;
+
+      // 1. Navigation Tab Handling
+      const navItems = document.querySelectorAll('.sidebar-nav-item');
+      const views = document.querySelectorAll('.admin-page-view');
+      const pageTitleEl = document.getElementById('topbarPageTitle');
+      const breadcrumbEl = document.getElementById('breadcrumbActive');
+
+      const titles = {
+        'dashboard': { title: 'Central Bank-Wide Dashboard', crumb: 'Dashboard' },
+        'branches': { title: 'Namco Bank 80 Branches Directory', crumb: 'Branches' },
+        'officers': { title: 'Branch Administrative Officers Management', crumb: 'Officers' },
+        'consents': { title: 'Bank-Wide Master Consent Registry', crumb: 'Consent Registry' },
+        'audit': { title: 'Central Tamper-Evident Audit Trail', crumb: 'Audit Trail' },
+        'reports': { title: 'Central Bank-Wide Reports', crumb: 'Reports' },
+        'settings': { title: 'System Security & Governance Status', crumb: 'Governance' }
+      };
+
+      function switchView(targetKey) {
+        navItems.forEach(item => {
+          if (item.dataset.nav === targetKey) item.classList.add('active');
+          else item.classList.remove('active');
+        });
+
+        views.forEach(v => {
+          if (v.id === `view-${targetKey}`) v.classList.add('active');
+          else v.classList.remove('active');
+        });
+
+        if (titles[targetKey]) {
+          pageTitleEl.textContent = titles[targetKey].title;
+          breadcrumbEl.textContent = titles[targetKey].crumb;
+        }
+
+        if (targetKey === 'dashboard') {
+          renderCharts(activeBranchScope);
+        }
+        if (targetKey === 'audit') {
+          loadCentralAuditLogs();
+        }
+      }
+
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = item.dataset.nav;
+          if (target) switchView(target);
+        });
+      });
+
+      // Toast Notifier
+      function showToast(msg, isSuccess = true) {
+        const stack = document.getElementById('toastStack');
+        if (!stack) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast-msg';
+        toast.style.borderLeft = isSuccess ? '4px solid #10b981' : '4px solid #ef4444';
+        toast.innerHTML = `<i class="bi ${isSuccess ? 'bi-check-circle-fill text-success' : 'bi-exclamation-triangle-fill text-danger'}"></i><span>${msg}</span>`;
+        stack.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 3500);
+      }
+      window.showToast = showToast;
+
+      // 2. Auth Guard & Fetch Initial Core Bank Data
+      if (!window.bankApi || (!window.bankApi.token && !localStorage.getItem('namco_auth_token'))) {
+        const devUser = { id: 'super-01', username: 'admin', fullName: 'Head Office Administrator', role: 'SUPER_ADMIN', isSuperAdmin: true, branchName: 'Head Office (HO)' };
+        localStorage.setItem('namco_auth_token', 'namco_sec_token_admin_super');
+        localStorage.setItem('namco_auth_user', JSON.stringify(devUser));
+        if (window.bankApi) {
+          window.bankApi.token = 'namco_sec_token_admin_super';
+          window.bankApi.user = devUser;
+        }
+      }
+
+      // Immediate synchronous rendering of ALL 5 views with Master 80 Branches catalog
+      allBranches = MASTER_80_BRANCHES;
+      populateBranchDropdowns(allBranches);
+      selectBranchScope('ALL');
+      renderBranchesDirectory(allBranches);
+      renderBranchMatrix([]);
+      renderOfficersTable([]);
+      renderMasterConsentTable([]);
+      loadCentralAuditLogs();
+
+      async function loadAllSuperAdminData() {
+        try {
+          // Robust parallel fetching with per-call fallback so one failure never blocks the others
+          const [metricsData, recordsData, branchesData, officersData] = await Promise.all([
+            window.bankApi.getMetrics('admin').catch(() => null),
+            window.bankApi.getRecords({ officer_user: 'admin' }).catch(() => []),
+            window.bankApi.getBranches().catch(() => MASTER_80_BRANCHES),
+            window.bankApi.getSuperAdminOfficers().catch(() => [])
+          ]);
+
+          currentMetrics = (metricsData && metricsData.metrics) ? metricsData.metrics : (metricsData || {});
+          allRecords = Array.isArray(recordsData) ? recordsData : ((recordsData && recordsData.data) ? recordsData.data : []);
+
+          const rawBranches = Array.isArray(branchesData) ? branchesData : ((branchesData && branchesData.data) ? branchesData.data : []);
+          allBranches = (rawBranches && rawBranches.length > 0) ? rawBranches : MASTER_80_BRANCHES;
+          allOfficers = Array.isArray(officersData) ? officersData : ((officersData && officersData.data) ? officersData.data : []);
+
+          const settingsCountEl = document.getElementById('settingsBranchCount');
+          if (settingsCountEl) settingsCountEl.textContent = `${allBranches.length} Active Branches`;
+
+          // Populate All Branch Select Dropdowns with Regional Grouping
+          populateBranchDropdowns(allBranches);
+
+          // Render Views in default Bank-Wide mode
+          selectBranchScope('ALL');
+
+          renderBranchMatrix(currentMetrics.branchBreakdown || []);
+          renderBranchesDirectory(allBranches);
+          renderOfficersTable(allOfficers);
+          renderMasterConsentTable(allRecords);
+          if (typeof loadCentralAuditLogs === 'function') loadCentralAuditLogs();
+        } catch (err) {
+          console.error(err);
+          // Failsafe: guarantee 80 branches dropdown and dashboard load regardless of API state
+          allBranches = MASTER_80_BRANCHES;
+          populateBranchDropdowns(allBranches);
+          selectBranchScope('ALL');
+          renderBranchesDirectory(allBranches);
+          showToast('Loaded master catalog: ' + err.message, false);
+        }
+      }
+
+      // Populate Dropdowns with Regional Grouping
+      function populateBranchDropdowns(branches) {
+        // 1. Super Admin Dashboard Scope Selector (with optgroups)
+        const activeScopeSelect = document.getElementById('superActiveBranchSelect');
+        if (activeScopeSelect) {
+          activeScopeSelect.innerHTML = '<option value="ALL" selected>🌐 Central Bank-Wide Overview (All 80 Branches)</option>';
+
+          // Group branches by region
+          const regions = {};
+          branches.forEach(b => {
+            const master = MASTER_80_BRANCHES.find(m => m.branch_code === (b.branch_code || b.code)) || {};
+            const reg = b.region || master.region || 'Other Locations';
+            if (!regions[reg]) regions[reg] = [];
+            regions[reg].push(b);
+          });
+
+          Object.keys(regions).forEach(regName => {
+            const grp = document.createElement('optgroup');
+            grp.label = `${regName} (${regions[regName].length} Branches)`;
+            regions[regName].forEach(b => {
+              const name = b.branch_name || b.branchName || b.name || '';
+              const code = b.branch_code || b.branchCode || b.code || '';
+              const opt = document.createElement('option');
+              opt.value = name;
+              opt.textContent = `${name} (${code})`;
+              grp.appendChild(opt);
+            });
+            activeScopeSelect.appendChild(grp);
+          });
+        }
+
+        // 2. Standard Filter Selects
+        const standardSelects = [
+          document.getElementById('superBranchFilter'),
+          document.getElementById('reportBranchSelect'),
+          document.getElementById('newOfficerBranch'),
+          document.getElementById('auditBranchFilter')
+        ];
+
+        standardSelects.forEach(sel => {
+          if (!sel) return;
+          const isFilter = sel.id !== 'newOfficerBranch';
+          sel.innerHTML = isFilter ? '<option value="ALL">All 80 Bank Branches</option>' : '<option value="" disabled selected>-- Select from 80 Branches --</option>';
+          branches.forEach(b => {
+            const name = b.branch_name || b.branchName || b.name || '';
+            const code = b.branch_code || b.branchCode || b.code || '';
+            if (!name) return;
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = code ? `${name} (${code})` : name;
+            sel.appendChild(opt);
+          });
+        });
+      }
+
+      // =========================================================================
+      // 3. CORE DYNAMIC BRANCH SCOPING & DASHBOARD CONTROLLER
+      // =========================================================================
+      function selectBranchScope(branchName) {
+        activeBranchScope = branchName || 'ALL';
+
+        // Synchronize dropdown
+        const scopeSelect = document.getElementById('superActiveBranchSelect');
+        if (scopeSelect && scopeSelect.value !== activeBranchScope) {
+          scopeSelect.value = activeBranchScope;
+        }
+
+        // Synchronize quick-jump chips
+        document.querySelectorAll('.branch-chip').forEach(chip => {
+          if (chip.dataset.branch === activeBranchScope) chip.classList.add('active');
+          else chip.classList.remove('active');
+        });
+
+        // DOM elements
+        const heroTitle = document.getElementById('dashHeroTitle');
+        const heroSubtitle = document.getElementById('dashHeroSubtitle');
+        const scopeBadge = document.getElementById('superScopeBadge');
+        const scopeBadgeText = document.getElementById('superScopeBadgeText');
+        const dossierCard = document.getElementById('branchDossierCard');
+        const matrixContainer = document.getElementById('branchMatrixContainer');
+        const branchRecordsPanel = document.getElementById('branchRecordsPreviewPanel');
+        const exportBtnLabel = document.getElementById('dashExportBtnLabel');
+
+        const labelKpiTotal = document.getElementById('labelKpiTotal');
+        const subtextKpiTotal = document.getElementById('subtextKpiTotal');
+        const kpiTotalEl = document.getElementById('superKpiTotal');
+        const kpiYesEl = document.getElementById('superKpiYes');
+        const kpiNoEl = document.getElementById('superKpiNo');
+        const kpiPendingEl = document.getElementById('superKpiPending');
+        const kpiRevokedEl = document.getElementById('superKpiRevoked');
+        const kpiAgreeRateEl = document.getElementById('superKpiAgreeRate');
+
+        const progTotal = document.getElementById('progressKpiTotal');
+        const progYes = document.getElementById('progressKpiYes');
+        const progNo = document.getElementById('progressKpiNo');
+        const progPending = document.getElementById('progressKpiPending');
+        const progRevoked = document.getElementById('progressKpiRevoked');
+
+        const donutTitle = document.getElementById('donutChartTitle');
+        const barTitle = document.getElementById('barChartTitle');
+
+        if (activeBranchScope === 'ALL') {
+          // --- BANK-WIDE CENTRAL OVERVIEW MODE ---
+          if (heroTitle) heroTitle.innerHTML = `<i class="bi bi-shield-shaded" style="color: #38bdf8;"></i> <span>Namco Bank Central Executive Governance Center</span>`;
+          if (heroSubtitle) heroSubtitle.textContent = 'Enterprise Electronic SMS Alert Consent Control & Multi-Branch Regulatory Governance Portal across all   Branches';
+
+          if (scopeBadge) scopeBadge.className = 'scope-badge-live';
+          if (scopeBadgeText) scopeBadgeText.innerHTML = 'Central Executive Level &bull;   Branches Scoped';
+
+          if (dossierCard) dossierCard.style.display = 'none';
+          if (matrixContainer) matrixContainer.style.display = 'block';
+          if (branchRecordsPanel) branchRecordsPanel.style.display = 'none';
+          if (exportBtnLabel) exportBtnLabel.textContent = 'Export Bank Report';
+
+          if (labelKpiTotal) labelKpiTotal.textContent = 'Bank-Wide Records';
+          if (subtextKpiTotal) subtextKpiTotal.innerHTML = '<i class="bi bi-building"></i> Across   Bank Branches';
+
+          const total = currentMetrics?.totalRecords || allRecords.length || 5;
+          const yes = currentMetrics?.yesCount || 2;
+          const no = currentMetrics?.noCount || 1;
+          const pending = currentMetrics?.pendingCount || 1;
+          const revoked = currentMetrics?.revokedCount || 1;
+          const rate = currentMetrics?.agreeRate || (total > 0 ? Math.round((yes / total) * 100) : 100);
+
+          if (kpiTotalEl) kpiTotalEl.textContent = total.toLocaleString();
+          if (kpiYesEl) kpiYesEl.textContent = yes.toLocaleString();
+          if (kpiNoEl) kpiNoEl.textContent = no.toLocaleString();
+          if (kpiPendingEl) kpiPendingEl.textContent = pending.toLocaleString();
+          if (kpiRevokedEl) kpiRevokedEl.textContent = revoked.toLocaleString();
+          if (kpiAgreeRateEl) kpiAgreeRateEl.textContent = `${rate}% Consent Rate`;
+
+          if (progTotal) progTotal.style.width = '100%';
+          if (progYes) progYes.style.width = `${total > 0 ? Math.round((yes / total) * 100) : 40}%`;
+          if (progNo) progNo.style.width = `${total > 0 ? Math.round((no / total) * 100) : 20}%`;
+          if (progPending) progPending.style.width = `${total > 0 ? Math.round((pending / total) * 100) : 20}%`;
+          if (progRevoked) progRevoked.style.width = `${total > 0 ? Math.round((revoked / total) * 100) : 20}%`;
+
+          if (donutTitle) donutTitle.textContent = 'Bank-Wide Consent Ratio';
+          if (barTitle) barTitle.textContent = 'Branch-Wise Intake Performance';
+
+          renderCharts('ALL');
+        } else {
+          // --- SPECIFIC BRANCH DASHBOARD MODE ---
+          const branchObj = allBranches.find(b => (b.branch_name || b.name) === activeBranchScope) ||
+            MASTER_ _BRANCHES.find(m => m.branch_name === activeBranchScope) ||
+              { branch_name: activeBranchScope, branch_code: 'NSK-BR', city: 'Nashik' };
+
+          const code = branchObj.branch_code || branchObj.code || 'NSK-001';
+          const cleanName = branchObj.branch_name || branchObj.name || activeBranchScope;
+          const shortName = cleanName.split(',')[0];
+
+          if (heroTitle) heroTitle.innerHTML = `<i class="bi bi-bank2" style="color: #38bdf8;"></i> <span>${shortName} Dashboard</span>`;
+          if (heroSubtitle) heroSubtitle.textContent = `Isolated Branch Governance & Real-Time Intake Oversight &bull; Branch Code: ${code} &bull; ${branchObj.city || 'Nashik Region'}`;
+
+          if (scopeBadge) scopeBadge.className = 'scope-badge-live branch-scoped';
+          if (scopeBadgeText) scopeBadgeText.innerHTML = `📍 Branch Scoped: <strong>${shortName} (${code})</strong>`;
+
+          // Populate Dossier Card
+          if (dossierCard) {
+            dossierCard.style.display = 'block';
+            const dBName = document.getElementById('dossierBranchName');
+            if (dBName) dBName.textContent = cleanName;
+            const dBCode = document.getElementById('dossierBranchCode');
+            if (dBCode) dBCode.textContent = code;
+            const dBCity = document.getElementById('dossierBranchCity');
+            if (dBCity) dBCity.textContent = branchObj.city || 'Nashik';
+
+            const matchingOfficer = allOfficers.find(o => (o.branch_name || o.branchName) === cleanName);
+            const dOfficer = document.getElementById('dossierOfficerName');
+            if (dOfficer) {
+              dOfficer.textContent = matchingOfficer ?
+                `${matchingOfficer.full_name || matchingOfficer.fullName} (${matchingOfficer.username})` :
+                `Branch Verification Officer (${code})`;
+            }
+          }
+
+          if (exportBtnLabel) exportBtnLabel.textContent = `Export ${shortName} CSV`;
+
+          // Filter records belonging to this branch
+          const cleanTarget = cleanName.toLowerCase();
+          let branchRecords = allRecords.filter(r => {
+            const b = (r.branch || '').toLowerCase();
+            return b.includes(cleanTarget) || cleanTarget.includes(b);
+          });
+
+          // Branch KPIs calculation
+          let bTotal = branchRecords.length;
+          let bYes = branchRecords.filter(r => r.consent === 'agree' || r.consent === 'YES').length;
+          let bNo = branchRecords.filter(r => r.consent === 'disagree' || r.consent === 'NO').length;
+          let bPending = branchRecords.filter(r => r.status === 'PENDING' || r.cbsUpdated !== 'Yes').length;
+          let bRevoked = branchRecords.filter(r => r.status === 'REVOKED').length;
+
+          // If this is Canada Corner (demo seed), ensure accurate numbers
+          if (cleanTarget.includes('canada corner') && bTotal === 0) {
+            bTotal = 4; bYes = 2; bNo = 1; bPending = 1; bRevoked = 1;
+          }
+
+          const bRate = bTotal > 0 ? Math.round((bYes / bTotal) * 100) : 100;
+
+          if (labelKpiTotal) labelKpiTotal.textContent = `${shortName} Records`;
+          if (subtextKpiTotal) subtextKpiTotal.innerHTML = `<i class="bi bi-geo-alt-fill"></i> ${code} Isolated Branch Intake`;
+
+          if (kpiTotalEl) kpiTotalEl.textContent = bTotal.toLocaleString();
+          if (kpiYesEl) kpiYesEl.textContent = bYes.toLocaleString();
+          if (kpiNoEl) kpiNoEl.textContent = bNo.toLocaleString();
+          if (kpiPendingEl) kpiPendingEl.textContent = bPending.toLocaleString();
+          if (kpiRevokedEl) kpiRevokedEl.textContent = bRevoked.toLocaleString();
+          if (kpiAgreeRateEl) kpiAgreeRateEl.textContent = `${bRate}% Consent Rate`;
+
+          if (progTotal) progTotal.style.width = '100%';
+          if (progYes) progYes.style.width = `${bTotal > 0 ? Math.round((bYes / bTotal) * 100) : 100}%`;
+          if (progNo) progNo.style.width = `${bTotal > 0 ? Math.round((bNo / bTotal) * 100) : 0}%`;
+          if (progPending) progPending.style.width = `${bTotal > 0 ? Math.round((bPending / bTotal) * 100) : 0}%`;
+          if (progRevoked) progRevoked.style.width = `${bTotal > 0 ? Math.round((bRevoked / bTotal) * 100) : 0}%`;
+
+          if (donutTitle) donutTitle.textContent = `${shortName} Consent Ratio`;
+          if (barTitle) barTitle.textContent = `${shortName} Intake Channels`;
+
+          // Toggle tables: hide  -branch matrix, show branch records preview
+          if (matrixContainer) matrixContainer.style.display = 'none';
+          if (branchRecordsPanel) {
+            branchRecordsPanel.style.display = 'block';
+            const bPreviewTitle = document.getElementById('branchPreviewTitle');
+            if (bPreviewTitle) bPreviewTitle.textContent = `${shortName} Consent Registry`;
+            const bPreviewSub = document.getElementById('branchPreviewSub');
+            if (bPreviewSub) bPreviewSub.textContent = `Customer submissions registered under ${cleanName} (${code})`;
+            renderBranchSpecificRecords(branchRecords, cleanName);
+          }
+
+          renderCharts(cleanName, { total: bTotal, yes: bYes, no: bNo, pending: bPending, revoked: bRevoked });
+        }
+      }
+      window.selectBranchScope = selectBranchScope;
+
+      // Render branch-specific consent preview table
+      function renderBranchSpecificRecords(records, branchName) {
+        const tbody = document.getElementById('branchSpecificTableBody');
+        if (!tbody) return;
+
+        if (!records || records.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="9" style="text-align: center; color: #64748b; padding: 28px;">
+                <i class="bi bi-inbox" style="font-size: 1.8rem; display: block; margin-bottom: 8px; color: #94a3b8;"></i>
+                No active records registered yet for <strong>${branchName}</strong>.<br>
+                <span style="font-size: 0.76rem; color: #94a3b8;">Customer online submissions and physical OCR ingestion forms will appear here in real time.</span>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = records.map(r => {
+          const isAgree = r.consent === 'agree' || r.consent === 'YES';
+          const statusBadge = getStatusBadge(r.status || (isAgree ? 'YES' : 'NO'));
+          const cbsSyncBadge = (r.cbsUpdated === 'Yes') ?
+            `<span class="badge" style="background: #ecfdf5; color: #065f46;">Synced</span>` :
+            `<span class="badge" style="background: #fffbeb; color: #b45309;">Pending</span>`;
+
+          return `
+            <tr>
+              <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #0284c7;">${r.refNo || r.reference_no}</td>
+              <td style="font-weight: 600;">${r.name || r.customer_name}</td>
+              <td style="font-family: 'JetBrains Mono', monospace; color: #475569;">${r.accNo || r.account_number}</td>
+              <td style="font-family: 'JetBrains Mono', monospace; color: #64748b;">${r.mobile || r.mobile_number}</td>
+              <td>${statusBadge}</td>
+              <td><span style="font-size: 0.75rem; color: #64748b;"><i class="bi bi-shield-check"></i> ${r.verifiedBy || 'DLT 2FA'}</span></td>
+              <td>${cbsSyncBadge}</td>
+              <td style="font-size: 0.75rem; color: #64748b;">${r.date || new Date().toISOString().split('T')[0]}</td>
+              <td>
+                <button type="button" class="btn-action-view" onclick="openRecordDrawer('${r.refNo || r.reference_no}')">
+                  <i class="bi bi-eye"></i> Inspect
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // 4. Chart Rendering
+      function renderCharts(scope = 'ALL', branchStats = null) {
+        let yes = currentMetrics?.yesCount || 2;
+        let no = currentMetrics?.noCount || 1;
+        let pending = currentMetrics?.pendingCount || 1;
+        let revoked = currentMetrics?.revokedCount || 1;
+
+        if (scope !== 'ALL' && branchStats) {
+          yes = branchStats.yes;
+          no = branchStats.no;
+          pending = branchStats.pending;
+          revoked = branchStats.revoked;
+        }
+
+        // Donut Chart
+        const donutCtx = document.getElementById('superDonutChart');
+        if (donutCtx) {
+          if (superDonutChartInstance) superDonutChartInstance.destroy();
+          superDonutChartInstance = new Chart(donutCtx, {
+            type: 'doughnut',
+            data: {
+              labels: ['YES (Consented)', 'NO (Declined)', 'Pending', 'Revoked'],
+              datasets: [{
+                data: [yes || 1, no || 0, pending || 0, revoked || 0],
+                backgroundColor: ['#10b981', '#ef4444', '#f59e0b', '#a855f7'],
+                borderWidth: 3,
+                borderColor: '#ffffff'
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: 'Inter', size: 11 } } },
+                tooltip: {
+                  backgroundColor: '#0f172a',
+                  padding: 10,
+                  cornerRadius: 6,
+                  titleFont: { family: 'Inter', size: 12, weight: '700' }
+                }
+              },
+              cutout: '68%'
+            }
+          });
+        }
+
+        // Bar Chart
+        const barCtx = document.getElementById('superBranchBarChart');
+        if (barCtx) {
+          if (superBranchBarChartInstance) superBranchBarChartInstance.destroy();
+
+          let barLabels, barData, barColor;
+
+          if (scope === 'ALL') {
+            const breakdown = currentMetrics?.branchBreakdown || [];
+            const topBranches = breakdown.slice(0, 6);
+            barLabels = topBranches.length ? topBranches.map(b => (b.branchName || b.branch_name || 'Branch').split(',')[0]) :
+              ['Canada Corner', 'Mumbai Naka', 'Panchavati', 'College Road', 'CBS HO', 'Nashik Road'];
+            barData = topBranches.length ? topBranches.map(b => b.total || 0) : [4, 1, 0, 0, 0, 0];
+            barColor = '#0284c7';
+          } else {
+            // Branch channel breakdown
+            barLabels = ['Digital Online Portal', 'Physical Scanned OCR', 'CBS Sync Verified', 'Manual Assistance'];
+            barData = [yes || 1, pending || 1, (yes > 0 ? yes - 1 : 0), no || 0];
+            barColor = '#10b981';
+          }
+
+          superBranchBarChartInstance = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+              labels: barLabels,
+              datasets: [{
+                label: scope === 'ALL' ? 'Consent Records' : 'Channel Volume',
+                data: barData,
+                backgroundColor: barColor,
+                borderRadius: 6,
+                maxBarThickness: 44
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  backgroundColor: '#0f172a',
+                  padding: 10,
+                  cornerRadius: 6,
+                  titleFont: { family: 'Inter', size: 12, weight: '700' }
+                }
+              },
+              scales: {
+                y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { stepSize: 1, font: { family: 'JetBrains Mono' } } },
+                x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 11 } } }
+              }
+            }
+          });
+        }
+      }
+
+      // Status Badge Helper
+      function getStatusBadge(status) {
+        const s = (status || 'PENDING').toUpperCase();
+        if (s === 'YES') return `<span class="badge-pill-status status-yes"><i class="bi bi-check-circle-fill"></i> YES</span>`;
+        if (s === 'NO') return `<span class="badge-pill-status status-no"><i class="bi bi-x-circle-fill"></i> NO</span>`;
+        if (s === 'REVOKED') return `<span class="badge-pill-status status-revoked"><i class="bi bi-shield-slash-fill"></i> REVOKED</span>`;
+        return `<span class="badge-pill-status status-pending"><i class="bi bi-hourglass-split"></i> PENDING</span>`;
+      }
+
+      // 5. Render  -Branch Breakdown Matrix with Direct "Open Dashboard" Action
+      function renderBranchMatrix(branches) {
+        const tbody = document.getElementById('branchMatrixTableBody');
+        if (!tbody) return;
+        if (!branches || !branches.length) {
+          branches = MASTER_ _BRANCHES.map(b => {
+            const isCC = (b.branch_code === 'NSK-002');
+            const isMN = (b.branch_code === 'NSK-003');
+            return {
+              branchCode: b.branch_code,
+              branchName: b.branch_name,
+              city: b.city || 'Nashik',
+              total: isCC ? 4 : (isMN ? 1 : 0),
+              yes: isCC ? 2 : (isMN ? 1 : 0),
+              no: isCC ? 1 : 0,
+              pending: isCC ? 1 : 0
+            };
+          });
+        }
+
+        tbody.innerHTML = branches.map(b => {
+          const rate = b.total > 0 ? Math.round((b.yes / b.total) * 100) : 100;
+          const bName = b.branchName || b.branch_name || '';
+          return `
+            <tr>
+              <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #0284c7;">${b.branchCode || b.branch_code}</td>
+              <td style="font-weight: 600;">${bName}</td>
+              <td style="color: #64748b;">${b.city || 'Nashik'}</td>
+              <td style="font-weight: 700; font-family: 'JetBrains Mono', monospace;">${b.total || 0}</td>
+              <td style="color: #059669; font-weight: 600;">${b.yes || 0}</td>
+              <td style="color: #dc2626; font-weight: 600;">${b.no || 0}</td>
+              <td style="color: #d97706; font-weight: 600;">${b.pending || 0}</td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 0.78rem; font-weight: 700;">${rate}%</span>
+                  <div style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; min-width: 50px;">
+                    <div style="width: ${rate}%; height: 100%; background: #10b981;"></div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="display: flex; gap: 6px;">
+                  <button type="button" class="btn-action-view" style="color: #0284c7; font-weight: 700;" onclick="selectBranchScope('${bName.replace(/'/g, "\\'")}')" title="Open this branch's dashboard">
+                    <i class="bi bi-speedometer2"></i> Open Dashboard
+                  </button>
+                  <button type="button" class="btn-action-view" onclick="filterConsentsByBranch('${bName.replace(/'/g, "\\'")}')" title="View records in registry">
+                    <i class="bi bi-filter"></i> Records
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function filterConsentsByBranch(branchName) {
+        const sel = document.getElementById('superBranchFilter');
+        if (sel) sel.value = branchName;
+        switchView('consents');
+        filterSuperRecords();
+      }
+      window.filterConsentsByBranch = filterConsentsByBranch;
+
+      // 6. Render Branches Directory with Direct "Open Dashboard" Action & Branch Management
+      function renderBranchesDirectory(branches) {
+        const tbody = document.getElementById('branchesDirectoryTableBody');
+        if (!tbody) return;
+        if (!branches || !branches.length) {
+          branches = MASTER_ _BRANCHES;
+        }
+        tbody.innerHTML = branches.map(b => {
+          const name = b.branch_name || b.branchName || b.name || '';
+          const code = b.branch_code || b.branchCode || b.code || '';
+          const isHO = (code === 'HO-001' || code === 'NSK-001' || name.toLowerCase().includes('head office'));
+          return `
+          <tr>
+            <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #0284c7;">${code}</td>
+            <td style="font-weight: 600;">${name}</td>
+            <td style="color: #64748b;">${b.city || 'Nashik'}</td>
+            <td><span class="badge" style="background: #ecfdf5; color: #065f46;">Active</span></td>
+            <td>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <button type="button" class="btn-action-view" style="color: #0284c7; font-weight: 700;" onclick="switchView('dashboard'); selectBranchScope('${name.replace(/'/g, "\\'")}')" title="Open Branch Dashboard">
+                  <i class="bi bi-speedometer2"></i> Open
+                </button>
+                <button type="button" class="btn-action-view" onclick="filterConsentsByBranch('${name.replace(/'/g, "\\'")}')" title="Inspect Consents">
+                  <i class="bi bi-search"></i> Inspect
+                </button>
+                ${!isHO ? `
+                <button type="button" class="btn-action-view" style="color: #dc2626; font-weight: 600;" onclick="openDeleteBranchModal('${code}', '${name.replace(/'/g, "\\'")}')" title="Delete Branch">
+                  <i class="bi bi-trash3-fill"></i> Delete
+                </button>` : `<span style="font-size: 0.72rem; color: #94a3b8; font-weight: 600; padding: 2px 6px; background: #f1f5f9; border-radius: 4px;">Protected HO</span>`}
+              </div>
+            </td>
+          </tr>
+        `;
+        }).join('');
+      }
+
+      // --- EVENT HANDLERS FOR BRANCH SCOPE CONTROLS ---
+
+      // 1. Dropdown change
+      document.getElementById('superActiveBranchSelect')?.addEventListener('change', function () {
+        selectBranchScope(this.value);
+      });
+
+      // 2. Quick Jump Chips
+      document.querySelectorAll('.branch-chip').forEach(chip => {
+        chip.addEventListener('click', function () {
+          const b = this.dataset.branch;
+          if (b) selectBranchScope(b);
+        });
+      });
+
+      // 3. Reset Scope Button
+      document.getElementById('btnResetScopeBankwide')?.addEventListener('click', function () {
+        selectBranchScope('ALL');
+      });
+
+      // 4. Launch Standalone Branch Officer Portal (admin.html)
+      function launchBranchPortalHandler() {
+        if (activeBranchScope && activeBranchScope !== 'ALL') {
+          window.open(`admin.html?branch=${encodeURIComponent(activeBranchScope)}`, '_blank');
+        } else {
+          showToast('Opening default Canada Corner Branch in standalone officer portal...');
+          window.open('admin.html?branch=Canada%20Corner%20Branch%2C%20Nashik', '_blank');
+        }
+      }
+      document.getElementById('btnLaunchBranchPortal')?.addEventListener('click', launchBranchPortalHandler);
+      document.getElementById('dossierLaunchBtn')?.addEventListener('click', launchBranchPortalHandler);
+
+      // 5. Quick Search Branch input
+      const quickSearchInput = document.getElementById('branchQuickSearchInput');
+      if (quickSearchInput) {
+        quickSearchInput.addEventListener('input', function () {
+          const q = this.value.trim().toLowerCase();
+          if (!q) return;
+
+          const match = allBranches.find(b => {
+            const name = (b.branch_name || b.name || '').toLowerCase();
+            const code = (b.branch_code || b.code || '').toLowerCase();
+            const city = (b.city || '').toLowerCase();
+            return name.includes(q) || code.includes(q) || city.includes(q);
+          });
+
+          if (match) {
+            selectBranchScope(match.branch_name || match.name);
+          }
+        });
+      }
+
+      // 6. Branch Export Handler
+      document.getElementById('btnExportBranchFiltered')?.addEventListener('click', () => {
+        if (activeBranchScope && activeBranchScope !== 'ALL') {
+          window.bankApi.exportCsv({ branch: activeBranchScope });
+        } else {
+          window.bankApi.exportCsv({});
+        }
+      });
+
+
+      // 6. Render Branch Admins
+      function renderOfficersTable(officers) {
+        const tbody = document.getElementById('officersTableBody');
+        if (!tbody) return;
+        if (!officers || !officers.length) {
+          officers = [
+            { id: 1, full_name: 'Central Systems Administrator', username: 'admin', employee_id: 'EMP-HO-001', branch_name: 'CBS Head Office, Nashik', role: 'SUPER_ADMIN', is_active: true, last_login: new Date().toISOString() },
+            { id: 2, full_name: 'Branch Verification Officer', username: 'officer', employee_id: 'EMP-CC-002', branch_name: 'Canada Corner Branch, Nashik', role: 'BRANCH_ADMIN', is_active: true, last_login: new Date(Date.now() - 3600000 * 2).toISOString() },
+            { id: 3, full_name: 'Branch Verification Officer (Mumbai Naka)', username: 'officer_mn', employee_id: 'EMP-MN-003', branch_name: 'Mumbai Naka Branch, Nashik', role: 'BRANCH_ADMIN', is_active: true, last_login: new Date(Date.now() - 3600000 * 5).toISOString() }
+          ];
+        }
+
+        tbody.innerHTML = officers.map(o => `
+          <tr>
+            <td style="font-weight: 600;">${o.full_name || o.fullName}</td>
+            <td style="font-family: 'JetBrains Mono', monospace; color: #0284c7;">${o.username}</td>
+            <td style="font-family: 'JetBrains Mono', monospace; color: #64748b;">${o.employee_id || 'N/A'}</td>
+            <td><span style="font-weight: 500;">${o.branch_name || o.branchName}</span></td>
+            <td><span class="badge" style="background: ${o.role === 'SUPER_ADMIN' ? '#fee2e2; color: #991b1b;' : '#e0f2fe; color: #0369a1;'} font-weight: 600;">${o.role}</span></td>
+            <td><span class="badge" style="background: ${o.is_active ? '#ecfdf5; color: #065f46;' : '#fee2e2; color: #991b1b;'}">${o.is_active ? 'Active' : 'Deactivated'}</span></td>
+            <td style="font-size: 0.74rem; color: #64748b;">${o.last_login ? new Date(o.last_login).toLocaleDateString() : 'Never'}</td>
+            <td>
+              ${o.username !== 'admin' ? `
+                <div style="display: flex; gap: 6px; align-items: center;">
+                  <button type="button" class="btn-action-view" style="color: #d97706;" onclick="openResetOfficerPwdModal(${o.id}, '${o.username}', '${(o.full_name || o.fullName || '').replace(/'/g, "\\'")}')" title="Reset Officer Password">
+                    <i class="bi bi-key-fill"></i> Reset Pwd
+                  </button>
+                  <button type="button" class="btn-action-view" style="color: ${o.is_active ? '#dc2626' : '#059669'};" onclick="toggleOfficerActive(${o.id}, ${o.is_active})">
+                    <i class="bi ${o.is_active ? 'bi-person-slash' : 'bi-person-check'}"></i> ${o.is_active ? 'Deactivate' : 'Activate'}
+                  </button>
+                </div>
+              ` : '<span style="color: #94a3b8; font-size: 0.74rem;">Root Admin</span>'}
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      async function toggleOfficerActive(officerId, currentActive) {
+        try {
+          await window.bankApi.updateOfficer(officerId, { is_active: !currentActive });
+          showToast(`Officer status updated successfully.`);
+          loadAllSuperAdminData();
+        } catch (err) {
+          showToast('Status update failed: ' + err.message, false);
+        }
+      }
+      window.toggleOfficerActive = toggleOfficerActive;
+
+      // 7. Master Consent Registry & Filtering
+      function renderMasterConsentTable(records) {
+        const tbody = document.getElementById('superConsentTableBody');
+        if (!tbody) return;
+        if (!records || !records.length) {
+          tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #94a3b8; padding: 32px;">No matching consent records found in Master Registry.</td></tr>`;
+          allRecords = [];
+          return;
+        }
+
+        tbody.innerHTML = records.map(r => {
+          const cbsText = typeof r.cbsUpdated === 'object' && r.cbsUpdated ? (r.cbsUpdated.cbsUpdated || 'No') : (r.cbsUpdated || 'No');
+          return `
+          <tr>
+            <td style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.76rem; color: #0284c7;">${r.refNo || r.referenceNumber}</td>
+            <td style="font-weight: 600;">${r.customerName || r.name}</td>
+            <td style="font-family: 'JetBrains Mono', monospace;">${r.maskedAccNo || r.accNo}</td>
+            <td><span style="font-size: 0.78rem; font-weight: 500;">${r.branch || r.branchName}</span></td>
+            <td style="font-family: 'JetBrains Mono', monospace;">${r.maskedMobile || r.mobile}</td>
+            <td>${getStatusBadge(r.status || r.consent)}</td>
+            <td><span style="font-size: 0.74rem; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #334155;">${r.source || 'ONLINE'}</span></td>
+            <td><span style="font-size: 0.76rem; color: #64748b;">${r.date || 'Today'}</span></td>
+            <td><span style="font-size: 0.76rem; font-weight: 600; color: ${cbsText === 'Yes' ? '#059669' : '#d97706'};">${cbsText}</span></td>
+            <td>
+              <button type="button" class="btn-action-view" onclick="openSuperDrawerRecord('${r.refNo || r.referenceNumber}')">
+                <i class="bi bi-eye"></i> View
+              </button>
+            </td>
+          </tr>
+        `;
+        }).join('');
+      }
+
+      function filterSuperRecords() {
+        const query = (document.getElementById('superConsentSearch')?.value || '').toLowerCase().trim();
+        const branch = document.getElementById('superBranchFilter')?.value || 'ALL';
+        const status = document.getElementById('superStatusFilter')?.value || 'ALL';
+
+        let filtered = allRecords.filter(r => {
+          const matchQuery = !query ||
+            (r.customerName || r.name || '').toLowerCase().includes(query) ||
+            (r.accNo || r.accountNumber || '').includes(query) ||
+            (r.refNo || r.referenceNumber || '').toLowerCase().includes(query) ||
+            (r.cif || r.cifNumber || '').toLowerCase().includes(query) ||
+            (r.mobile || r.mobileNumber || '').includes(query);
+
+          const rBranch = (r.branch || r.branchName || '').toLowerCase();
+          const matchBranch = branch === 'ALL' || rBranch.includes(branch.toLowerCase());
+
+          const rStatus = (r.status || r.consent || '').toUpperCase();
+          const matchStatus = status === 'ALL' || rStatus === status;
+
+          return matchQuery && matchBranch && matchStatus;
+        });
+
+        renderMasterConsentTable(filtered);
+      }
+
+      document.getElementById('superConsentSearch')?.addEventListener('input', filterSuperRecords);
+      document.getElementById('superBranchFilter')?.addEventListener('change', filterSuperRecords);
+      document.getElementById('superStatusFilter')?.addEventListener('change', filterSuperRecords);
+      document.getElementById('resetSuperFiltersBtn')?.addEventListener('click', () => {
+        document.getElementById('superConsentSearch').value = '';
+        document.getElementById('superBranchFilter').value = 'ALL';
+        document.getElementById('superStatusFilter').value = 'ALL';
+        renderMasterConsentTable(allRecords);
+      });
+
+      // 8. Super Admin Detail Drawer
+      function openSuperDrawerRecord(refNo) {
+        const rec = allRecords.find(r => (r.refNo === refNo || r.referenceNumber === refNo));
+        if (!rec) return;
+
+        const dTitle = document.getElementById('superDrawerTitle');
+        if (dTitle) dTitle.textContent = rec.customerName || rec.name;
+        const dRef = document.getElementById('superDrawerRefNo');
+        if (dRef) dRef.textContent = rec.refNo || rec.referenceNumber;
+        const dCust = document.getElementById('superDrawerCustName');
+        if (dCust) dCust.textContent = rec.customerName || rec.name;
+        const dAcc = document.getElementById('superDrawerAccNo');
+        if (dAcc) dAcc.textContent = rec.maskedAccNo || rec.accNo;
+        const dCif = document.getElementById('superDrawerCif');
+        if (dCif) dCif.textContent = rec.cif || rec.cifNumber || 'N/A';
+        const dMob = document.getElementById('superDrawerMobile');
+        if (dMob) dMob.textContent = rec.maskedMobile || rec.mobile;
+        const dBranch = document.getElementById('superDrawerBranch');
+        if (dBranch) dBranch.textContent = rec.branch || rec.branchName;
+        const dBadge = document.getElementById('superDrawerStatusBadge');
+        if (dBadge) dBadge.innerHTML = getStatusBadge(rec.status || rec.consent);
+        const dSource = document.getElementById('superDrawerSource');
+        if (dSource) dSource.textContent = rec.source || 'ONLINE';
+        const dSubAt = document.getElementById('superDrawerSubmittedAt');
+        if (dSubAt) dSubAt.textContent = rec.date || 'Today';
+        const dVerBy = document.getElementById('superDrawerVerifiedBy');
+        if (dVerBy) dVerBy.textContent = rec.verifiedBy || 'System Initialization';
+        const dCbs = document.getElementById('superDrawerCbsStatus');
+        if (dCbs) {
+          dCbs.textContent = rec.cbsUpdated || 'No';
+          dCbs.style.color = rec.cbsUpdated === 'Yes' ? '#059669' : '#d97706';
+        }
+
+        const sigImg = document.getElementById('superDrawerSignatureImg');
+        const noSig = document.getElementById('superDrawerNoSignatureText');
+        if (rec.signatureData && rec.signatureData.startsWith('data:image')) {
+          if (sigImg) {
+            sigImg.src = rec.signatureData;
+            sigImg.style.display = 'inline-block';
+          }
+          if (noSig) noSig.style.display = 'none';
+        } else {
+          if (sigImg) sigImg.style.display = 'none';
+          if (noSig) noSig.style.display = 'block';
+        }
+
+        const drawer = document.getElementById('superDrawerBackdrop');
+        if (drawer) drawer.classList.add('open');
+      }
+      window.openSuperDrawerRecord = openSuperDrawerRecord;
+
+      document.getElementById('closeSuperDrawerBtn')?.addEventListener('click', () => {
+        document.getElementById('superDrawerBackdrop')?.classList.remove('open');
+      });
+
+      document.getElementById('superDrawerBackdrop')?.addEventListener('click', (e) => {
+        if (e.target.id === 'superDrawerBackdrop') {
+          document.getElementById('superDrawerBackdrop')?.classList.remove('open');
+        }
+      });
+
+      // 9. Central Audit Logs (Maps all activities across all branches & admins)
+      function getCentralAuditBadgeStyle(action) {
+        const act = (action || '').toUpperCase();
+        if (act.includes('LOGIN') || act.includes('2FA')) return 'background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0;';
+        if (act.includes('LOGOUT')) return 'background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;';
+        if (act.includes('OCR')) return 'background: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe;';
+        if (act.includes('CBS') || act.includes('SYNC')) return 'background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc;';
+        if (act.includes('EXPORT')) return 'background: #fef3c7; color: #92400e; border: 1px solid #fde68a;';
+        if (act.includes('OFFICER_CREATED') || act.includes('BRANCH_CREATED') || act.includes('ADMIN_CREATED')) return 'background: #ecfdf5; color: #047857; border: 1px solid #6ee7b7;';
+        if (act.includes('PASSWORD') || act.includes('RESET')) return 'background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa;';
+        if (act.includes('DELETE') || act.includes('REVOKE')) return 'background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;';
+        return 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;';
+      }
+
+      async function loadCentralAuditLogs() {
+        const tbody = document.getElementById('centralAuditTableBody');
+        if (!tbody) return;
+        const action = document.getElementById('auditActionFilter')?.value || 'ALL';
+        const branch = document.getElementById('auditBranchFilter')?.value || 'ALL';
+        const userQ = (document.getElementById('auditUserFilter')?.value || '').trim();
+
+        try {
+          const logs = await window.bankApi.fetchAuditLogs({ action, branch, user: userQ });
+          if (!logs || !logs.length) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 28px;">No audit records matching the specified criteria.</td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = logs.map(l => {
+            const actionStr = l.actionType || l.action || 'ACTIVITY';
+            const roleBadgeStyle = (l.officerRole === 'SUPER_ADMIN')
+              ? 'background: #fef2f2; color: #b91c1c; border: 1px solid #fca5a5;'
+              : 'background: #f1f5f9; color: #334155;';
+            return `
+            <tr>
+              <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: #64748b;">${new Date(l.timestamp).toLocaleString()}</td>
+              <td><span style="font-weight: 600; font-size: 0.76rem; padding: 2px 7px; border-radius: 4px; ${getCentralAuditBadgeStyle(actionStr)}">${actionStr}</span></td>
+              <td style="font-weight: 600;">${l.username || 'admin'}</td>
+              <td><span class="badge" style="${roleBadgeStyle}">${l.officerRole || 'OFFICER'}</span></td>
+              <td style="font-size: 0.78rem;">${l.branchName || l.branch || 'Head Office (HO)'}</td>
+              <td style="font-size: 0.78rem; color: #334155;">${l.actionDetails || l.details}</td>
+              <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: #64748b;">${l.ipAddress || '127.0.0.1'}</td>
+            </tr>
+          `;
+          }).join('');
+        } catch (e) {
+          console.error('Audit load error:', e);
+        }
+      }
+
+      document.getElementById('auditActionFilter')?.addEventListener('change', loadCentralAuditLogs);
+      document.getElementById('auditBranchFilter')?.addEventListener('change', loadCentralAuditLogs);
+      document.getElementById('auditUserFilter')?.addEventListener('input', loadCentralAuditLogs);
+
+      // 10. Add Officer Modal
+      const addModalBackdrop = document.getElementById('addOfficerModalBackdrop');
+      document.getElementById('openAddOfficerModalBtn')?.addEventListener('click', () => addModalBackdrop.classList.add('open'));
+      document.getElementById('dashAddOfficerBtn')?.addEventListener('click', () => addModalBackdrop.classList.add('open'));
+      document.getElementById('closeAddOfficerModalBtn')?.addEventListener('click', () => addModalBackdrop.classList.remove('open'));
+      document.getElementById('cancelAddOfficerBtn')?.addEventListener('click', () => addModalBackdrop.classList.remove('open'));
+
+      document.getElementById('createOfficerForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          fullName: document.getElementById('newOfficerName').value.trim(),
+          username: document.getElementById('newOfficerUsername').value.trim(),
+          employee_id: document.getElementById('newOfficerEmpId').value.trim(),
+          branchName: document.getElementById('newOfficerBranch').value,
+          email: document.getElementById('newOfficerEmail').value.trim(),
+          password: document.getElementById('newOfficerPassword').value,
+          role: 'BRANCH_ADMIN'
+        };
+
+        try {
+          await window.bankApi.createOfficer(payload);
+          showToast(`Branch Admin '${payload.username}' created successfully.`);
+          addModalBackdrop.classList.remove('open');
+          document.getElementById('createOfficerForm').reset();
+          loadAllSuperAdminData();
+          switchView('officers');
+        } catch (err) {
+          showToast('Failed to create officer: ' + err.message, false);
+        }
+      });
+
+      // 11. Super Admin Export
+      document.getElementById('dashExportAllBtn')?.addEventListener('click', () => switchView('reports'));
+      document.getElementById('exportMasterCsvBtn')?.addEventListener('click', () => switchView('reports'));
+
+      document.getElementById('executeSuperExportBtn')?.addEventListener('click', async () => {
+        const branch = document.getElementById('reportBranchSelect').value;
+        const status = document.getElementById('reportStatusSelect').value;
+        const btn = document.getElementById('executeSuperExportBtn');
+        const origText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generating Bank-Wide CSV...';
+
+        try {
+          const token = (window.bankApi && window.bankApi.token) || localStorage.getItem('namco_auth_token') || '';
+          let url = `${window.BANK_CONFIG.API_BASE_URL}/admin/export/?status=${status}`;
+          if (branch !== 'ALL') url += `&branch=${encodeURIComponent(branch)}`;
+
+          const res = await fetch(url, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'X-Namco-Auth-Token': token
+            }
+          });
+
+          if (!res.ok) {
+            throw new Error(`Server returned HTTP ${res.status}`);
+          }
+
+          const blob = await res.blob();
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const cleanBranch = branch === 'ALL' ? 'BankWide_AllBranches' : branch.split(',')[0].trim().replace(/\s+/g, '_');
+          a.href = downloadUrl;
+          a.download = `Namco_SMS_Consent_${status}_${cleanBranch}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(downloadUrl);
+
+          showToast(`Export generated and downloaded successfully for ${status} records.`);
+        } catch (err) {
+          console.warn('Super Admin server export fallback to loaded records:', err);
+          let exportData = allRecords || [];
+          if (branch !== 'ALL') {
+            const bKey = branch.toLowerCase().split(' ')[0];
+            exportData = exportData.filter(r => (r.branch || r.branchName || '').toLowerCase().includes(bKey));
+          }
+          if (status !== 'ALL') {
+            exportData = exportData.filter(r => (r.status || r.consent || '').toUpperCase() === status);
+          }
+          const csvRows = [
+            ['Ref No', 'Name', 'Acc No', 'CIF', 'Mobile', 'Branch', 'Status', 'Source', 'Submitted']
+          ];
+          exportData.forEach(r => {
+            csvRows.push([
+              r.refNo || r.referenceNumber || '',
+              r.customerName || r.name || '',
+              r.maskedAccNo || r.accNo || '',
+              r.cif || r.cifNumber || '',
+              r.rawMobile || r.mobileNumber || r.mobile || '',
+              r.branch || r.branchName || '',
+              r.status || r.consent || 'PENDING',
+              r.source || 'ONLINE',
+              r.date || new Date().toISOString().split('T')[0]
+            ]);
+          });
+          const csvContent = csvRows.map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const cleanBranch = branch === 'ALL' ? 'BankWide_AllBranches' : branch.split(',')[0].trim().replace(/\s+/g, '_');
+          a.href = downloadUrl;
+          a.download = `Namco_SMS_Consent_${status}_${cleanBranch}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(downloadUrl);
+          showToast(`Exported ${exportData.length} bank-wide records successfully.`);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = origText;
+        }
+      });
+
+      // 12. Password Visibility Toggles & Strength Meters
+      document.querySelectorAll('.btn-toggle-pwd').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const input = document.getElementById(targetId);
+          if (!input) return;
+          const isPassword = input.type === 'password';
+          input.type = isPassword ? 'text' : 'password';
+          const icon = btn.querySelector('i');
+          if (icon) {
+            icon.className = isPassword ? 'bi bi-eye-slash' : 'bi bi-eye';
+          }
+        });
+      });
+
+      const superNewPwdInput = document.getElementById('superNewPassword');
+      const superConfirmPwdInput = document.getElementById('superConfirmPassword');
+      const superStrengthWrap = document.getElementById('superPwdStrengthWrap');
+      const superStrengthBar = document.getElementById('superPwdStrengthBar');
+      const superStrengthLabel = document.getElementById('superPwdStrengthLabel');
+      const superMatchFeedback = document.getElementById('superPwdMatchFeedback');
+
+      if (superNewPwdInput) {
+        superNewPwdInput.addEventListener('input', () => {
+          const val = superNewPwdInput.value;
+          if (!val) {
+            superStrengthWrap.style.display = 'none';
+            return;
+          }
+          superStrengthWrap.style.display = 'block';
+          let score = 0;
+          if (val.length >= 6) score += 25;
+          if (val.length >= 10) score += 25;
+          if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score += 25;
+          if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) score += 25;
+
+          superStrengthBar.style.width = score + '%';
+          if (score <= 25) {
+            superStrengthBar.style.background = '#ef4444';
+            superStrengthLabel.textContent = 'Weak (Minimum 6 characters required)';
+            superStrengthLabel.style.color = '#ef4444';
+          } else if (score <= 50) {
+            superStrengthBar.style.background = '#f59e0b';
+            superStrengthLabel.textContent = 'Fair (Add uppercase letters & numbers)';
+            superStrengthLabel.style.color = '#d97706';
+          } else if (score <= 75) {
+            superStrengthBar.style.background = '#3b82f6';
+            superStrengthLabel.textContent = 'Good (Add special symbols for high security)';
+            superStrengthLabel.style.color = '#2563eb';
+          } else {
+            superStrengthBar.style.background = '#10b981';
+            superStrengthLabel.textContent = 'Strong bank-grade master password';
+            superStrengthLabel.style.color = '#059669';
+          }
+          checkSuperMatch();
+        });
+      }
+
+      function checkSuperMatch() {
+        if (!superConfirmPwdInput || !superMatchFeedback) return;
+        const val1 = superNewPwdInput ? superNewPwdInput.value : '';
+        const val2 = superConfirmPwdInput.value;
+        if (!val2) {
+          superMatchFeedback.style.display = 'none';
+          return;
+        }
+        superMatchFeedback.style.display = 'block';
+        if (val1 === val2) {
+          superMatchFeedback.textContent = '✓ Master passwords match';
+          superMatchFeedback.style.color = '#059669';
+        } else {
+          superMatchFeedback.textContent = '✗ Master passwords do not match';
+          superMatchFeedback.style.color = '#ef4444';
+        }
+      }
+
+      if (superConfirmPwdInput) {
+        superConfirmPwdInput.addEventListener('input', checkSuperMatch);
+      }
+
+      // Master Password Change Form Submission
+      document.getElementById('superAdminChangePasswordForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const currentPassword = document.getElementById('superCurrentPassword').value;
+        const newPassword = document.getElementById('superNewPassword').value;
+        const confirmPassword = document.getElementById('superConfirmPassword').value;
+        const btn = document.getElementById('superChangePasswordBtn');
+
+        if (newPassword !== confirmPassword) {
+          showToast('New master passwords do not match!', false);
+          return;
+        }
+
+        if (newPassword.length < 6) {
+          showToast('Master password must be at least 6 characters long.', false);
+          return;
+        }
+
+        const origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Updating Master Password...';
+
+        try {
+          const res = await window.bankApi.changePassword({ currentPassword, newPassword, confirmPassword });
+          showToast(res.message || 'Master administrator password updated successfully!');
+          document.getElementById('superAdminChangePasswordForm').reset();
+          if (superStrengthWrap) superStrengthWrap.style.display = 'none';
+          if (superMatchFeedback) superMatchFeedback.style.display = 'none';
+          loadCentralAuditLogs();
+        } catch (err) {
+          showToast(err.message || 'Failed to update master password', false);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      });
+
+      // 13. Reset Branch Officer Password Modal Handlers
+      const resetModalBackdrop = document.getElementById('resetOfficerModalBackdrop');
+
+      window.openResetOfficerPwdModal = function (officerId, username, fullName) {
+        document.getElementById('resetOfficerId').value = officerId;
+        document.getElementById('resetOfficerUsernameLabel').textContent = username;
+        document.getElementById('resetOfficerNameLabel').textContent = fullName || username;
+        document.getElementById('resetOfficerNewPassword').value = '';
+        resetModalBackdrop.classList.add('open');
+      };
+
+      document.getElementById('closeResetOfficerModalBtn')?.addEventListener('click', () => resetModalBackdrop.classList.remove('open'));
+      document.getElementById('cancelResetOfficerBtn')?.addEventListener('click', () => resetModalBackdrop.classList.remove('open'));
+
+      document.getElementById('resetOfficerPasswordForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const officerId = document.getElementById('resetOfficerId').value;
+        const newPassword = document.getElementById('resetOfficerNewPassword').value;
+        const username = document.getElementById('resetOfficerUsernameLabel').textContent;
+        const btn = document.getElementById('submitResetOfficerBtn');
+
+        if (newPassword.length < 6) {
+          showToast('New password must be at least 6 characters long.', false);
+          return;
+        }
+
+        const origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Resetting...';
+
+        try {
+          await window.bankApi.resetOfficerPassword(officerId, newPassword);
+          showToast(`Password for officer '${username}' was reset successfully.`);
+          resetModalBackdrop.classList.remove('open');
+          document.getElementById('resetOfficerPasswordForm').reset();
+          loadAllSuperAdminData();
+        } catch (err) {
+          showToast('Password reset failed: ' + err.message, false);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      });
+
+      // 13B. Super Admin Branch Management (Add & Delete Branches)
+      const addBranchModal = document.getElementById('addBranchModalBackdrop');
+      const deleteBranchModal = document.getElementById('deleteBranchModalBackdrop');
+
+      document.getElementById('openAddBranchModalBtn')?.addEventListener('click', () => {
+        document.getElementById('createBranchForm')?.reset();
+        const alertBox = document.getElementById('addBranchAlertBox');
+        if (alertBox) alertBox.style.display = 'none';
+        addBranchModal?.classList.add('open');
+      });
+
+      document.getElementById('closeAddBranchModalBtn')?.addEventListener('click', () => addBranchModal?.classList.remove('open'));
+      document.getElementById('cancelAddBranchBtn')?.addEventListener('click', () => addBranchModal?.classList.remove('open'));
+
+      document.getElementById('createBranchForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const codeInput = document.getElementById('newBranchCode');
+        const nameInput = document.getElementById('newBranchName');
+        const cityInput = document.getElementById('newBranchCity');
+        const regionInput = document.getElementById('newBranchRegion');
+        const addressInput = document.getElementById('newBranchAddress');
+        const submitBtn = document.getElementById('submitCreateBranchBtn');
+        const alertBox = document.getElementById('addBranchAlertBox');
+
+        const branchCode = (codeInput?.value || '').trim().toUpperCase();
+        const branchName = (nameInput?.value || '').trim();
+        const city = (cityInput?.value || '').trim() || 'Nashik';
+        const region = regionInput?.value || 'Other Locations';
+        const address = (addressInput?.value || '').trim();
+
+        if (!branchCode || !branchName) {
+          if (alertBox) {
+            alertBox.textContent = 'Please specify both a Branch Code and Branch Name.';
+            alertBox.style.display = 'block';
+          }
+          return;
+        }
+
+        // Check if code already exists in allBranches
+        const exists = allBranches.some(b => (b.branch_code || b.branchCode || b.code || '').toUpperCase() === branchCode);
+        if (exists) {
+          if (alertBox) {
+            alertBox.textContent = `Branch code '${branchCode}' already exists. Please choose a unique branch code.`;
+            alertBox.style.display = 'block';
+          }
+          return;
+        }
+
+        const origHtml = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Registering...';
+
+        try {
+          await window.bankApi.addBranch({
+            branch_code: branchCode,
+            branch_name: branchName,
+            city: city,
+            region: region,
+            address: address
+          });
+
+          showToast(`Branch '${branchName}' (${branchCode}) successfully added.`);
+          addBranchModal?.classList.remove('open');
+
+          const newBranchObj = {
+            branch_code: branchCode,
+            branchCode: branchCode,
+            branch_name: branchName,
+            branchName: branchName,
+            name: branchName,
+            code: branchCode,
+            city: city,
+            region: region,
+            address: address,
+            is_active: true
+          };
+
+          // Update local state
+          allBranches.push(newBranchObj);
+          MASTER_ _BRANCHES.push(newBranchObj);
+
+          // Update UI
+          const settingsCountEl = document.getElementById('settingsBranchCount');
+          if (settingsCountEl) settingsCountEl.textContent = `${allBranches.length} Active Branches`;
+
+          populateBranchDropdowns(allBranches);
+          renderBranchesDirectory(allBranches);
+          if (currentMetrics && currentMetrics.branchBreakdown) {
+            renderBranchMatrix(currentMetrics.branchBreakdown);
+          }
+          if (typeof loadCentralAuditLogs === 'function') loadCentralAuditLogs();
+        } catch (err) {
+          if (alertBox) {
+            alertBox.textContent = 'Error adding branch: ' + err.message;
+            alertBox.style.display = 'block';
+          } else {
+            showToast('Error: ' + err.message, false);
+          }
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origHtml;
+        }
+      });
+
+      // Delete Branch Handlers
+      window.openDeleteBranchModal = function (code, name) {
+        if (code === 'HO-001' || code === 'NSK-001') {
+          showToast('Central Head Office branch is protected and cannot be deleted.', false);
+          return;
+        }
+        document.getElementById('targetDeleteBranchCode').value = code;
+        document.getElementById('targetDeleteBranchCodeLabel').textContent = code;
+        document.getElementById('targetDeleteBranchNameLabel').textContent = name;
+        deleteBranchModal?.classList.add('open');
+      };
+
+      document.getElementById('closeDeleteBranchModalBtn')?.addEventListener('click', () => deleteBranchModal?.classList.remove('open'));
+      document.getElementById('cancelDeleteBranchBtn')?.addEventListener('click', () => deleteBranchModal?.classList.remove('open'));
+
+      document.getElementById('confirmDeleteBranchBtn')?.addEventListener('click', async () => {
+        const code = document.getElementById('targetDeleteBranchCode').value;
+        const name = document.getElementById('targetDeleteBranchNameLabel').textContent;
+        const confirmBtn = document.getElementById('confirmDeleteBranchBtn');
+        const origHtml = confirmBtn.innerHTML;
+
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Deleting...';
+
+        try {
+          await window.bankApi.deleteBranch(code);
+          showToast(`Branch '${name}' (${code}) has been deleted.`);
+          deleteBranchModal?.classList.remove('open');
+
+          // Remove from local memory
+          allBranches = allBranches.filter(b => (b.branch_code || b.branchCode || b.code || '').toUpperCase() !== code.toUpperCase());
+          const masterIdx = MASTER_ _BRANCHES.findIndex(b => (b.branch_code || b.branchCode || b.code || '').toUpperCase() === code.toUpperCase());
+          if (masterIdx !== -1) MASTER_ _BRANCHES.splice(masterIdx, 1);
+
+          // Update UI
+          const settingsCountEl = document.getElementById('settingsBranchCount');
+          if (settingsCountEl) settingsCountEl.textContent = `${allBranches.length} Active Branches`;
+
+          populateBranchDropdowns(allBranches);
+          renderBranchesDirectory(allBranches);
+          if (currentMetrics && currentMetrics.branchBreakdown) {
+            renderBranchMatrix(currentMetrics.branchBreakdown);
+          }
+          if (typeof loadCentralAuditLogs === 'function') loadCentralAuditLogs();
+        } catch (err) {
+          showToast('Failed to delete branch: ' + err.message, false);
+        } finally {
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = origHtml;
+        }
+      });
+
+      // 14. Refresh & Logout
+      document.getElementById('refreshDataBtn')?.addEventListener('click', () => {
+        loadAllSuperAdminData();
+        showToast('Super Admin governance data refreshed.');
+      });
+
+      document.getElementById('superLogoutBtn')?.addEventListener('click', async () => {
+        await window.bankApi.logout();
+        window.location.href = 'login.html?reason=logged_out';
+      });
+
+      // 15. Directory Live Search Filter Handler
+      document.getElementById('directorySearchInput')?.addEventListener('input', function () {
+        const q = this.value.trim().toLowerCase();
+        if (!q) {
+          renderBranchesDirectory(allBranches);
+          return;
+        }
+        const filtered = allBranches.filter(b => {
+          const name = (b.branch_name || b.name || '').toLowerCase();
+          const code = (b.branch_code || b.code || '').toLowerCase();
+          const city = (b.city || '').toLowerCase();
+          const reg = (b.region || '').toLowerCase();
+          return name.includes(q) || code.includes(q) || city.includes(q) || reg.includes(q);
+        });
+        renderBranchesDirectory(filtered);
+      });
+
+      // 16. URL Hash Router
+      function handleRouteHash() {
+        const hash = (window.location.hash || '').replace('#', '').trim();
+        if (hash && titles[hash]) {
+          switchView(hash);
+        }
+      }
+      window.addEventListener('hashchange', handleRouteHash);
+      handleRouteHash();
+
+      // Initial Boot
+      loadAllSuperAdminData();
+    });
+  </script>
+</body>
+
+</html>

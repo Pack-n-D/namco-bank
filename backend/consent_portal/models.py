@@ -27,11 +27,13 @@ class BankOfficer(models.Model):
         ('SUPER_ADMIN', 'Central Super Administrator'),
         ('BRANCH_ADMIN', 'Branch Administrative Officer'),
         ('AUDITOR', 'Compliance Auditor'),
+        ('DLT_PARTNER', 'DLT SMS Gateway Partner'),
     ]
 
     username = models.CharField(max_length=50, unique=True, db_index=True)
     full_name = models.CharField(max_length=150)
     employee_id = models.CharField(max_length=50, blank=True, null=True)
+    account_number = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     mobile = models.CharField(max_length=15, blank=True, null=True)
     password_hash = models.CharField(max_length=255)
@@ -74,7 +76,8 @@ class BankOfficer(models.Model):
                 self.set_password(raw_password)
                 self.save(update_fields=['password_hash'])
                 return True
-        return self.password_hash == raw_password
+        # No plaintext fallback — reject unrecognized hash formats
+        return False
 
     def is_locked(self):
         if self.locked_until and self.locked_until > timezone.now():
@@ -101,6 +104,8 @@ class Customer(models.Model):
     name = models.CharField(max_length=150)
     account_number = models.CharField(max_length=25, unique=True, db_index=True)
     cif_number = models.CharField(max_length=25, db_index=True)
+    pan_number = models.CharField(max_length=20, blank=True, null=True, db_index=True)
+    aadhaar_number = models.CharField(max_length=20, blank=True, null=True, db_index=True)
     mobile_number = models.CharField(max_length=15, db_index=True)
     branch = models.ForeignKey(BankBranch, on_delete=models.SET_NULL, null=True, blank=True, related_name='customers')
     branch_name = models.CharField(max_length=150, default='Head Office, Nashik')
@@ -139,6 +144,8 @@ class SMSConsent(models.Model):
     customer_name = models.CharField(max_length=150)
     account_number = models.CharField(max_length=25, db_index=True)
     cif_number = models.CharField(max_length=25, db_index=True)
+    pan_number = models.CharField(max_length=20, blank=True, null=True, db_index=True)
+    aadhaar_number = models.CharField(max_length=20, blank=True, null=True, db_index=True)
     mobile_number = models.CharField(max_length=15, db_index=True)
     branch_name = models.CharField(max_length=150, default='CBS Head Office, Nashik', db_index=True)
     

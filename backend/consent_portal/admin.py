@@ -1,3 +1,5 @@
+# pyrefly: ignore-file
+# type: ignore
 from django.contrib import admin
 from .models import SMSConsent, BankOfficer, AuditLog, BankBranch, Customer, ConsentHistory, PhysicalForm
 

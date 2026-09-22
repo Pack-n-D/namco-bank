@@ -1,0 +1,34 @@
+# ==============================================================================
+# NAMCO BANK - SYSTEMD APPLICATION SERVICE CONFIGURATION
+# Location on Server: /etc/systemd/system/namco-consent.service
+# ==============================================================================
+
+[Unit]
+Description=Namco Bank SMS Consent Gunicorn Daemon
+After=network.target postgresql.service
+
+[Service]
+Type=notify
+User=namcoapp
+Group=namcoapp
+WorkingDirectory=/var/www/namco-bank/backend
+EnvironmentFile=/var/www/namco-bank/backend/.env
+ExecStart=/var/www/namco-bank/backend/venv/bin/gunicorn namco_core.wsgi:application \
+          --workers 5 \
+          --worker-class gthread \
+          --threads 4 \
+          --bind 127.0.0.1:8000 \
+          --timeout 60 \
+          --keep-alive 5 \
+          --access-logfile /var/log/namco/gunicorn_access.log \
+          --error-logfile /var/log/namco/gunicorn_error.log \
+          --capture-output
+
+Restart=always
+RestartSec=5s
+KillMode=mixed
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

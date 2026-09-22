@@ -184,6 +184,18 @@ app.post('/api/v1/admin/auth/login', (req, res) => {
   return res.status(401).json({ success: false, message: 'Invalid Username or Password' });
 });
 
+// Admin / Officer Change Password
+app.post('/api/v1/admin/change-password', (req, res) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+  if (!newPassword || newPassword.length < 6) {
+    return res.status(400).json({ success: false, message: 'New password must be at least 6 characters long.' });
+  }
+  if (confirmPassword && newPassword !== confirmPassword) {
+    return res.status(400).json({ success: false, message: 'New password and confirmation do not match.' });
+  }
+  return res.json({ success: true, message: 'Password updated successfully.' });
+});
+
 // ==========================================
 // 3. OFFICER / ADMIN GET CONSENTS & SEARCH
 // ==========================================

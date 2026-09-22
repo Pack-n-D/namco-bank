@@ -6,3 +6,6 @@ Pillow>=10.0.0
 pypdf>=3.17.0
 pytesseract>=0.3.10
 python-dotenv>=1.0.0
+cryptography>=42.0.0
+requests>=2.31.0
+gunicorn>=22.0.0

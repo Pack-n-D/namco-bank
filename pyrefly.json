@@ -1,0 +1,17 @@
+{
+  "project_roots": [
+    ".",
+    "backend",
+    "backend/consent_portal"
+  ],
+  "search_path": [
+    "backend",
+    "backend/consent_portal"
+  ],
+  "errors": {
+    "bad-override-mutable-attribute": "ignore",
+    "untyped-import": "ignore",
+    "missing-attribute": "ignore",
+    "bad-override": "ignore"
+  }
+}

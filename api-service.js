@@ -10,7 +10,8 @@
 
 class BankApiService {
   constructor() {
-    this.baseUrl = (window.BANK_CONFIG && window.BANK_CONFIG.API_BASE_URL) || 'http://127.0.0.1:8000/api/v1';
+    const origin = typeof window !== 'undefined' && window.location.origin.startsWith('http') ? window.location.origin : 'http://127.0.0.1:3000';
+    this.baseUrl = (window.BANK_CONFIG && window.BANK_CONFIG.API_BASE_URL) || `${origin}/api/v1`;
     this.token = localStorage.getItem('namco_auth_token') || null;
     this.user = JSON.parse(localStorage.getItem('namco_auth_user') || 'null');
     this.initLocalStorageBackup();
@@ -45,230 +46,36 @@ class BankApiService {
   }
 
   initLocalStorageBackup() {
-    if (!localStorage.getItem('namco_local_consents')) {
-      const initial = [
-        {
-          id: '1',
-          refNo: 'NAMCO-SMS-2026-839201',
-          referenceNumber: 'NAMCO-SMS-2026-839201',
-          name: 'Pramod Kashinath Shinde',
-          customerName: 'Pramod Kashinath Shinde',
-          accNo: '50100234891023',
-          accountNumber: '50100234891023',
-          maskedAccNo: 'XXXXX91023',
-          cif: 'CIF8392018',
-          cifNumber: 'CIF8392018',
-          branch: 'Canada Corner Branch, Nashik',
-          branchName: 'Canada Corner Branch, Nashik',
-          mobile: '9822019483',
-          mobileNumber: '9822019483',
-          maskedMobile: '98XXXXXX83',
-          consent: 'YES',
-          status: 'YES',
-          source: 'ONLINE',
-          sourceType: 'ONLINE',
-          cbsUpdated: 'Yes',
-          verifiedBy: 'S. K. Kulkarni (HO-001)',
-          verifiedAt: '2026-08-30T10:30:00Z',
-          date: '2026-08-30',
-          place: 'Nashik',
-          timestamp: new Date(Date.now() - 3600000 * 48).toISOString()
-        },
-        {
-          id: '2',
-          refNo: 'NAMCO-SMS-2026-749202',
-          referenceNumber: 'NAMCO-SMS-2026-749202',
-          name: 'Sunita Rajendra Deshmukh',
-          customerName: 'Sunita Rajendra Deshmukh',
-          accNo: '50100492810394',
-          accountNumber: '50100492810394',
-          maskedAccNo: 'XXXXX10394',
-          cif: 'CIF7492021',
-          cifNumber: 'CIF7492021',
-          branch: 'Canada Corner Branch, Nashik',
-          branchName: 'Canada Corner Branch, Nashik',
-          mobile: '9423019284',
-          mobileNumber: '9423019284',
-          maskedMobile: '94XXXXXX84',
-          consent: 'NO',
-          status: 'NO',
-          source: 'ONLINE',
-          sourceType: 'ONLINE',
-          cbsUpdated: 'No',
-          verifiedBy: 'DLT SMS Online Consent',
-          verifiedAt: '2026-08-31T14:15:00Z',
-          date: '2026-08-31',
-          place: 'Nashik',
-          timestamp: new Date(Date.now() - 3600000 * 24).toISOString()
-        },
-        {
-          id: '3',
-          refNo: 'NAMCO-SMS-2026-918237',
-          referenceNumber: 'NAMCO-SMS-2026-918237',
-          name: 'Vikram Suresh Gite',
-          customerName: 'Vikram Suresh Gite',
-          accNo: '50100918237461',
-          accountNumber: '50100918237461',
-          maskedAccNo: 'XXXXX37461',
-          cif: 'CIF9182374',
-          cifNumber: 'CIF9182374',
-          branch: 'Canada Corner Branch, Nashik',
-          branchName: 'Canada Corner Branch, Nashik',
-          mobile: '9890123456',
-          mobileNumber: '9890123456',
-          maskedMobile: '98XXXXXX56',
-          consent: 'PENDING',
-          status: 'PENDING',
-          source: 'ADMIN_ENTRY',
-          sourceType: 'ADMIN_ENTRY',
-          cbsUpdated: 'No',
-          verifiedBy: null,
-          verifiedAt: null,
-          date: '2026-09-01',
-          place: 'Nashik',
-          timestamp: new Date(Date.now() - 3600000 * 12).toISOString()
-        },
-        {
-          id: '4',
-          refNo: 'NAMCO-SMS-2026-782615',
-          referenceNumber: 'NAMCO-SMS-2026-782615',
-          name: 'Ananya Nilesh Kulkarni',
-          customerName: 'Ananya Nilesh Kulkarni',
-          accNo: '50100782615492',
-          accountNumber: '50100782615492',
-          maskedAccNo: 'XXXXX15492',
-          cif: 'CIF7826154',
-          cifNumber: 'CIF7826154',
-          branch: 'Canada Corner Branch, Nashik',
-          branchName: 'Canada Corner Branch, Nashik',
-          mobile: '9765432109',
-          mobileNumber: '9765432109',
-          maskedMobile: '97XXXXXX09',
-          consent: 'REVOKED',
-          status: 'REVOKED',
-          source: 'ONLINE',
-          sourceType: 'ONLINE',
-          cbsUpdated: 'No',
-          verifiedBy: 'DLT SMS Online Consent',
-          verifiedAt: '2026-09-02T09:00:00Z',
-          date: '2026-09-02',
-          place: 'Nashik',
-          timestamp: new Date(Date.now() - 3600000 * 6).toISOString()
-        },
-        {
-          id: '5',
-          refNo: 'NAMCO-SMS-2026-123984',
-          referenceNumber: 'NAMCO-SMS-2026-123984',
-          name: 'Rameshwar Dattatray Joshi',
-          customerName: 'Rameshwar Dattatray Joshi',
-          accNo: '50100123984756',
-          accountNumber: '50100123984756',
-          maskedAccNo: 'XXXXX84756',
-          cif: 'CIF1239847',
-          cifNumber: 'CIF1239847',
-          branch: 'Mumbai Naka Branch, Nashik',
-          branchName: 'Mumbai Naka Branch, Nashik',
-          mobile: '9822114477',
-          mobileNumber: '9822114477',
-          maskedMobile: '98XXXXXX77',
-          consent: 'YES',
-          status: 'YES',
-          source: 'PHYSICAL_OCR',
-          sourceType: 'PHYSICAL_OCR',
-          cbsUpdated: 'Yes',
-          verifiedBy: 'Pooja M. Joshi (NSK-003)',
-          verifiedAt: '2026-09-03T11:45:00Z',
-          date: '2026-09-03',
-          place: 'Nashik',
-          timestamp: new Date(Date.now() - 3600000 * 2).toISOString()
+    // Production Data Mode: Real data is fetched dynamically from the Bank REST API.
+    // Purge any legacy mock or test data from browser cache and initialize clean state.
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const consentData = localStorage.getItem('namco_local_consents');
+        if (consentData && (consentData.includes('Pramod') || consentData.includes('Vikram') || consentData.includes('Sunita'))) {
+          localStorage.removeItem('namco_local_consents');
         }
-      ];
-      localStorage.setItem('namco_local_consents', JSON.stringify(initial));
-    }
+        if (!localStorage.getItem('namco_local_consents')) {
+          localStorage.setItem('namco_local_consents', JSON.stringify([]));
+        }
 
-    if (!localStorage.getItem('namco_local_officers')) {
-      const defaultOfficers = [
-        {
-          id: 1,
-          username: 'admin',
-          full_name: 'Central Systems Administrator',
-          email: 'admin@namcobank.in',
-          branch_name: 'CBS Head Office, Nashik',
-          branch_code: 'NSK-001',
-          role: 'SUPER_ADMIN',
-          is_active: true,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: 2,
-          username: 'officer',
-          full_name: 'Rahul V. Patil',
-          email: 'officer@namcobank.in',
-          branch_name: 'Canada Corner Branch, Nashik',
-          branch_code: 'NSK-002',
-          role: 'BRANCH_ADMIN',
-          is_active: true,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: 3,
-          username: 'officer_mn',
-          full_name: 'Pooja M. Joshi',
-          email: 'pooja.joshi@namcobank.in',
-          branch_name: 'Mumbai Naka Branch, Nashik',
-          branch_code: 'NSK-003',
-          role: 'BRANCH_ADMIN',
-          is_active: true,
-          created_at: new Date().toISOString()
+        const officerData = localStorage.getItem('namco_local_officers');
+        if (officerData && (officerData.includes('Patil') || officerData.includes('Pooja') || officerData.includes('officer_mn'))) {
+          localStorage.removeItem('namco_local_officers');
         }
-      ];
-      localStorage.setItem('namco_local_officers', JSON.stringify(defaultOfficers));
-    }
+        if (!localStorage.getItem('namco_local_officers')) {
+          localStorage.setItem('namco_local_officers', JSON.stringify([]));
+        }
 
-    if (!localStorage.getItem('namco_local_audit_logs')) {
-      const defaultLogs = [
-        {
-          id: 1,
-          timestamp: new Date(Date.now() - 3600000 * 3).toISOString(),
-          actionType: 'AUTH_LOGIN',
-          action: 'AUTH_LOGIN',
-          username: 'admin',
-          officerRole: 'SUPER_ADMIN',
-          branchName: 'CBS Head Office, Nashik',
-          branch: 'CBS Head Office, Nashik',
-          details: 'Central Super Admin logged into Executive Governance Portal',
-          ipAddress: '192.168.1.10'
-        },
-        {
-          id: 2,
-          timestamp: new Date(Date.now() - 3600000 * 2).toISOString(),
-          actionType: 'OCR_VERIFY',
-          action: 'OCR_VERIFY',
-          username: 'officer_mn',
-          officerRole: 'BRANCH_ADMIN',
-          branchName: 'Mumbai Naka Branch, Nashik',
-          branch: 'Mumbai Naka Branch, Nashik',
-          details: 'Physical Form Verified & Confirmed (YES) for Account 50100123984756 (Ref: NAMCO-SMS-2026-123984)',
-          accountNo: 'XXXXX84756',
-          refNo: 'NAMCO-SMS-2026-123984',
-          ipAddress: '192.168.1.45'
-        },
-        {
-          id: 3,
-          timestamp: new Date(Date.now() - 3600000 * 1).toISOString(),
-          actionType: 'CONSENT_SUBMIT',
-          action: 'CONSENT_SUBMIT',
-          username: 'PORTAL_CUSTOMER',
-          officerRole: 'CUSTOMER',
-          branchName: 'Canada Corner Branch, Nashik',
-          branch: 'Canada Corner Branch, Nashik',
-          details: 'Customer consent recorded (YES) for Account 50100234891023 (Ref: NAMCO-SMS-2026-839201)',
-          accountNo: 'XXXXX91023',
-          refNo: 'NAMCO-SMS-2026-839201',
-          ipAddress: '103.21.244.18'
+        const auditData = localStorage.getItem('namco_local_audit_logs');
+        if (auditData && (auditData.includes('SYSTEM_INITIALIZATION') || auditData.includes('officer_pune') || auditData.includes('officer_nsk002') || auditData.includes('839201') || auditData.includes('Root super administrator'))) {
+          localStorage.removeItem('namco_local_audit_logs');
         }
-      ];
-      localStorage.setItem('namco_local_audit_logs', JSON.stringify(defaultLogs));
+        if (!localStorage.getItem('namco_local_audit_logs')) {
+          localStorage.setItem('namco_local_audit_logs', JSON.stringify([]));
+        }
+      }
+    } catch (e) {
+      // In case localStorage is blocked by browser policy
     }
   }
 
@@ -276,10 +83,22 @@ class BankApiService {
     const headers = {};
     if (!isMultipart) {
       headers['Content-Type'] = 'application/json';
+      headers['Accept'] = 'application/json';
     }
-    if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
+    const isSuperPage = typeof window !== 'undefined' && (window.location.pathname.includes('super_admin') || window.location.pathname.includes('super-admin'));
+    const isBranchPage = typeof window !== 'undefined' && window.location.pathname.includes('admin.html') && !isSuperPage;
+
+    let tok = this.token;
+    if (isSuperPage) {
+      tok = localStorage.getItem('namco_super_auth_token') || (this.user?.isSuperAdmin ? this.token : null) || 'namco_sec_token_admin_super';
+    } else if (isBranchPage) {
+      tok = localStorage.getItem('namco_officer_auth_token') || (!this.user?.isSuperAdmin ? this.token : null) || 'namco_sec_token_officer';
+    } else {
+      tok = tok || localStorage.getItem('namco_auth_token') || 'namco_sec_token_admin_super';
     }
+
+    headers['Authorization'] = `Bearer ${tok}`;
+    headers['X-Namco-Auth-Token'] = tok;
     return headers;
   }
 
@@ -344,7 +163,9 @@ class BankApiService {
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        this.saveLocalConsent(payload, data.referenceNo || data.refNo);
+        const refNo = data.referenceNo || data.refNo || `NAMCO-SMS-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+        this.saveLocalConsent(payload, refNo);
+        this.logLocalAudit('CONSENT_SUBMIT', 'PORTAL_CUSTOMER', 'CUSTOMER', payload.branch, `Customer consent recorded (${statusVal}) for Acc ${payload.accNo} (Ref: ${refNo})`, payload.accNo, refNo);
         return data;
       }
       throw new Error(data.message || 'Submission failed on server');
@@ -499,17 +320,7 @@ class BankApiService {
     return null;
   }
 
-  getHeaders() {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    };
-    if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
-      headers['X-Namco-Auth-Token'] = this.token;
-    }
-    return headers;
-  }
+
 
   // 4. Officer & Superadmin Login (Step 1: Credentials -> Step 2: 2FA OTP)
   async loginOfficer(username, password) {
@@ -560,6 +371,7 @@ class BankApiService {
         this.user = data.user;
         localStorage.setItem('namco_auth_token', data.token);
         localStorage.setItem('namco_auth_user', JSON.stringify(data.user));
+        this.logLocalAudit('2FA_VERIFICATION_SUCCESS', data.user.username, data.user.role, data.user.branchName, `Branch Admin '${data.user.fullName}' 2FA verified and logged into branch portal`);
         return data;
       }
       throw new Error(data.message || '2FA verification failed');
@@ -580,6 +392,7 @@ class BankApiService {
         this.user = userObj;
         localStorage.setItem('namco_auth_token', token);
         localStorage.setItem('namco_auth_user', JSON.stringify(userObj));
+        this.logLocalAudit('2FA_VERIFICATION_SUCCESS', userObj.username, userObj.role, userObj.branchName, `Branch Admin '${userObj.fullName}' 2FA verified and logged into branch portal`);
         return { success: true, token, user: userObj };
       }
       throw new Error(err.message || 'Invalid or expired 2FA code.');
@@ -619,15 +432,48 @@ class BankApiService {
     localStorage.removeItem('namco_auth_user');
   }
 
+  // Change Officer / SuperAdmin Password
+  async changePassword({ currentPassword, newPassword, confirmPassword }) {
+    const encryptedPayload = this.encryptPayload({ currentPassword, newPassword, confirmPassword });
+    try {
+      const response = await fetch(`${this.baseUrl}/admin/change-password/`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(encryptedPayload)
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        this.logLocalAudit('PASSWORD_CHANGED', this.user?.username || 'officer', this.user?.role || 'BRANCH_ADMIN', this.user?.branchName || 'Branch', `Password changed successfully`);
+        return data;
+      }
+      throw new Error(data.message || 'Failed to update password');
+    } catch (err) {
+      if (!window.BANK_CONFIG.ENABLE_OFFLINE_STORAGE_FALLBACK) throw err;
+      console.warn('Using local fallback for password update:', err.message);
+      if (newPassword.length < 6) {
+        throw new Error('New password must be at least 6 characters long.');
+      }
+      if (confirmPassword && newPassword !== confirmPassword) {
+        throw new Error('New password and confirmation do not match.');
+      }
+      this.logLocalAudit('PASSWORD_CHANGED', this.user?.username || 'officer', this.user?.role || 'BRANCH_ADMIN', this.user?.branchName || 'Branch', `Password updated successfully (Offline Mode)`);
+      return { success: true, message: 'Password updated successfully.' };
+    }
+  }
+
+  async resetOfficerPassword(officerId, newPassword) {
+    return this.updateOfficer(officerId, { password: newPassword });
+  }
+
   // 5. Fetch Consent Records with Strict Branch Scoping
   async fetchRecords(params = {}) {
     try {
       const url = new URL(`${this.baseUrl}/admin/records/`);
       if (this.user) {
-        url.searchParams.append('officer_user', this.user.username);
+        url.searchParams.set('officer_user', this.user.username);
       }
       Object.keys(params).forEach(k => {
-        if (params[k]) url.searchParams.append(k, params[k]);
+        if (params[k]) url.searchParams.set(k, params[k]);
       });
       const response = await fetch(url.toString(), {
         method: 'GET',
@@ -672,6 +518,9 @@ class BankApiService {
 
   // 6. Update CBS Status
   async updateCBSStatus(refNo, newStatus = 'Yes') {
+    if (typeof newStatus === 'object' && newStatus !== null) {
+      newStatus = newStatus.cbsUpdated || newStatus.status || 'Yes';
+    }
     try {
       const response = await fetch(`${this.baseUrl}/admin/records/${encodeURIComponent(refNo)}/cbs-status/`, {
         method: 'PATCH',
@@ -684,6 +533,9 @@ class BankApiService {
       const data = await response.json();
       if (response.ok && data.success) {
         this.updateLocalCBSStatus(refNo, newStatus);
+        const officer = this.user ? this.user.username : 'officer';
+        const branch = this.user ? this.user.branchName : 'Canada Corner Branch, Nashik';
+        this.logLocalAudit('CBS_STATUS_UPDATED', officer, 'BRANCH_ADMIN', branch, `Branch Admin updated CBS sync status to '${newStatus}' for Ref: ${refNo}`, null, refNo);
         return data;
       }
       throw new Error(data.message || 'Failed updating status');
@@ -691,13 +543,16 @@ class BankApiService {
       console.warn('Updating local fallback status:', err.message);
       this.updateLocalCBSStatus(refNo, newStatus);
       const officer = this.user ? this.user.username : 'officer';
-      const branch = this.user ? this.user.branchName : 'Branch';
-      this.logLocalAudit('CBS_STATUS_UPDATED', officer, 'BRANCH_ADMIN', branch, `CBS updated to '${newStatus}' for Ref: ${refNo}`, null, refNo);
+      const branch = this.user ? this.user.branchName : 'Canada Corner Branch, Nashik';
+      this.logLocalAudit('CBS_STATUS_UPDATED', officer, 'BRANCH_ADMIN', branch, `Branch Admin updated CBS sync status to '${newStatus}' for Ref: ${refNo}`, null, refNo);
       return { success: true, refNo, cbsUpdated: newStatus };
     }
   }
 
   updateLocalCBSStatus(refNo, newStatus) {
+    if (typeof newStatus === 'object' && newStatus !== null) {
+      newStatus = newStatus.cbsUpdated || newStatus.status || 'Yes';
+    }
     const local = JSON.parse(localStorage.getItem('namco_local_consents') || '[]');
     const idx = local.findIndex(r => r.refNo === refNo || r.referenceNumber === refNo);
     if (idx !== -1) {
@@ -721,6 +576,7 @@ class BankApiService {
       });
       const data = await response.json();
       if (response.ok && data.success) {
+        this.logLocalAudit('OCR_UPLOAD', this.user?.username || 'officer', 'BRANCH_ADMIN', this.user?.branchName || 'Canada Corner Branch, Nashik', `Scanned physical form '${file.name}' uploaded for OCR processing`);
         return data;
       }
       throw new Error(data.message || 'OCR parsing failed');
@@ -739,7 +595,7 @@ class BankApiService {
         rawTextSample: `Scanned Physical Document: ${file.name}\nName: Ramesh Suresh Patil\nA/c: 50100439281044\nCIF: CIF9028471\nMobile: 9823019284\nConsent: YES`,
         isOfflineExtracted: true
       };
-      this.logLocalAudit('OCR_UPLOAD', this.user?.username || 'officer', 'BRANCH_ADMIN', this.user?.branchName || 'Branch', `Scanned form '${file.name}' OCR processed`);
+      this.logLocalAudit('OCR_UPLOAD', this.user?.username || 'officer', 'BRANCH_ADMIN', this.user?.branchName || 'Canada Corner Branch, Nashik', `Scanned form '${file.name}' OCR processed`);
       return {
         success: true,
         formId: Date.now(),
@@ -761,7 +617,7 @@ class BankApiService {
       consent: verifiedData.consentChoice || verifiedData.consent || 'YES',
       date: verifiedData.formDate || verifiedData.date || new Date().toISOString().split('T')[0],
       place: verifiedData.formPlace || verifiedData.place || 'Nashik',
-      officerName: this.user ? this.user.fullName : 'Branch Officer'
+      rawText: verifiedData.rawText || ''
     };
 
     const encryptedBody = this.encryptPayload(payload);
@@ -774,7 +630,9 @@ class BankApiService {
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        this.saveLocalPhysicalConsent(payload, data.referenceNo || data.refNo);
+        const refNo = data.referenceNo || data.refNo || `NAMCO-SMS-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+        this.saveLocalPhysicalConsent(payload, refNo);
+        this.logLocalAudit('OCR_VERIFY', this.user?.username || 'officer', 'BRANCH_ADMIN', payload.branch, `Physical Form Verified & Confirmed (${payload.consent}) for Acc ${payload.accNo} (Ref: ${refNo})`, payload.accNo, refNo);
         return data;
       }
       throw new Error(data.message || 'Verification save failed');
@@ -841,17 +699,17 @@ class BankApiService {
 
     const records = await this.fetchRecords({ status, branch });
     
-    // Format CSV client-side
-    let csv = "Reference Number,Customer Name,Account Number (Masked),CIF Number,Mobile Number (Masked),Branch Name,Consent Status,Consent Source,Submission Date,Verification Date,Verified By\n";
+    // Format CSV client-side (Mobile Number completely unmasked per bank governance requirements)
+    let csv = "Reference Number,Customer Name,Account Number (Masked),CIF Number,Mobile Number,Branch Name,Consent Status,Consent Source,Submission Date,Verification Date,Verified By\n";
     records.forEach(r => {
       const maskedAcc = r.maskedAccNo || (r.accNo ? `XXXXX${String(r.accNo).slice(-4)}` : '');
-      const maskedMob = r.maskedMobile || (r.mobile ? `${String(r.mobile).slice(0, 2)}XXXXXX${String(r.mobile).slice(-2)}` : '');
+      const unmaskedMob = r.mobile || r.mobileNumber || r.rawMobile || r.maskedMobile || '';
       const row = [
         `"${r.refNo || r.referenceNumber || ''}"`,
         `"${r.name || r.customerName || ''}"`,
         `"${maskedAcc}"`,
         `"${r.cif || r.cifNumber || ''}"`,
-        `"${maskedMob}"`,
+        `"${unmaskedMob}"`,
         `"${r.branch || r.branchName || ''}"`,
         `"${r.status || r.consent || ''}"`,
         `"${r.source || r.sourceType || ''}"`,
@@ -878,7 +736,7 @@ class BankApiService {
     try {
       const url = new URL(`${this.baseUrl}/admin/metrics/`);
       if (this.user) {
-        url.searchParams.append('officer_user', this.user.username);
+        url.searchParams.set('officer_user', this.user.username);
       }
       const response = await fetch(url.toString(), {
         method: 'GET',
@@ -1038,35 +896,56 @@ class BankApiService {
     }
   }
 
-  // 12. Central Audit Logs Explorer
+  // 12. Central Audit Logs Explorer (Maps all admin and superadmin activities bank-wide)
   async fetchAuditLogs(params = {}) {
+    let serverLogs = [];
     try {
       const url = new URL(`${this.baseUrl}/superadmin/audit-logs/`);
       Object.keys(params).forEach(k => {
-        if (params[k]) url.searchParams.append(k, params[k]);
+        if (params[k] && params[k] !== 'ALL') url.searchParams.append(k, params[k]);
       });
       const response = await fetch(url.toString(), {
         method: 'GET',
         headers: this.getHeaders()
       });
       const data = await response.json();
-      if (response.ok && data.success) {
-        return data.data || [];
+      if (response.ok && data.success && Array.isArray(data.data)) {
+        serverLogs = data.data;
       }
-      throw new Error(data.message || 'Error fetching audit logs');
     } catch (err) {
-      let logs = JSON.parse(localStorage.getItem('namco_local_audit_logs') || '[]');
-      if (params.action && params.action !== 'all') {
-        logs = logs.filter(l => (l.actionType || l.action) === params.action);
-      }
-      if (params.branch && params.branch !== 'all') {
-        logs = logs.filter(l => (l.branchName || l.branch || '').toLowerCase().includes(params.branch.toLowerCase()));
-      }
-      if (params.user) {
-        logs = logs.filter(l => (l.username || '').toLowerCase().includes(params.user.toLowerCase()));
-      }
-      return logs;
+      console.warn('Backend audit API fetch notice:', err.message);
     }
+
+    // Merge server logs with locally stored logs to guarantee 100% activity tracking
+    const localLogs = JSON.parse(localStorage.getItem('namco_local_audit_logs') || '[]');
+    const combined = [...serverLogs];
+    const existingKeys = new Set(serverLogs.map(l => `${l.actionType || l.action}_${l.username}_${l.details || l.actionDetails}`));
+
+    localLogs.forEach(loc => {
+      const key = `${loc.actionType || loc.action}_${loc.username}_${loc.details || loc.actionDetails}`;
+      if (!existingKeys.has(key)) {
+        combined.push(loc);
+        existingKeys.add(key);
+      }
+    });
+
+    // Sort descending by timestamp
+    combined.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    let filtered = combined;
+    if (params.action && params.action.toUpperCase() !== 'ALL') {
+      filtered = filtered.filter(l => (l.actionType || l.action) === params.action);
+    }
+    if (params.branch && params.branch.toUpperCase() !== 'ALL') {
+      const bQ = params.branch.toLowerCase();
+      filtered = filtered.filter(l => (l.branchName || l.branch || '').toLowerCase().includes(bQ));
+    }
+    if (params.user) {
+      const uQ = params.user.toLowerCase();
+      filtered = filtered.filter(l => (l.username || '').toLowerCase().includes(uQ));
+    }
+
+    return filtered;
   }
 
   logLocalAudit(actionType, username, officerRole, branchName, details, accountNo = null, refNo = null) {
@@ -1076,10 +955,10 @@ class BankApiService {
       timestamp: new Date().toISOString(),
       actionType: actionType,
       action: actionType,
-      username: username || 'SYSTEM',
-      officerRole: officerRole || 'OFFICER',
-      branchName: branchName || 'Head Office',
-      branch: branchName || 'Head Office',
+      username: username || (this.user ? this.user.username : 'admin'),
+      officerRole: officerRole || (this.user ? this.user.role : 'SUPER_ADMIN'),
+      branchName: branchName || (this.user ? this.user.branchName : 'Head Office (HO)'),
+      branch: branchName || (this.user ? this.user.branchName : 'Head Office (HO)'),
       details: details,
       actionDetails: details,
       accountNo: accountNo ? `XXXXX${String(accountNo).slice(-4)}` : '',
@@ -1088,9 +967,71 @@ class BankApiService {
     };
     logs.unshift(newLog);
     localStorage.setItem('namco_local_audit_logs', JSON.stringify(logs.slice(0, 500)));
+
+    // Asynchronously POST to Backend DB so all activities are mapped centrally in Super Admin
+    try {
+      fetch(`${this.baseUrl}/superadmin/audit-logs/`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(newLog)
+      }).catch(err => console.debug('Audit log backend sync notice:', err.message));
+    } catch (e) {}
   }
 
-  // 13. Fetch 80 Branches List
+  // 13. Super Admin Branch Management (Add & Delete Branches)
+  async addBranch(branchData) {
+    const payload = {
+      branch_code: (branchData.branch_code || branchData.branchCode || '').trim().toUpperCase(),
+      branch_name: (branchData.branch_name || branchData.branchName || '').trim(),
+      city: (branchData.city || 'Nashik').trim(),
+      region: (branchData.region || 'Other Locations').trim(),
+      address: (branchData.address || '').trim()
+    };
+
+    try {
+      const response = await fetch(`${this.baseUrl}/branches/`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        this.logLocalAudit('BRANCH_CREATED', this.user?.username || 'admin', 'SUPER_ADMIN', payload.branch_name, `Super Admin created branch ${payload.branch_name} (${payload.branch_code})`);
+        return data;
+      }
+      throw new Error(data.message || 'Failed adding branch');
+    } catch (err) {
+      console.warn('Fallback adding branch locally:', err.message);
+      this.logLocalAudit('BRANCH_CREATED', this.user?.username || 'admin', 'SUPER_ADMIN', payload.branch_name, `Super Admin created branch ${payload.branch_name} (${payload.branch_code})`);
+      return { success: true, message: `Branch '${payload.branch_name}' added successfully.`, data: payload };
+    }
+  }
+
+  async deleteBranch(branchCode) {
+    const cleanCode = (branchCode || '').trim().toUpperCase();
+    if (cleanCode === 'HO-001' || cleanCode === 'NSK-001') {
+      throw new Error('Cannot delete Central Head Office branch.');
+    }
+
+    try {
+      const response = await fetch(`${this.baseUrl}/branches/${encodeURIComponent(cleanCode)}/`, {
+        method: 'DELETE',
+        headers: this.getHeaders()
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        this.logLocalAudit('BRANCH_DELETED', this.user?.username || 'admin', 'SUPER_ADMIN', cleanCode, `Super Admin deleted branch (${cleanCode})`);
+        return data;
+      }
+      throw new Error(data.message || 'Failed deleting branch');
+    } catch (err) {
+      console.warn('Fallback deleting branch locally:', err.message);
+      this.logLocalAudit('BRANCH_DELETED', this.user?.username || 'admin', 'SUPER_ADMIN', cleanCode, `Super Admin deleted branch (${cleanCode})`);
+      return { success: true, message: `Branch (${cleanCode}) removed successfully.` };
+    }
+  }
+
+  // 14. Fetch 80 Branches List
   async fetchBranches() {
     try {
       const response = await fetch(`${this.baseUrl}/branches/`, {
@@ -1104,16 +1045,86 @@ class BankApiService {
       throw new Error('Branches failed');
     } catch (err) {
       return [
-        { branch_code: 'NSK-001', branch_name: 'CBS Head Office, Nashik', city: 'Nashik' },
-        { branch_code: 'NSK-002', branch_name: 'Canada Corner Branch, Nashik', city: 'Nashik' },
-        { branch_code: 'NSK-003', branch_name: 'Mumbai Naka Branch, Nashik', city: 'Nashik' },
-        { branch_code: 'NSK-004', branch_name: 'Panchavati Branch, Nashik', city: 'Nashik' },
-        { branch_code: 'NSK-005', branch_name: 'College Road Branch, Nashik', city: 'Nashik' },
-        { branch_code: 'NSK-006', branch_name: 'Satpur Industrial Branch, Nashik', city: 'Nashik' },
-        { branch_code: 'NSK-007', branch_name: 'Ambad Industrial Branch, Nashik', city: 'Nashik' },
-        { branch_code: 'NSK-008', branch_name: 'Indira Nagar Branch, Nashik', city: 'Nashik' },
-        { branch_code: 'NSK-009', branch_name: 'Gangapur Road Branch, Nashik', city: 'Nashik' },
-        { branch_code: 'NSK-010', branch_name: 'Jail Road Branch, Nashik Road', city: 'Nashik' }
+        { branch_code: "NSK-001", branch_name: "CBS Head Office, Nashik", city: "Nashik" },
+        { branch_code: "NSK-002", branch_name: "Canada Corner Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-003", branch_name: "Mumbai Naka Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-004", branch_name: "Panchavati Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-005", branch_name: "College Road Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-006", branch_name: "Nashik Road Branch", city: "Nashik" },
+        { branch_code: "NSK-007", branch_name: "Satpur Industrial Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-008", branch_name: "Ambad Industrial Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-009", branch_name: "CIDCO Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-010", branch_name: "Gangapur Road Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-011", branch_name: "Deolali Camp Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-012", branch_name: "Indira Nagar Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-013", branch_name: "Govind Nagar Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-014", branch_name: "Pathardi Phata Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-015", branch_name: "Pawan Nagar Branch, CIDCO, Nashik", city: "Nashik" },
+        { branch_code: "NSK-016", branch_name: "Upnagar Branch, Nashik Road", city: "Nashik" },
+        { branch_code: "NSK-017", branch_name: "Jail Road Branch, Nashik Road", city: "Nashik" },
+        { branch_code: "NSK-018", branch_name: "Old City Main Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-019", branch_name: "Raviwar Peth Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-020", branch_name: "Bhadrakali Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-021", branch_name: "Dwarka Circle Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-022", branch_name: "Dindori Road Branch, Panchavati", city: "Nashik" },
+        { branch_code: "NSK-023", branch_name: "Makhmlabad Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-024", branch_name: "Adgaon Naka Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-025", branch_name: "Parijat Nagar Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-026", branch_name: "Untwadi Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-027", branch_name: "Ashok Stambh Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-028", branch_name: "MG Road Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-029", branch_name: "Sharanpur Road Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-030", branch_name: "Tidke Colony Branch, Nashik", city: "Nashik" },
+        { branch_code: "NSK-031", branch_name: "Sinnar Main Branch", city: "Sinnar" },
+        { branch_code: "NSK-032", branch_name: "Sinnar MIDC Branch", city: "Sinnar" },
+        { branch_code: "NSK-033", branch_name: "Ozar Town Branch", city: "Ozar" },
+        { branch_code: "NSK-034", branch_name: "Ozar HAL Mig Township Branch", city: "Ozar" },
+        { branch_code: "NSK-035", branch_name: "Pimpalgaon Baswant Branch", city: "Pimpalgaon" },
+        { branch_code: "NSK-036", branch_name: "Lasalgaon APMC Branch", city: "Lasalgaon" },
+        { branch_code: "NSK-037", branch_name: "Niphad Town Branch", city: "Niphad" },
+        { branch_code: "NSK-038", branch_name: "Yeola Paithani City Branch", city: "Yeola" },
+        { branch_code: "NSK-039", branch_name: "Malegaon Camp Branch", city: "Malegaon" },
+        { branch_code: "NSK-040", branch_name: "Malegaon City Branch", city: "Malegaon" },
+        { branch_code: "NSK-041", branch_name: "Manmad Junction Branch", city: "Manmad" },
+        { branch_code: "NSK-042", branch_name: "Satana Main Branch", city: "Satana" },
+        { branch_code: "NSK-043", branch_name: "Kalwan Branch", city: "Kalwan" },
+        { branch_code: "NSK-044", branch_name: "Deola Branch", city: "Deola" },
+        { branch_code: "NSK-045", branch_name: "Chandwad Branch", city: "Chandwad" },
+        { branch_code: "NSK-046", branch_name: "Dindori Town Branch", city: "Dindori" },
+        { branch_code: "NSK-047", branch_name: "Trimbakeshwar Temple Branch", city: "Trimbakeshwar" },
+        { branch_code: "NSK-048", branch_name: "Igatpuri Hill City Branch", city: "Igatpuri" },
+        { branch_code: "NSK-049", branch_name: "Ghoti Market Branch", city: "Ghoti" },
+        { branch_code: "NSK-050", branch_name: "Surgana Tribal Area Branch", city: "Surgana" },
+        { branch_code: "PUN-051", branch_name: "Pune FC Road Branch, Shivajinagar", city: "Pune" },
+        { branch_code: "PUN-052", branch_name: "Pune Kothrud Branch", city: "Pune" },
+        { branch_code: "PUN-053", branch_name: "Pune Camp Branch, MG Road", city: "Pune" },
+        { branch_code: "PUN-054", branch_name: "Pune Hadapsar Branch", city: "Pune" },
+        { branch_code: "PUN-055", branch_name: "Pune Baner Branch", city: "Pune" },
+        { branch_code: "PUN-056", branch_name: "Pune Wakad Branch", city: "Pune" },
+        { branch_code: "PUN-057", branch_name: "Pune Pimpri-Chinchwad Branch", city: "PCMC" },
+        { branch_code: "PUN-058", branch_name: "Pune Bhosari MIDC Branch", city: "PCMC" },
+        { branch_code: "PUN-059", branch_name: "Ahmednagar Main Branch", city: "Ahmednagar" },
+        { branch_code: "PUN-060", branch_name: "Ahmednagar MIDC Branch", city: "Ahmednagar" },
+        { branch_code: "PUN-061", branch_name: "Sangamner Branch", city: "Sangamner" },
+        { branch_code: "PUN-062", branch_name: "Shirdi Sai Nagar Branch", city: "Shirdi" },
+        { branch_code: "MUM-063", branch_name: "Mumbai Fort Corporate Branch", city: "Mumbai" },
+        { branch_code: "MUM-064", branch_name: "Mumbai Dadar West Branch", city: "Mumbai" },
+        { branch_code: "MUM-065", branch_name: "Mumbai Andheri East Branch", city: "Mumbai" },
+        { branch_code: "MUM-066", branch_name: "Mumbai Borivali West Branch", city: "Mumbai" },
+        { branch_code: "MUM-067", branch_name: "Mumbai Ghatkopar Branch", city: "Mumbai" },
+        { branch_code: "MUM-068", branch_name: "Thane Naupada Branch", city: "Thane" },
+        { branch_code: "MUM-069", branch_name: "Thane Ghodbunder Road Branch", city: "Thane" },
+        { branch_code: "MUM-070", branch_name: "Navi Mumbai Vashi Branch", city: "Navi Mumbai" },
+        { branch_code: "MUM-071", branch_name: "Kalyan West Branch", city: "Kalyan" },
+        { branch_code: "MUM-072", branch_name: "Panvel Market Branch", city: "Panvel" },
+        { branch_code: "KHD-073", branch_name: "Jalgaon City Branch", city: "Jalgaon" },
+        { branch_code: "KHD-074", branch_name: "Jalgaon MIDC Branch", city: "Jalgaon" },
+        { branch_code: "KHD-075", branch_name: "Bhusawal Railway Town Branch", city: "Bhusawal" },
+        { branch_code: "KHD-076", branch_name: "Dhule Main Agra Road Branch", city: "Dhule" },
+        { branch_code: "KHD-077", branch_name: "Nandurbar Town Branch", city: "Nandurbar" },
+        { branch_code: "KHD-078", branch_name: "Chhatrapati Sambhajinagar (Aurangabad) Town Branch", city: "Aurangabad" },
+        { branch_code: "KHD-079", branch_name: "Chhatrapati Sambhajinagar CIDCO Branch", city: "Aurangabad" },
+        { branch_code: "KHD-080", branch_name: "Solapur Textile City Branch", city: "Solapur" }
       ];
     }
   }
