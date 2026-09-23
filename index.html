@@ -1055,20 +1055,376 @@
   footer a{color:var(--text-500); text-decoration:underline;}
   footer a:hover{color:var(--navy-900);}
 
-  /* ===== Print (downloaded physical copy) ===== */
-  @media print{
-    .no-print{display:none !important;}
-    body{background:#fff !important;}
-    .print-summary{display:block !important; max-width:680px; margin:0 auto; padding:20px;}
-    .print-head{border-bottom:2px solid var(--navy-900); padding-bottom:14px; margin-bottom:18px; text-align:center;}
-    .print-head .bank-name{font-family:var(--font-serif); font-size:20px; font-weight:700; color:var(--navy-900);}
-    .print-head .bank-sub{font-size:12.5px; color:var(--text-500); margin-top:2px;}
-    .print-head h1{font-size:16px; margin-top:14px;}
-    .print-table{width:100%; border-collapse:collapse; margin-top:10px;}
-    .print-table td{padding:9px 4px; border-bottom:1px solid var(--border); font-size:13.5px;}
-    .print-table td:first-child{color:var(--text-500); width:45%;}
-    .print-table td:last-child{font-weight:600; color:var(--text-900);}
-    .print-note{font-size:11.5px; color:var(--text-500); margin-top:20px; line-height:1.5;}
+  /* ===== Physical Form & Print Engine ===== */
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 6mm 8mm;
+    }
+    html, body {
+      background: #fff !important;
+      color: #000 !important;
+      font-size: 10.5px !important;
+      line-height: 1.25 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+    }
+    .no-print {
+      display: none !important;
+    }
+    .print-summary {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #fff !important;
+    }
+    .official-paper-form {
+      border: 2px solid #0B2244;
+      padding: 6px 8px;
+      background: #fff;
+      page-break-inside: avoid;
+      box-sizing: border-box;
+    }
+    .opf-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #0B2244;
+      padding-bottom: 4px;
+      margin-bottom: 4px;
+    }
+    .opf-logo-col {
+      width: 60px;
+      flex-shrink: 0;
+      text-align: center;
+    }
+    .opf-logo-img {
+      max-width: 52px;
+      max-height: 52px;
+      display: block;
+      margin: 0 auto;
+    }
+    .opf-logo-fallback {
+      font-weight: 800;
+      font-size: 11px;
+      color: #7A1030;
+      border: 1.5px solid #7A1030;
+      padding: 4px;
+    }
+    .opf-title-col {
+      flex: 1;
+      text-align: center;
+      padding: 0 8px;
+    }
+    .opf-bank-marathi {
+      font-size: 13px;
+      font-weight: 800;
+      color: #7A1030;
+      line-height: 1.2;
+    }
+    .opf-bank-eng {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #0B2244;
+      letter-spacing: 0.3px;
+      line-height: 1.2;
+    }
+    .opf-bank-type {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #333;
+      margin-top: 1px;
+    }
+    .opf-bank-ho {
+      font-size: 8.5px;
+      color: #555;
+      margin-top: 1px;
+    }
+    .opf-estd-col {
+      width: 65px;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .opf-badge-box {
+      border: 1.5px solid #0B2244;
+      padding: 2px 4px;
+      text-align: center;
+      background: #f8fafc;
+    }
+    .opf-badge-yr {
+      font-size: 10px;
+      font-weight: 800;
+      display: block;
+      color: #0B2244;
+    }
+    .opf-badge-lbl {
+      font-size: 7px;
+      font-weight: 700;
+      display: block;
+      color: #7A1030;
+      letter-spacing: 0.5px;
+    }
+    .opf-banner {
+      background: #0B2244 !important;
+      color: #fff !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      text-align: center;
+      padding: 3px 6px;
+      margin-bottom: 4px;
+    }
+    .opf-main-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #fff;
+    }
+    .opf-sub-title {
+      font-size: 9px;
+      color: #e2e8f0;
+    }
+    .opf-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9px;
+      padding: 2px 4px;
+      border-bottom: 1px solid #94a3b8;
+      margin-bottom: 4px;
+      background: #f1f5f9;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .opf-meta-row .opf-lbl {
+      font-weight: 700;
+      color: #333;
+    }
+    .opf-meta-row .opf-val-bold {
+      font-weight: 800;
+      color: #0B2244;
+      font-family: monospace;
+    }
+    .opf-section {
+      border: 1px solid #1e3a5f;
+      margin-bottom: 4px;
+    }
+    .opf-sec-head {
+      background: #e2e8f0 !important;
+      color: #0B2244 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-bottom: 1px solid #1e3a5f;
+      letter-spacing: 0.3px;
+    }
+    .opf-sec-body {
+      padding: 3px 6px;
+    }
+    .opf-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+      font-size: 9px;
+    }
+    .opf-col-branch {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .opf-col-brcode {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .opf-field-label {
+      font-weight: 700;
+      color: #1e293b;
+      white-space: nowrap;
+      font-size: 9px;
+    }
+    .opf-underline-val {
+      flex: 1;
+      border-bottom: 1px solid #475569;
+      min-height: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      padding: 0 4px;
+      font-size: 9.5px;
+    }
+    .opf-row-boxes {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+    .opf-box-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .char-box-grid {
+      display: inline-flex;
+      gap: 1.5px;
+    }
+    .char-box-grid span {
+      display: inline-block;
+      width: 13.5px;
+      height: 15px;
+      border: 1px solid #000;
+      text-align: center;
+      line-height: 15px;
+      font-size: 9.5px;
+      font-weight: 700;
+      font-family: monospace;
+      background: #fff;
+    }
+    .opf-row-three {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+      font-size: 9px;
+    }
+    .opf-row-three > div {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .opf-dec-text {
+      font-size: 8.5px;
+      color: #333;
+      margin-bottom: 2px;
+      line-height: 1.25;
+    }
+    .opf-consent-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      font-size: 8.5px;
+    }
+    .opf-check-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      margin-bottom: 2px;
+      line-height: 1.2;
+    }
+    .opf-cb-box {
+      font-size: 11px;
+      line-height: 1;
+      font-weight: bold;
+      color: #0B2244;
+      flex-shrink: 0;
+    }
+    .opf-terms-text {
+      font-size: 8px;
+      color: #475569;
+      line-height: 1.25;
+      margin-bottom: 3px;
+    }
+    .opf-sig-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-top: 2px;
+    }
+    .opf-sig-meta {
+      font-size: 9px;
+      line-height: 1.35;
+    }
+    .opf-sig-box {
+      border: 1px dashed #333;
+      width: 190px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 2px;
+      position: relative;
+      background: #fafafa;
+    }
+    .opf-sig-img-wrap {
+      position: absolute;
+      top: 2px;
+      left: 8px;
+      right: 8px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .opf-sig-line {
+      width: 85%;
+      border-bottom: 1px solid #333;
+      margin-bottom: 2px;
+    }
+    .opf-sig-label {
+      font-size: 7.5px;
+      text-align: center;
+      font-weight: 700;
+      color: #333;
+      line-height: 1.1;
+    }
+    .opf-bank-use-section {
+      border: 1.5px solid #0B2244;
+      background: #f8fafc;
+    }
+    .opf-bank-head {
+      background: #0B2244 !important;
+      color: #fff !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .opf-bank-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .opf-bank-details {
+      flex: 1;
+      font-size: 8px;
+      line-height: 1.4;
+    }
+    .opf-bank-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 2px;
+      flex-wrap: wrap;
+    }
+    .opf-stamp-box {
+      width: 135px;
+      height: 44px;
+      border: 1px solid #475569;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: #fff;
+    }
+    .opf-stamp-inner {
+      font-size: 7px;
+      font-weight: 700;
+      color: #64748b;
+      line-height: 1.15;
+    }
+    .opf-form-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 7px;
+      color: #64748b;
+      margin-top: 2px;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 2px;
+    }
   }
 </style>
 </head>
@@ -1108,16 +1464,24 @@
     <p>Tell us how you'd like to hear from us. This takes about two minutes — verify your registered mobile number, confirm your account, then choose your preference.</p>
   </div>
 
-  <div class="download-row">
-    <div style="font-size: 13px; color: #6B7284;">
-      <button type="button" id="quickLoginLink" style="display:none; background:none; border:none; color:#1B3E70; font-weight:600; cursor:pointer; padding:0; text-decoration:underline;">
-        Already registered? View Profile / Update Consent
+  <div class="download-row" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:18px;">
+    <div style="display:flex; flex-direction:column; gap:3px;">
+      <span style="font-weight:700; font-size:13.5px; color:var(--navy-900);">Prefer paper submission at branch?</span>
+      <span style="font-size:12px; color:var(--text-500);">Customers unable to complete online verification can download the official blank A4 registration form to fill with pen and submit at any Namco Bank branch.</span>
+      <button type="button" id="quickLoginLink" style="display:none; margin-top:4px; align-self:flex-start; background:none; border:none; color:#1B3E70; font-weight:600; cursor:pointer; padding:0; text-decoration:underline; font-size:12.5px;">
+        Already registered? View Profile / Update Consent &rarr;
       </button>
     </div>
-    <button class="btn btn-secondary" id="downloadFormBtn" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
-      Download form
-    </button>
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <button class="btn btn-secondary" id="downloadBlankFormBtn" type="button" title="Download official blank A4 registration form to fill with pen and submit at branch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px; height:15px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Download Blank Form (A4)
+      </button>
+      <button class="btn btn-secondary" id="downloadFormBtn" type="button" title="Print/Download pre-filled copy of your entered details and consent record">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px; height:15px;"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Download Filled Copy
+      </button>
+    </div>
   </div>
 
   <nav class="stepper" id="formStepper" aria-label="Form progress">
@@ -1269,6 +1633,43 @@
         <label for="aadhaarCard">Aadhaar card number <span class="req">*</span></label>
         <input type="text" id="aadhaarCard" inputmode="numeric" placeholder="12-digit Aadhaar number" maxlength="12" autocomplete="off">
         <p class="err">Please enter a valid Aadhaar card number.</p>
+      </div>
+    </div>
+
+    <!-- Communication / Residential Address -->
+    <div style="border-top:1px solid var(--border); margin:18px 0 16px; padding-top:16px;">
+      <h3 style="font-size:14px; font-weight:700; color:var(--navy-900); margin-bottom:12px; display:flex; align-items:center; gap:7px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Residential / Communication Address <span style="font-weight:400; font-size:12px; color:var(--text-500);">(As registered with the bank)</span>
+      </h3>
+
+      <div class="field">
+        <label for="addrLine1">Address Line 1 (Flat / House No., Building, Street) <span class="req">*</span></label>
+        <input type="text" id="addrLine1" placeholder="e.g. Flat 302, Shanti Heights, College Road" autocomplete="address-line1">
+        <p class="err">Please enter your primary address line.</p>
+      </div>
+
+      <div class="field">
+        <label for="addrLine2">Address Line 2 (Area, Landmark)</label>
+        <input type="text" id="addrLine2" placeholder="e.g. Near Canada Corner, Behind City Center" autocomplete="address-line2">
+      </div>
+
+      <div class="row3" style="display:grid; grid-template-columns: 1fr 1fr 130px; gap:12px;">
+        <div class="field">
+          <label for="addrCity">City / District <span class="req">*</span></label>
+          <input type="text" id="addrCity" placeholder="City or District" value="Nashik" autocomplete="address-level2">
+          <p class="err">Please enter your city/district.</p>
+        </div>
+        <div class="field">
+          <label for="addrState">State <span class="req">*</span></label>
+          <input type="text" id="addrState" placeholder="State" value="Maharashtra" autocomplete="address-level1">
+          <p class="err">Please enter your state.</p>
+        </div>
+        <div class="field">
+          <label for="addrPin">PIN Code <span class="req">*</span></label>
+          <input type="text" id="addrPin" inputmode="numeric" placeholder="6 digits" maxlength="6" autocomplete="postal-code">
+          <p class="err">Valid 6-digit PIN code required.</p>
+        </div>
       </div>
     </div>
 
@@ -1694,7 +2095,11 @@
       <div class="ref-row"><span class="k">Submitted</span><span class="v" id="refDate">—</span></div>
     </div>
 
-    <div class="btn-row" style="justify-content:center;">
+    <div class="btn-row" style="justify-content:center; flex-wrap:wrap; gap:10px;">
+      <button class="btn btn-secondary" id="confirmPrintCopyBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px; height:15px;"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Download / Print Form Copy
+      </button>
       <button class="btn btn-secondary" id="viewHistoryBtn" type="button">View consent history</button>
       <button class="btn btn-primary" id="updateConsentBtn" type="button">Update consent</button>
     </div>
@@ -1721,6 +2126,7 @@
       <div class="ref-row"><span class="k">Branch</span><span class="v" id="profBranch">—</span></div>
       <div class="ref-row"><span class="k">PAN</span><span class="v" id="profPan">—</span></div>
       <div class="ref-row"><span class="k">Aadhaar</span><span class="v" id="profAadhaar">—</span></div>
+      <div class="ref-row"><span class="k">Residential address</span><span class="v" id="profAddress">—</span></div>
       <div class="ref-row"><span class="k">Consent status</span><span class="v" id="profConsentStatus">—</span></div>
       <div class="ref-row"><span class="k">Active channels</span><span class="v" id="profChannels">—</span></div>
     </div>
@@ -2026,23 +2432,273 @@
 </footer>
 
 <div class="print-summary" id="printSummary">
-  <div class="print-head">
-    <div class="bank-name">Namco Bank</div>
-    <div class="bank-sub">The Nasik Merchants Co‑operative Bank Ltd.</div>
-    <h1>SMS Alert Consent — Form Copy</h1>
+  <div class="official-paper-form">
+    <!-- TOP HEADER -->
+    <div class="opf-header">
+      <div class="opf-logo-col">
+        <img src="/logo.png" alt="Namco Crest" class="opf-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="opf-logo-fallback" style="display:none;">NAMCO</div>
+      </div>
+      <div class="opf-title-col">
+        <div class="opf-bank-marathi">दि नाशिक मर्चंट्स को-ऑपरेटिव्ह बँक लि., नाशिक</div>
+        <div class="opf-bank-eng">THE NASIK MERCHANTS CO-OPERATIVE BANK LTD., NASHIK</div>
+        <div class="opf-bank-type">(MULTI-STATE SCHEDULED BANK) • ESTD. 1959</div>
+        <div class="opf-bank-ho">Head Office: "Namco Bhavan", Old Agra Road / A-2, B-Road, MIDC, Nashik - 422002</div>
+      </div>
+      <div class="opf-estd-col">
+        <div class="opf-badge-box">
+          <span class="opf-badge-yr">1959</span>
+          <span class="opf-badge-lbl">ESTABLISHED</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM TITLE STRIP -->
+    <div class="opf-banner">
+      <div class="opf-main-title">BANK SMS ALERT REGISTRATION / CONSENT FORM</div>
+      <div class="opf-sub-title">बँक एसएमएस अलर्ट नोंदणी / संमती अर्ज (RBI Directives & DPDP Guidelines)</div>
+    </div>
+
+    <!-- META ROW -->
+    <div class="opf-meta-row">
+      <div class="opf-meta-left">
+        <span class="opf-lbl">Application Ref:</span>
+        <span class="opf-val-bold" id="pfRefNo">NAMCO-SMS-BLANK</span>
+      </div>
+      <div class="opf-meta-mid">
+        <span class="opf-lbl">Form Category:</span>
+        <span class="opf-val" id="pfFormMode">[ ] Direct Physical Branch Submission   [ ] Online Self-Service</span>
+      </div>
+      <div class="opf-meta-right">
+        <span class="opf-lbl">Date:</span>
+        <span class="opf-val" id="pfFormDate">____ / ____ / 2026</span>
+      </div>
+    </div>
+
+    <!-- SECTION 1: CUSTOMER & ACCOUNT DETAILS -->
+    <div class="opf-section">
+      <div class="opf-sec-head">1. CUSTOMER & ACCOUNT PARTICULARS / खातेदाराची माहिती (FILL IN CAPITAL LETTERS)</div>
+      <div class="opf-sec-body">
+        <div class="opf-row">
+          <div class="opf-col-branch">
+            <span class="opf-field-label">Branch Name / शाखा:</span>
+            <span class="opf-underline-val" id="pfBranchName">________________________________________________</span>
+          </div>
+          <div class="opf-col-brcode">
+            <span class="opf-field-label">Branch Code:</span>
+            <div class="char-box-grid" id="pfBranchCodeBoxes">
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="opf-row">
+          <span class="opf-field-label">Full Name of Account Holder / खातेदाराचे नाव:</span>
+          <span class="opf-underline-val" id="pfCustomerName">_________________________________________________________________________________</span>
+        </div>
+
+        <div class="opf-row-boxes">
+          <div class="opf-box-group">
+            <span class="opf-field-label">Account No (15 Digits):</span>
+            <div class="char-box-grid pf-grid-15" id="pfAccountBoxes">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="opf-box-group">
+            <span class="opf-field-label">Customer ID / CIF (11 Digits):</span>
+            <div class="char-box-grid pf-grid-11" id="pfCifBoxes">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="opf-row-boxes">
+          <div class="opf-box-group">
+            <span class="opf-field-label">PAN Number (10 Chars):</span>
+            <div class="char-box-grid pf-grid-10" id="pfPanBoxes">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="opf-box-group">
+            <span class="opf-field-label">Aadhaar Number (12 Digits):</span>
+            <div class="char-box-grid pf-grid-12" id="pfAadhaarBoxes">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: REGISTERED MOBILE NUMBER & ADDRESS -->
+    <div class="opf-section">
+      <div class="opf-sec-head">2. REGISTERED MOBILE NUMBER & COMMUNICATION ADDRESS / मोबाईल व संपर्क पत्ता</div>
+      <div class="opf-sec-body">
+        <div class="opf-row" style="align-items:center;">
+          <span class="opf-field-label">Registered Mobile Number / नोंदणीकृत मोबाईल:</span>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-weight:700; font-size:10px; border:1px solid #000; padding:1px 5px; background:#fff;">+91</span>
+            <div class="char-box-grid pf-grid-10" id="pfMobileBoxes">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="opf-row">
+          <span class="opf-field-label">Address Line 1 (Flat / House, Building, Street):</span>
+          <span class="opf-underline-val" id="pfAddress1">_________________________________________________________________________________</span>
+        </div>
+        <div class="opf-row">
+          <span class="opf-field-label">Address Line 2 (Area, Landmark):</span>
+          <span class="opf-underline-val" id="pfAddress2">_________________________________________________________________________________</span>
+        </div>
+
+        <div class="opf-row-three">
+          <div>
+            <span class="opf-field-label">City / District:</span>
+            <span class="opf-underline-val" id="pfCity">Nashik</span>
+          </div>
+          <div>
+            <span class="opf-field-label">State:</span>
+            <span class="opf-underline-val" id="pfState">Maharashtra</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:5px;">
+            <span class="opf-field-label">PIN Code:</span>
+            <div class="char-box-grid pf-grid-6" id="pfPinBoxes">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: CONSENT DECLARATION & ALERT SCOPE -->
+    <div class="opf-section">
+      <div class="opf-sec-head">3. SMS ALERT REGISTRATION & CONSENT DECLARATION / संमती व अलर्ट व्याप्ती</div>
+      <div class="opf-sec-body">
+        <p class="opf-dec-text">
+          I / We hereby request and authorise The Nasik Merchants Co-operative Bank Ltd. to send SMS alerts and service notifications to my above registered mobile number as selected below:
+        </p>
+
+        <div class="opf-consent-grid">
+          <div class="opf-consent-col">
+            <div class="opf-check-line">
+              <span class="opf-cb-box" id="pfCbCore">&#9745;</span>
+              <div>
+                <strong>Core Banking & Transaction Alerts [Mandatory / अनिवार्य]</strong><br>
+                <span>Real-time debit/credit, ATM, UPI, IMPS/NEFT, and 2FA OTP codes.</span>
+              </div>
+            </div>
+            <div class="opf-check-line">
+              <span class="opf-cb-box" id="pfCbServicing">&#9745;</span>
+              <div>
+                <strong>Account Servicing & Notices</strong><br>
+                <span>FD/RD deposit maturity, loan EMI due, cheque clearance updates.</span>
+              </div>
+            </div>
+            <div class="opf-check-line">
+              <span class="opf-cb-box" id="pfCbFraud">&#9745;</span>
+              <div>
+                <strong>Security, Fraud Prevention & Risk Alerts</strong><br>
+                <span>Immediate warnings on suspicious account logins and risk alerts.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="opf-consent-col">
+            <div class="opf-check-line">
+              <span class="opf-cb-box" id="pfCbPromo">&#9744;</span>
+              <div>
+                <strong>Commercial & Promotional Offers [Optional / ऐच्छिक]</strong><br>
+                <span>Special deposit schemes, seasonal rates, and loan offers.</span>
+              </div>
+            </div>
+            <div class="opf-check-line">
+              <span class="opf-cb-box" id="pfCbChannels">&#9745;</span>
+              <div>
+                <strong>Delivery Channels:</strong>
+                <span id="pfChannelsLabel">SMS Alerts, Email E-Statements, WhatsApp Banking</span>
+              </div>
+            </div>
+            <div class="opf-check-line">
+              <span class="opf-cb-box" id="pfCbThirdParty">&#9745;</span>
+              <div>
+                <strong>Authorised Third-Party Service Providers:</strong><br>
+                <span>I authorise the Bank to share my mobile number and relevant alert communication with its authorised third-party service providers strictly for message delivery, routing, and alert transmission.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: CUSTOMER UNDERTAKING & SIGNATURE -->
+    <div class="opf-section">
+      <div class="opf-sec-head">4. CUSTOMER UNDERTAKING & SIGNATURE / ग्राहकाची सही व हमीपत्र</div>
+      <div class="opf-sec-body">
+        <p class="opf-terms-text">
+          I declare that the information provided above is true and correct. I agree to notify the Bank immediately in writing of any change in my mobile number or address. I agree to pay the SMS alert service charges as per the Bank's approved tariff.
+        </p>
+        <div class="opf-sig-container">
+          <div class="opf-sig-meta">
+            <div><strong>Date / दिनांक:</strong> <span id="pfSigDate">____ / ____ / 2026</span></div>
+            <div style="margin-top:6px;"><strong>Place / ठिकाण:</strong> <span id="pfSigPlace">Nashik / ______________</span></div>
+            <div style="margin-top:6px;"><strong>Customer Status:</strong> <span id="pfCustomerStatus">Account Holder</span></div>
+          </div>
+          <div class="opf-sig-box">
+            <div class="opf-sig-img-wrap" id="pfSigImgWrap" style="display:none;">
+              <img id="pfSigImage" alt="Digital Signature" style="max-height:36px; max-width:170px;">
+            </div>
+            <div class="opf-sig-line" id="pfSigLine"></div>
+            <div class="opf-sig-label">Signature / Thumb Impression of Account Holder<br>(खातेदाराची स्वाक्षरी)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: FOR BANK USE ONLY -->
+    <div class="opf-section opf-bank-use-section">
+      <div class="opf-sec-head opf-bank-head">5. FOR BANK BRANCH USE ONLY / बँकेच्या उपयोगासाठी (To be filled by Bank Staff)</div>
+      <div class="opf-sec-body">
+        <div class="opf-bank-grid">
+          <div class="opf-bank-details">
+            <div class="opf-bank-row">
+              <div><strong>Verified By (Officer Name):</strong> ___________________________</div>
+              <div><strong>Employee ID / Code:</strong> ______________</div>
+            </div>
+            <div class="opf-bank-row">
+              <div><strong>Branch Code:</strong> ________</div>
+              <div><strong>Signature Verified in CBS:</strong> [ ] YES   [ ] NO</div>
+              <div><strong>Verification Date:</strong> ____ / ____ / 2026</div>
+            </div>
+            <div class="opf-bank-row">
+              <div><strong>CBS Entry / Ref No:</strong> ___________________________</div>
+              <div><strong>Finacle Status:</strong> [ ] Updated / Active</div>
+            </div>
+          </div>
+          <div class="opf-stamp-box">
+            <div class="opf-stamp-inner">
+              BRANCH OFFICIAL STAMP & SEAL<br>
+              (शाखेचा अधिकृत शिक्का)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPF FOOTER -->
+    <div class="opf-form-footer">
+      <span>The Nasik Merchants Co-operative Bank Ltd. • Form Code: NMCB-SMS-CONSENT-2026-REV3</span>
+      <span id="pfFooterTimestamp">RBI Core Banking & DPDP Act 2023 Compliance</span>
+    </div>
   </div>
-  <table class="print-table">
-    <tr><td>Account holder</td><td id="pName">—</td></tr>
-    <tr><td>Mobile number</td><td id="pMobile">—</td></tr>
-    <tr><td>Account number</td><td id="pAcctNo">—</td></tr>
-    <tr><td>Customer ID (CIF)</td><td id="pCif">—</td></tr>
-    <tr><td>Branch</td><td id="pBranch">—</td></tr>
-    <tr><td>PAN</td><td id="pPan">—</td></tr>
-    <tr><td>Aadhaar</td><td id="pAadhaar">—</td></tr>
-    <tr><td>SMS alert preference</td><td id="pChoice">—</td></tr>
-    <tr><td>Date generated</td><td id="pDate">—</td></tr>
-  </table>
-  <p class="print-note">This is a system-generated copy of your SMS alert consent form, reflecting the details currently entered. PAN and Aadhaar are shown partially masked for your protection. Fields not yet filled in the form will show as "—".</p>
 </div>
 
 <script>
@@ -2212,6 +2868,12 @@
         if(p.rawAadhaar || (p.aadhaarNumber && p.aadhaarNumber !== 'Not Linked')) {
           aadhaarCard.value = p.rawAadhaar || p.aadhaarNumber.replace(/\D/g, '');
         }
+        if(p.addressLine1) addrLine1.value = p.addressLine1;
+        if(p.addressLine2) addrLine2.value = p.addressLine2;
+        if(p.cityDistrict) addrCity.value = p.cityDistrict;
+        if(p.state) addrState.value = p.state;
+        if(p.pincode) addrPin.value = p.pincode;
+
         if(p.currentConsent){
           const isYes = p.currentConsent.toUpperCase() === 'YES';
           document.querySelector('input[value="yes"]').checked = isYes;
@@ -2249,6 +2911,11 @@
   const branch = document.getElementById('branch');
   const panCard = document.getElementById('panCard');
   const aadhaarCard = document.getElementById('aadhaarCard');
+  const addrLine1 = document.getElementById('addrLine1');
+  const addrLine2 = document.getElementById('addrLine2');
+  const addrCity = document.getElementById('addrCity');
+  const addrState = document.getElementById('addrState');
+  const addrPin = document.getElementById('addrPin');
 
   function getFullName(){
     return [firstName.value.trim(), middleName.value.trim(), lastName.value.trim()]
@@ -2257,11 +2924,15 @@
 
   document.getElementById('toStep3Btn').addEventListener('click', ()=>{
     let ok = true;
-    [[firstName],[lastName],[acctNo],[cif],[branch],[panCard],[aadhaarCard]].forEach(([el])=>{
+    [[firstName],[lastName],[acctNo],[cif],[branch],[panCard],[aadhaarCard],[addrLine1],[addrCity],[addrState],[addrPin]].forEach(([el])=>{
       const invalid = !el.value.trim();
       setInvalid(el.closest('.field'), invalid);
       if(invalid) ok = false;
     });
+    if(addrPin.value.trim() && addrPin.value.trim().length !== 6){
+      setInvalid(addrPin.closest('.field'), true);
+      ok = false;
+    }
     if(!ok) return;
     document.getElementById('consentName').textContent = getFullName();
     goToStep(3);
@@ -2459,6 +3130,11 @@
           branch: branch.value || 'CBS Head Office, Nashik',
           pan: panCard.value.trim().toUpperCase(),
           aadhaar: aadhaarCard.value.trim(),
+          addressLine1: addrLine1.value.trim(),
+          addressLine2: addrLine2.value.trim(),
+          cityDistrict: addrCity.value.trim(),
+          state: addrState.value.trim(),
+          pincode: addrPin.value.trim(),
           consent: consentVal,
           date: dateField.value,
           place: placeField.value.trim(),
@@ -2558,6 +3234,17 @@
     document.getElementById('profPan').textContent = panCard.value.trim() ? maskId(panCard.value.toUpperCase(), 2, 2) : '—';
     document.getElementById('profAadhaar').textContent = aadhaarCard.value.trim() ? ('XXXX-XXXX-' + aadhaarCard.value.trim().slice(-4)) : '—';
     
+    const profAddrParts = [
+      addrLine1?.value.trim(),
+      addrLine2?.value.trim(),
+      addrCity?.value.trim(),
+      addrState?.value.trim() ? `${addrState.value.trim()} - ${addrPin?.value.trim()}` : addrPin?.value.trim()
+    ].filter(Boolean);
+    const profAddrEl = document.getElementById('profAddress');
+    if (profAddrEl) {
+      profAddrEl.textContent = profAddrParts.length ? profAddrParts.join(', ') : '—';
+    }
+
     const latest = consentHistory[0] || {};
     const profConsentStatus = document.getElementById('profConsentStatus');
     if(profConsentStatus) {
@@ -2627,22 +3314,149 @@
     setTimeout(resizeCanvas, 50);
   });
 
-  /* ---------- Download form: PDF / print copy ---------- */
-  document.getElementById('downloadFormBtn').addEventListener('click', ()=>{
-    document.getElementById('pName').textContent = getFullName() || '—';
-    document.getElementById('pMobile').textContent = mobileInput.value.length === 10
-      ? `+91 ${mobileInput.value.replace(/(\d{5})(\d{5})/,'$1 $2')}` : '—';
-    document.getElementById('pAcctNo').textContent = acctNo.value.trim() ? ('XXXXX' + acctNo.value.trim().slice(-4)) : '—';
-    document.getElementById('pCif').textContent = cif.value.trim() || '—';
-    document.getElementById('pBranch').textContent = branch.value || '—';
-    document.getElementById('pPan').textContent = panCard.value.trim() ? maskId(panCard.value.toUpperCase(), 2, 2) : '—';
-    document.getElementById('pAadhaar').textContent = aadhaarCard.value.trim() ? ('XXXX-XXXX-' + aadhaarCard.value.trim().slice(-4)) : '—';
-    const chosen = document.querySelector('input[name="consentChoice"]:checked');
-    document.getElementById('pChoice').textContent = chosen
-      ? (chosen.value === 'yes' ? 'Receive SMS alerts' : 'Opted out of optional alerts') : '—';
-    document.getElementById('pDate').textContent = new Date().toLocaleString('en-IN', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
-    window.print();
-  });
+  /* ---------- Download Physical Form: Blank A4 Form vs Pre-filled Copy ---------- */
+  function fillCharBoxes(containerId, text, totalCount){
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const clean = (text || '').toString().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const spans = container.querySelectorAll('span');
+    spans.forEach((span, i) => {
+      span.textContent = clean[i] || '';
+    });
+  }
+
+  function populateOfficialPhysicalForm(mode){
+    const isFilled = (mode === 'filled');
+
+    // 1. Reference and metadata
+    const refNumEl = document.getElementById('refId');
+    const existingRef = (refNumEl && refNumEl.textContent && refNumEl.textContent !== '—') ? refNumEl.textContent.trim() : '';
+    const assignedRef = isFilled ? (existingRef || ('NAMCO-SMS-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random()*900000))) : 'NAMCO-SMS-BLANK-FORM';
+    
+    const pfRefNo = document.getElementById('pfRefNo');
+    if(pfRefNo) pfRefNo.textContent = assignedRef;
+
+    const pfFormMode = document.getElementById('pfFormMode');
+    if(pfFormMode) {
+      pfFormMode.textContent = isFilled ? '[X] Online Self-Service Consent Copy' : '[X] Direct Physical Branch Submission (Handwritten Form)';
+    }
+
+    const pfFormDate = document.getElementById('pfFormDate');
+    if(pfFormDate) {
+      pfFormDate.textContent = isFilled ? new Date().toLocaleDateString('en-IN', {day:'2-digit', month:'2-digit', year:'numeric'}) : '____ / ____ / 2026';
+    }
+
+    // 2. Branch and Officer fields
+    const branchNameVal = branch?.value || 'CBS Head Office, Nashik';
+    const pfBranchName = document.getElementById('pfBranchName');
+    if(pfBranchName) {
+      pfBranchName.textContent = isFilled ? branchNameVal : '________________________________________________';
+    }
+
+    const codeMatch = branchNameVal.match(/NSK-(\d+)/);
+    const brCodeStr = codeMatch ? codeMatch[1].padStart(4, '0') : '0001';
+    fillCharBoxes('pfBranchCodeBoxes', isFilled ? brCodeStr : '', 4);
+
+    // 3. Customer Name
+    const fullNameVal = getFullName();
+    const pfCustomerName = document.getElementById('pfCustomerName');
+    if(pfCustomerName) {
+      pfCustomerName.textContent = (isFilled && fullNameVal) ? fullNameVal.toUpperCase() : '_________________________________________________________________________________';
+    }
+
+    // 4. Character Grids (Account No, CIF, PAN, Aadhaar, Mobile)
+    fillCharBoxes('pfAccountBoxes', isFilled ? (acctNo?.value || '') : '', 15);
+    fillCharBoxes('pfCifBoxes', isFilled ? (cif?.value || '') : '', 11);
+    fillCharBoxes('pfPanBoxes', isFilled ? (panCard?.value || '') : '', 10);
+    fillCharBoxes('pfAadhaarBoxes', isFilled ? (aadhaarCard?.value || '') : '', 12);
+    fillCharBoxes('pfMobileBoxes', isFilled ? (mobileInput?.value || '') : '', 10);
+
+    // 5. Residential Address
+    const pfAddress1 = document.getElementById('pfAddress1');
+    const pfAddress2 = document.getElementById('pfAddress2');
+    const pfCity = document.getElementById('pfCity');
+    const pfState = document.getElementById('pfState');
+
+    if(pfAddress1) pfAddress1.textContent = (isFilled && addrLine1?.value.trim()) ? addrLine1.value.trim() : '_________________________________________________________________________________';
+    if(pfAddress2) pfAddress2.textContent = (isFilled && addrLine2?.value.trim()) ? addrLine2.value.trim() : '_________________________________________________________________________________';
+    if(pfCity) pfCity.textContent = (isFilled && addrCity?.value.trim()) ? addrCity.value.trim() : 'Nashik / ________________';
+    if(pfState) pfState.textContent = (isFilled && addrState?.value.trim()) ? addrState.value.trim() : 'Maharashtra / ________________';
+    fillCharBoxes('pfPinBoxes', isFilled ? (addrPin?.value || '') : '', 6);
+
+    // 6. Consent Checkboxes
+    const pfCbCore = document.getElementById('pfCbCore');
+    const pfCbServicing = document.getElementById('pfCbServicing');
+    const pfCbFraud = document.getElementById('pfCbFraud');
+    const pfCbPromo = document.getElementById('pfCbPromo');
+    const pfCbChannels = document.getElementById('pfCbChannels');
+    const pfCbThirdParty = document.getElementById('pfCbThirdParty');
+
+    if(pfCbCore) pfCbCore.textContent = '☒'; // Always Mandatory
+    if(pfCbServicing) pfCbServicing.textContent = isFilled ? (cbPurposeServicing?.checked ? '☒' : '☐') : '☐';
+    if(pfCbFraud) pfCbFraud.textContent = isFilled ? (cbPurposeFraud?.checked ? '☒' : '☐') : '☐';
+    const promoOpted = isFilled && document.querySelector('input[name="consentChoice"]:checked')?.value === 'yes' && cbPurposePromotional?.checked;
+    if(pfCbPromo) pfCbPromo.textContent = promoOpted ? '☒' : '☐';
+    if(pfCbChannels) pfCbChannels.textContent = '☒';
+    if(pfCbThirdParty) pfCbThirdParty.textContent = isFilled ? (cbShareDltPartner?.checked ? '☒' : '☐') : '☐';
+
+    // 7. Signature Container
+    const sigImgWrap = document.getElementById('pfSigImgWrap');
+    const sigImage = document.getElementById('pfSigImage');
+    const sigLine = document.getElementById('pfSigLine');
+
+    if(isFilled && hasSigned && typeof sigPad !== 'undefined') {
+      try {
+        sigImage.src = sigPad.toDataURL('image/png');
+        if(sigImgWrap) sigImgWrap.style.display = 'flex';
+        if(sigLine) sigLine.style.display = 'none';
+      } catch(e) {
+        if(sigImgWrap) sigImgWrap.style.display = 'none';
+        if(sigLine) sigLine.style.display = 'block';
+      }
+    } else {
+      if(sigImgWrap) sigImgWrap.style.display = 'none';
+      if(sigLine) sigLine.style.display = 'block';
+    }
+
+    const pfSigDate = document.getElementById('pfSigDate');
+    const pfSigPlace = document.getElementById('pfSigPlace');
+    if(pfSigDate) pfSigDate.textContent = isFilled ? (dateField?.value || new Date().toLocaleDateString('en-IN')) : '____ / ____ / 2026';
+    if(pfSigPlace) pfSigPlace.textContent = isFilled ? (placeField?.value.trim() || 'Nashik') : 'Nashik / ______________';
+
+    const pfFooterTimestamp = document.getElementById('pfFooterTimestamp');
+    if(pfFooterTimestamp) {
+      pfFooterTimestamp.textContent = isFilled 
+        ? `Official Record Copy • Printed on ${new Date().toLocaleString('en-IN')} • DPDPA 2023 DF-COOP-MH-4291` 
+        : 'Official Blank Registration Form • Submit with KYC Documents at any Namco Bank Branch';
+    }
+  }
+
+  // Bind Download Blank Form button
+  const downloadBlankFormBtn = document.getElementById('downloadBlankFormBtn');
+  if(downloadBlankFormBtn){
+    downloadBlankFormBtn.addEventListener('click', ()=>{
+      populateOfficialPhysicalForm('blank');
+      window.print();
+    });
+  }
+
+  // Bind Download Filled Copy button
+  const downloadFormBtn = document.getElementById('downloadFormBtn');
+  if(downloadFormBtn){
+    downloadFormBtn.addEventListener('click', ()=>{
+      populateOfficialPhysicalForm('filled');
+      window.print();
+    });
+  }
+
+  // Bind Step 4 / Profile copy button if present
+  const confirmPrintCopyBtn = document.getElementById('confirmPrintCopyBtn');
+  if(confirmPrintCopyBtn){
+    confirmPrintCopyBtn.addEventListener('click', ()=>{
+      populateOfficialPhysicalForm('filled');
+      window.print();
+    });
+  }
 
   /* ---------- DPDP Rules 2025: Itemised Inventory Accordion ---------- */
   const itemisedToggle = document.getElementById('itemisedInventoryToggle');

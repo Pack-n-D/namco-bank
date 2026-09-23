@@ -107,6 +107,11 @@ class Customer(models.Model):
     pan_number = models.CharField(max_length=20, blank=True, null=True, db_index=True)
     aadhaar_number = models.CharField(max_length=20, blank=True, null=True, db_index=True)
     mobile_number = models.CharField(max_length=15, db_index=True)
+    address_line1 = models.CharField(max_length=255, blank=True, default='')
+    address_line2 = models.CharField(max_length=255, blank=True, default='')
+    city_district = models.CharField(max_length=100, blank=True, default='Nashik')
+    state = models.CharField(max_length=100, blank=True, default='Maharashtra')
+    pincode = models.CharField(max_length=10, blank=True, default='')
     branch = models.ForeignKey(BankBranch, on_delete=models.SET_NULL, null=True, blank=True, related_name='customers')
     branch_name = models.CharField(max_length=150, default='Head Office, Nashik')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -147,6 +152,11 @@ class SMSConsent(models.Model):
     pan_number = models.CharField(max_length=20, blank=True, null=True, db_index=True)
     aadhaar_number = models.CharField(max_length=20, blank=True, null=True, db_index=True)
     mobile_number = models.CharField(max_length=15, db_index=True)
+    address_line1 = models.CharField(max_length=255, blank=True, default='')
+    address_line2 = models.CharField(max_length=255, blank=True, default='')
+    city_district = models.CharField(max_length=100, blank=True, default='Nashik')
+    state = models.CharField(max_length=100, blank=True, default='Maharashtra')
+    pincode = models.CharField(max_length=10, blank=True, default='')
     branch_name = models.CharField(max_length=150, default='CBS Head Office, Nashik', db_index=True)
     
     signature_data = models.TextField(blank=True, null=True) # HTML5 Canvas Base64 or digital token

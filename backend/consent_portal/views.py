@@ -176,6 +176,16 @@ def ensure_db_schema():
                 cursor.execute("ALTER TABLE tbl_customers ADD COLUMN pan_number VARCHAR(20) NULL")
             if 'aadhaar_number' not in cust_cols:
                 cursor.execute("ALTER TABLE tbl_customers ADD COLUMN aadhaar_number VARCHAR(20) NULL")
+            if 'address_line1' not in cust_cols:
+                cursor.execute("ALTER TABLE tbl_customers ADD COLUMN address_line1 VARCHAR(255) DEFAULT ''")
+            if 'address_line2' not in cust_cols:
+                cursor.execute("ALTER TABLE tbl_customers ADD COLUMN address_line2 VARCHAR(255) DEFAULT ''")
+            if 'city_district' not in cust_cols:
+                cursor.execute("ALTER TABLE tbl_customers ADD COLUMN city_district VARCHAR(100) DEFAULT 'Nashik'")
+            if 'state' not in cust_cols:
+                cursor.execute("ALTER TABLE tbl_customers ADD COLUMN state VARCHAR(100) DEFAULT 'Maharashtra'")
+            if 'pincode' not in cust_cols:
+                cursor.execute("ALTER TABLE tbl_customers ADD COLUMN pincode VARCHAR(10) DEFAULT ''")
 
             # tbl_sms_consents extra columns
             cursor.execute("PRAGMA table_info(tbl_sms_consents)")
@@ -184,6 +194,16 @@ def ensure_db_schema():
                 cursor.execute("ALTER TABLE tbl_sms_consents ADD COLUMN pan_number VARCHAR(20) NULL")
             if 'aadhaar_number' not in consent_cols:
                 cursor.execute("ALTER TABLE tbl_sms_consents ADD COLUMN aadhaar_number VARCHAR(20) NULL")
+            if 'address_line1' not in consent_cols:
+                cursor.execute("ALTER TABLE tbl_sms_consents ADD COLUMN address_line1 VARCHAR(255) DEFAULT ''")
+            if 'address_line2' not in consent_cols:
+                cursor.execute("ALTER TABLE tbl_sms_consents ADD COLUMN address_line2 VARCHAR(255) DEFAULT ''")
+            if 'city_district' not in consent_cols:
+                cursor.execute("ALTER TABLE tbl_sms_consents ADD COLUMN city_district VARCHAR(100) DEFAULT 'Nashik'")
+            if 'state' not in consent_cols:
+                cursor.execute("ALTER TABLE tbl_sms_consents ADD COLUMN state VARCHAR(100) DEFAULT 'Maharashtra'")
+            if 'pincode' not in consent_cols:
+                cursor.execute("ALTER TABLE tbl_sms_consents ADD COLUMN pincode VARCHAR(10) DEFAULT ''")
 
             # Granular preferences columns (Purposes & Channels)
             granular_cols = [
@@ -585,6 +605,12 @@ class CustomerConsentSubmitView(APIView):
         pan_clean = str(pan).strip().upper()[:10] if pan else ''
         aadhaar_clean = ''.join(c for c in str(aadhaar) if c.isdigit())[:12] if aadhaar else ''
 
+        addr_line1 = str(data.get('addressLine1') or data.get('address_line1') or data.get('address1') or '').strip()
+        addr_line2 = str(data.get('addressLine2') or data.get('address_line2') or data.get('address2') or '').strip()
+        city_district = str(data.get('cityDistrict') or data.get('city_district') or data.get('district') or data.get('city') or 'Nashik').strip()
+        state = str(data.get('state') or 'Maharashtra').strip()
+        pincode = str(data.get('pincode') or data.get('pinCode') or data.get('pin') or '').strip()
+
         # 1. Master Customer entity
         customer, _ = Customer.objects.get_or_create(
             account_number=str(acc_no).strip(),
@@ -594,6 +620,11 @@ class CustomerConsentSubmitView(APIView):
                 "pan_number": pan_clean,
                 "aadhaar_number": aadhaar_clean,
                 "mobile_number": mob_clean,
+                "address_line1": addr_line1,
+                "address_line2": addr_line2,
+                "city_district": city_district,
+                "state": state,
+                "pincode": pincode,
                 "branch_name": str(branch_name).strip()
             }
         )
@@ -606,6 +637,16 @@ class CustomerConsentSubmitView(APIView):
             customer.aadhaar_number = aadhaar_clean
         customer.mobile_number = mob_clean
         customer.branch_name = str(branch_name).strip()
+        if addr_line1:
+            customer.address_line1 = addr_line1
+        if addr_line2:
+            customer.address_line2 = addr_line2
+        if city_district:
+            customer.city_district = city_district
+        if state:
+            customer.state = state
+        if pincode:
+            customer.pincode = pincode
         customer.save()
 
         # Granular Preferences Parsing
@@ -657,6 +698,11 @@ class CustomerConsentSubmitView(APIView):
             existing_consent.pan_number = customer.pan_number
             existing_consent.aadhaar_number = customer.aadhaar_number
             existing_consent.mobile_number = customer.mobile_number
+            existing_consent.address_line1 = customer.address_line1
+            existing_consent.address_line2 = customer.address_line2
+            existing_consent.city_district = customer.city_district
+            existing_consent.state = customer.state
+            existing_consent.pincode = customer.pincode
             existing_consent.branch_name = customer.branch_name
             existing_consent.signature_data = signature_data
             existing_consent.form_date = form_date
@@ -693,6 +739,11 @@ class CustomerConsentSubmitView(APIView):
                 pan_number=customer.pan_number,
                 aadhaar_number=customer.aadhaar_number,
                 mobile_number=customer.mobile_number,
+                address_line1=customer.address_line1,
+                address_line2=customer.address_line2,
+                city_district=customer.city_district,
+                state=customer.state,
+                pincode=customer.pincode,
                 branch_name=customer.branch_name,
                 signature_data=signature_data,
                 form_date=form_date,
@@ -1152,6 +1203,11 @@ class CustomerVerifyOtpView(APIView):
             "branchName": customer.branch_name,
             "panNumber": customer.pan_number or '',
             "aadhaarNumber": mask_aadhaar(customer.aadhaar_number) if customer.aadhaar_number else '',
+            "addressLine1": getattr(customer, 'address_line1', '') or '',
+            "addressLine2": getattr(customer, 'address_line2', '') or '',
+            "cityDistrict": getattr(customer, 'city_district', 'Nashik') or 'Nashik',
+            "state": getattr(customer, 'state', 'Maharashtra') or 'Maharashtra',
+            "pincode": getattr(customer, 'pincode', '') or '',
             # SECURITY: Raw Aadhaar NEVER returned in API responses (DPDPA 2023 compliance)
             "currentConsent": consent_record.status if consent_record else 'PENDING',
             "referenceNumber": consent_record.reference_number if consent_record else '',
@@ -1218,6 +1274,11 @@ class CustomerCompleteOnboardingView(APIView):
         form_place = (data.get('formPlace') or data.get('place') or 'Nashik').strip()
         form_date = data.get('formDate') or timezone.now().date()
         signature_data = data.get('signatureData') or ''
+        addr_line1 = (data.get('addressLine1') or data.get('address_line1') or '').strip()
+        addr_line2 = (data.get('addressLine2') or data.get('address_line2') or '').strip()
+        city_district = (data.get('cityDistrict') or data.get('city_district') or data.get('city') or 'Nashik').strip()
+        state = (data.get('state') or 'Maharashtra').strip()
+        pincode = (data.get('pincode') or data.get('pin') or '').strip()
 
         if not mobile_number:
             return Response(
@@ -1250,7 +1311,12 @@ class CustomerCompleteOnboardingView(APIView):
                 account_number=acc,
                 cif_number=cif,
                 mobile_number=mobile_number,
-                branch_name=branch_name
+                branch_name=branch_name,
+                address_line1=addr_line1,
+                address_line2=addr_line2,
+                city_district=city_district,
+                state=state,
+                pincode=pincode
             )
 
         # Update customer master fields
@@ -1262,6 +1328,16 @@ class CustomerCompleteOnboardingView(APIView):
             customer.branch_name = branch_name
         customer.pan_number = pan_number
         customer.aadhaar_number = aadhaar_number
+        if addr_line1:
+            customer.address_line1 = addr_line1
+        if addr_line2:
+            customer.address_line2 = addr_line2
+        if city_district:
+            customer.city_district = city_district
+        if state:
+            customer.state = state
+        if pincode:
+            customer.pincode = pincode
         customer.save()
 
         # Update or create SMSConsent
@@ -1283,6 +1359,11 @@ class CustomerCompleteOnboardingView(APIView):
                 status=new_status,
                 pan_number=pan_number,
                 aadhaar_number=aadhaar_number,
+                address_line1=customer.address_line1,
+                address_line2=customer.address_line2,
+                city_district=customer.city_district,
+                state=customer.state,
+                pincode=customer.pincode,
                 signature_data=signature_data,
                 form_place=form_place,
                 form_date=form_date,
@@ -1300,6 +1381,11 @@ class CustomerCompleteOnboardingView(APIView):
             consent_record.status = new_status
             consent_record.pan_number = pan_number
             consent_record.aadhaar_number = aadhaar_number
+            consent_record.address_line1 = customer.address_line1
+            consent_record.address_line2 = customer.address_line2
+            consent_record.city_district = customer.city_district
+            consent_record.state = customer.state
+            consent_record.pincode = customer.pincode
             if signature_data:
                 consent_record.signature_data = signature_data
             consent_record.form_place = form_place
@@ -1355,6 +1441,11 @@ class CustomerCompleteOnboardingView(APIView):
             "branchName": customer.branch_name,
             "panNumber": customer.pan_number,
             "aadhaarNumber": mask_aadhaar(customer.aadhaar_number),
+            "addressLine1": customer.address_line1 or '',
+            "addressLine2": customer.address_line2 or '',
+            "cityDistrict": customer.city_district or 'Nashik',
+            "state": customer.state or 'Maharashtra',
+            "pincode": customer.pincode or '',
             # SECURITY: Raw Aadhaar NEVER returned in API responses (DPDPA 2023 compliance)
             "currentConsent": consent_record.status,
             "referenceNumber": consent_record.reference_number,
@@ -1394,6 +1485,11 @@ class CustomerUpdateConsentView(APIView):
         form_date = data.get('formDate') or timezone.now().date()
         pan = (data.get('panNumber') or data.get('pan') or '').strip().upper()[:10]
         aadhaar = ''.join(c for c in str(data.get('aadhaarNumber') or data.get('aadhaar') or '') if c.isdigit())[:12]
+        addr_l1 = (data.get('addressLine1') or data.get('address_line1') or '').strip()
+        addr_l2 = (data.get('addressLine2') or data.get('address_line2') or '').strip()
+        city_dist = (data.get('cityDistrict') or data.get('city_district') or data.get('city') or '').strip()
+        state_val = (data.get('state') or '').strip()
+        pin_val = (data.get('pincode') or data.get('pin') or '').strip()
 
         new_status = 'YES' if raw_consent.upper() in ['YES', 'AGREE', 'TRUE', '1'] else 'NO'
 
@@ -1412,6 +1508,16 @@ class CustomerUpdateConsentView(APIView):
             customer.pan_number = pan
         if aadhaar:
             customer.aadhaar_number = aadhaar
+        if addr_l1:
+            customer.address_line1 = addr_l1
+        if addr_l2:
+            customer.address_line2 = addr_l2
+        if city_dist:
+            customer.city_district = city_dist
+        if state_val:
+            customer.state = state_val
+        if pin_val:
+            customer.pincode = pin_val
         customer.save()
 
         consent_record = SMSConsent.objects.filter(customer=customer).first()
@@ -1466,6 +1572,11 @@ class CustomerUpdateConsentView(APIView):
                 aadhaar_number=customer.aadhaar_number,
                 mobile_number=customer.mobile_number,
                 branch_name=customer.branch_name,
+                address_line1=customer.address_line1,
+                address_line2=customer.address_line2,
+                city_district=customer.city_district,
+                state=customer.state,
+                pincode=customer.pincode,
                 signature_data=signature_data,
                 form_date=form_date,
                 form_place=form_place,
@@ -1493,6 +1604,11 @@ class CustomerUpdateConsentView(APIView):
             consent_record.form_place = form_place
             consent_record.pan_number = customer.pan_number
             consent_record.aadhaar_number = customer.aadhaar_number
+            consent_record.address_line1 = customer.address_line1
+            consent_record.address_line2 = customer.address_line2
+            consent_record.city_district = customer.city_district
+            consent_record.state = customer.state
+            consent_record.pincode = customer.pincode
             consent_record.ip_address = client_ip
             consent_record.user_agent = user_agent
             consent_record.submitted_at = timezone.now()
@@ -2485,9 +2601,11 @@ class BranchDataExportView(APIView):
 
         writer = csv.writer(response)
         writer.writerow([
-            'Ref No', 'Customer Name', 'Account No', 'CIF', 'PAN', 'Aadhaar', 'Mobile', 'Branch', 'Status',
+            'Ref No', 'Customer Name', 'Account No', 'CIF', 'PAN', 'Aadhaar', 'Mobile', 
+            'Address Line 1', 'Address Line 2', 'City / District', 'State', 'PIN Code',
+            'Branch', 'Status',
             'Core Banking Alerts', 'Servicing Notices', 'Fraud & Security Alerts', 'Promotional Offers',
-            'SMS Channel', 'Email Channel', 'Voice Calls', 'WhatsApp Banking', 'DLT Partner Data Sharing',
+            'SMS Channel', 'Email Channel', 'Voice Calls', 'WhatsApp Banking', 'Authorised Third-Party Data Sharing',
             'Source', 'Submitted At'
         ])
 
@@ -2502,6 +2620,11 @@ class BranchDataExportView(APIView):
                 masked_pan,
                 masked_aadhaar,
                 mask_mobile(r.mobile_number),
+                getattr(r, 'address_line1', '') or '',
+                getattr(r, 'address_line2', '') or '',
+                getattr(r, 'city_district', '') or '',
+                getattr(r, 'state', '') or '',
+                getattr(r, 'pincode', '') or '',
                 r.branch_name,
                 r.status,
                 'YES' if getattr(r, 'purpose_core', True) else 'NO',

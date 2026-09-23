@@ -1136,6 +1136,10 @@
           <span class="drawer-field-label">Branch</span>
           <span class="drawer-field-val" id="superDrawerBranch">--</span>
         </div>
+        <div class="drawer-field-row">
+          <span class="drawer-field-label">Residential Address</span>
+          <span class="drawer-field-val" id="superDrawerAddress">--</span>
+        </div>
 
         <div class="drawer-section-heading">Consent Status & Verification</div>
         <div class="drawer-field-row">
@@ -2100,6 +2104,16 @@
         if (dMob) dMob.textContent = rec.maskedMobile || rec.mobile;
         const dBranch = document.getElementById('superDrawerBranch');
         if (dBranch) dBranch.textContent = rec.branch || rec.branchName;
+        const dAddr = document.getElementById('superDrawerAddress');
+        if (dAddr) {
+          const addrParts = [
+            rec.address_line1 || rec.addressLine1,
+            rec.address_line2 || rec.addressLine2,
+            rec.city_district || rec.cityDistrict || rec.city,
+            (rec.state ? `${rec.state}${rec.pincode ? ' - ' + rec.pincode : ''}` : rec.pincode)
+          ].filter(Boolean);
+          dAddr.textContent = addrParts.length ? addrParts.join(', ') : 'Not Provided / CBS Master';
+        }
         const dBadge = document.getElementById('superDrawerStatusBadge');
         if (dBadge) dBadge.innerHTML = getStatusBadge(rec.status || rec.consent);
         const dSource = document.getElementById('superDrawerSource');

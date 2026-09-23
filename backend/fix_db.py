@@ -29,6 +29,19 @@ add_column_if_missing('tbl_sms_consents', 'channel_whatsapp', 'BOOLEAN DEFAULT 0
 add_column_if_missing('tbl_sms_consents', 'share_dlt_partner', 'BOOLEAN DEFAULT 1')
 add_column_if_missing('tbl_sms_consents', 'preferences_json', 'TEXT NULL')
 
+# Add address columns to tbl_customers and tbl_sms_consents
+add_column_if_missing('tbl_customers', 'address_line1', 'VARCHAR(255) NULL')
+add_column_if_missing('tbl_customers', 'address_line2', 'VARCHAR(255) NULL')
+add_column_if_missing('tbl_customers', 'city_district', 'VARCHAR(100) DEFAULT "Nashik"')
+add_column_if_missing('tbl_customers', 'state', 'VARCHAR(100) DEFAULT "Maharashtra"')
+add_column_if_missing('tbl_customers', 'pincode', 'VARCHAR(10) NULL')
+
+add_column_if_missing('tbl_sms_consents', 'address_line1', 'VARCHAR(255) NULL')
+add_column_if_missing('tbl_sms_consents', 'address_line2', 'VARCHAR(255) NULL')
+add_column_if_missing('tbl_sms_consents', 'city_district', 'VARCHAR(100) DEFAULT "Nashik"')
+add_column_if_missing('tbl_sms_consents', 'state', 'VARCHAR(100) DEFAULT "Maharashtra"')
+add_column_if_missing('tbl_sms_consents', 'pincode', 'VARCHAR(10) NULL')
+
 # Add missing columns to tbl_admin_audit_logs
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS tbl_admin_audit_logs (
