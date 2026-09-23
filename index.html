@@ -1467,7 +1467,7 @@
   <div class="download-row" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:18px;">
     <div style="display:flex; flex-direction:column; gap:3px;">
       <span style="font-weight:700; font-size:13.5px; color:var(--navy-900);">Prefer paper submission at branch?</span>
-      <span style="font-size:12px; color:var(--text-500);">Customers unable to complete online verification can download the official blank A4 registration form to fill with pen and submit at any Namco Bank branch.</span>
+      <span style="font-size:12px; color:var(--text-500);">Customers who prefer paper submission or are unable to complete online verification can download the official blank A4 registration form to fill with pen and submit at any Namco Bank branch.</span>
       <button type="button" id="quickLoginLink" style="display:none; margin-top:4px; align-self:flex-start; background:none; border:none; color:#1B3E70; font-weight:600; cursor:pointer; padding:0; text-decoration:underline; font-size:12.5px;">
         Already registered? View Profile / Update Consent &rarr;
       </button>
@@ -1475,11 +1475,7 @@
     <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
       <button class="btn btn-secondary" id="downloadBlankFormBtn" type="button" title="Download official blank A4 registration form to fill with pen and submit at branch">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px; height:15px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-        Download Blank Form (A4)
-      </button>
-      <button class="btn btn-secondary" id="downloadFormBtn" type="button" title="Print/Download pre-filled copy of your entered details and consent record">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px; height:15px;"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Download Filled Copy
+        Download Physical Form (A4)
       </button>
     </div>
   </div>
@@ -2095,13 +2091,13 @@
       <div class="ref-row"><span class="k">Submitted</span><span class="v" id="refDate">—</span></div>
     </div>
 
-    <div class="btn-row" style="justify-content:center; flex-wrap:wrap; gap:10px;">
-      <button class="btn btn-secondary" id="confirmPrintCopyBtn" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px; height:15px;"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Download / Print Form Copy
+    <div class="btn-row" style="justify-content:center; flex-wrap:wrap; gap:12px;">
+      <button class="btn btn-primary" id="downloadMyConsentBtn" type="button" style="display:inline-flex; align-items:center; gap:8px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download My Consent
       </button>
       <button class="btn btn-secondary" id="viewHistoryBtn" type="button">View consent history</button>
-      <button class="btn btn-primary" id="updateConsentBtn" type="button">Update consent</button>
+      <button class="btn btn-secondary" id="updateConsentBtn" type="button">Update consent</button>
     </div>
   </section>
 
@@ -2138,8 +2134,12 @@
       </ul>
     </div>
 
-    <div class="btn-row" style="margin-top:20px;">
-      <button class="btn btn-primary" id="profileUpdateConsentBtn" type="button">Update consent</button>
+    <div class="btn-row" style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="btn btn-primary" id="profileDownloadConsentBtn" type="button" style="display:inline-flex; align-items:center; gap:8px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download My Consent
+      </button>
+      <button class="btn btn-secondary" id="profileUpdateConsentBtn" type="button">Update consent</button>
     </div>
   </section>
 
@@ -3155,10 +3155,10 @@
     if(preferences.purpose_servicing) activePurposes.push('Account Servicing');
     if(preferences.purpose_fraud) activePurposes.push('Fraud Monitoring');
     if(preferences.purpose_promotional) activePurposes.push('Commercial Offers');
-    if(preferences.share_dlt_partner) activePurposes.push('DLT Partner Sharing');
+    if(preferences.share_dlt_partner) activePurposes.push('Authorised Third-Party Sharing');
 
     const activeChannels = [];
-    if(preferences.channel_sms) activeChannels.push('SMS (DLT)');
+    if(preferences.channel_sms) activeChannels.push('SMS');
     if(preferences.channel_email) activeChannels.push('Email');
     if(preferences.channel_voice) activeChannels.push('Voice');
     if(preferences.channel_whatsapp) activeChannels.push('WhatsApp');
@@ -3358,18 +3358,31 @@
     fillCharBoxes('pfBranchCodeBoxes', isFilled ? brCodeStr : '', 4);
 
     // 3. Customer Name
-    const fullNameVal = getFullName();
+    const fullNameVal = getFullName() || 
+      (document.getElementById('refName')?.textContent !== '—' ? document.getElementById('refName')?.textContent : '') || 
+      (document.getElementById('profName')?.textContent !== '—' ? document.getElementById('profName')?.textContent : '');
     const pfCustomerName = document.getElementById('pfCustomerName');
     if(pfCustomerName) {
       pfCustomerName.textContent = (isFilled && fullNameVal) ? fullNameVal.toUpperCase() : '_________________________________________________________________________________';
     }
 
     // 4. Character Grids (Account No, CIF, PAN, Aadhaar, Mobile)
-    fillCharBoxes('pfAccountBoxes', isFilled ? (acctNo?.value || '') : '', 15);
-    fillCharBoxes('pfCifBoxes', isFilled ? (cif?.value || '') : '', 11);
-    fillCharBoxes('pfPanBoxes', isFilled ? (panCard?.value || '') : '', 10);
-    fillCharBoxes('pfAadhaarBoxes', isFilled ? (aadhaarCard?.value || '') : '', 12);
-    fillCharBoxes('pfMobileBoxes', isFilled ? (mobileInput?.value || '') : '', 10);
+    const curAcct = (acctNo?.value || '').replace(/\D/g, '') || 
+      (document.getElementById('profAcctNo')?.textContent !== '—' ? document.getElementById('profAcctNo')?.textContent.replace(/\D/g, '') : '');
+    const curCif = (cif?.value || '').replace(/\D/g, '') || 
+      (document.getElementById('profCif')?.textContent !== '—' ? document.getElementById('profCif')?.textContent.replace(/\D/g, '') : '');
+    const curPan = (panCard?.value || '').toUpperCase() || 
+      (document.getElementById('profPan')?.textContent !== '—' ? document.getElementById('profPan')?.textContent.toUpperCase() : '');
+    const curAadhaar = (aadhaarCard?.value || '').replace(/\D/g, '') || 
+      (document.getElementById('profAadhaar')?.textContent !== '—' ? document.getElementById('profAadhaar')?.textContent.replace(/\D/g, '') : '');
+    const curMobile = (mobileInput?.value || '').replace(/\D/g, '') || 
+      (document.getElementById('profMobile')?.textContent !== '—' ? document.getElementById('profMobile')?.textContent.replace(/\D/g, '') : '');
+
+    fillCharBoxes('pfAccountBoxes', isFilled ? curAcct : '', 15);
+    fillCharBoxes('pfCifBoxes', isFilled ? curCif : '', 11);
+    fillCharBoxes('pfPanBoxes', isFilled ? curPan : '', 10);
+    fillCharBoxes('pfAadhaarBoxes', isFilled ? curAadhaar : '', 12);
+    fillCharBoxes('pfMobileBoxes', isFilled ? curMobile : '', 10);
 
     // 5. Residential Address
     const pfAddress1 = document.getElementById('pfAddress1');
@@ -3377,11 +3390,17 @@
     const pfCity = document.getElementById('pfCity');
     const pfState = document.getElementById('pfState');
 
-    if(pfAddress1) pfAddress1.textContent = (isFilled && addrLine1?.value.trim()) ? addrLine1.value.trim() : '_________________________________________________________________________________';
-    if(pfAddress2) pfAddress2.textContent = (isFilled && addrLine2?.value.trim()) ? addrLine2.value.trim() : '_________________________________________________________________________________';
-    if(pfCity) pfCity.textContent = (isFilled && addrCity?.value.trim()) ? addrCity.value.trim() : 'Nashik / ________________';
-    if(pfState) pfState.textContent = (isFilled && addrState?.value.trim()) ? addrState.value.trim() : 'Maharashtra / ________________';
-    fillCharBoxes('pfPinBoxes', isFilled ? (addrPin?.value || '') : '', 6);
+    const curAddr1 = addrLine1?.value.trim() || '';
+    const curAddr2 = addrLine2?.value.trim() || '';
+    const curCity = addrCity?.value.trim() || 'Nashik';
+    const curState = addrState?.value.trim() || 'Maharashtra';
+    const curPin = (addrPin?.value || '').replace(/\D/g, '');
+
+    if(pfAddress1) pfAddress1.textContent = (isFilled && curAddr1) ? curAddr1 : '_________________________________________________________________________________';
+    if(pfAddress2) pfAddress2.textContent = (isFilled && curAddr2) ? curAddr2 : '_________________________________________________________________________________';
+    if(pfCity) pfCity.textContent = (isFilled && curCity) ? curCity : 'Nashik / ________________';
+    if(pfState) pfState.textContent = (isFilled && curState) ? curState : 'Maharashtra / ________________';
+    fillCharBoxes('pfPinBoxes', isFilled ? curPin : '', 6);
 
     // 6. Consent Checkboxes
     const pfCbCore = document.getElementById('pfCbCore');
@@ -3431,7 +3450,7 @@
     }
   }
 
-  // Bind Download Blank Form button
+  // Bind Download Blank Physical Form button (at top of portal for paper submission)
   const downloadBlankFormBtn = document.getElementById('downloadBlankFormBtn');
   if(downloadBlankFormBtn){
     downloadBlankFormBtn.addEventListener('click', ()=>{
@@ -3440,16 +3459,25 @@
     });
   }
 
-  // Bind Download Filled Copy button
-  const downloadFormBtn = document.getElementById('downloadFormBtn');
-  if(downloadFormBtn){
-    downloadFormBtn.addEventListener('click', ()=>{
+  // Bind Download My Consent button (on Step 4 confirmation after online submission)
+  const downloadMyConsentBtn = document.getElementById('downloadMyConsentBtn');
+  if(downloadMyConsentBtn){
+    downloadMyConsentBtn.addEventListener('click', ()=>{
       populateOfficialPhysicalForm('filled');
       window.print();
     });
   }
 
-  // Bind Step 4 / Profile copy button if present
+  // Bind Download My Consent button on Customer Profile page
+  const profileDownloadConsentBtn = document.getElementById('profileDownloadConsentBtn');
+  if(profileDownloadConsentBtn){
+    profileDownloadConsentBtn.addEventListener('click', ()=>{
+      populateOfficialPhysicalForm('filled');
+      window.print();
+    });
+  }
+
+  // Fallback for legacy button IDs if present
   const confirmPrintCopyBtn = document.getElementById('confirmPrintCopyBtn');
   if(confirmPrintCopyBtn){
     confirmPrintCopyBtn.addEventListener('click', ()=>{
