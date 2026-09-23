@@ -32,14 +32,17 @@ Enterprise Banking SMS Alert Consent, Physical Form OCR Auto-Fill Ingestion, and
 - **Branch-Wise Performance Table**: Full breakdown by branch showing Total, YES, NO, PENDING, REVOKED, and Compliance Percentage.
 - **Multi-Branch Admin Manager**: Create, edit, assign branch, activate/deactivate, and reset passwords for Branch Admins across all 80 branches.
 - **📜 Central Tamper-Evident Audit Trail**: Real-time immutable audit logs capturing all authentications, consent submissions, revocations, OCR uploads, OCR verifications, admin modifications, and report exports.
-- **Bank-Wide Reports Export**: Export bank-wide datasets with audit logging.
+### 4. 📡 Role 4 — DLT Telecom Regulatory & Gateway Scrubbing (`dlt-partner.html`)
+- **TRAI TCCCPR-2018 Regulatory Scrubbing**: Verify individual customer mobile numbers for SMS alert consent before campaign/notification dispatch.
+- **Bank-Wide Registry Search**: Real-time cross-branch lookup with instant "DISPATCH PERMITTED" (YES) vs "BLOCKED" (NO/Revoked) compliance rules.
+- **DLT Scrubbed Whitelist Export**: 1-click export of verified mobile numbers formatted for Telecom DLT upload (Header: `NAMCOB`, Entity ID: `1401157291823901234`).
 
 ---
 
 ## 🗄️ Database Architecture (PostgreSQL & Django ORM)
 
 - `tbl_bank_branches`: All 80 official Namco Bank branches with branch codes and cities.
-- `tbl_bank_officers`: RBAC (`SUPER_ADMIN`, `BRANCH_ADMIN`), PBKDF2 password hashing, and brute-force account lockout (5 failed attempts $\rightarrow$ 15-minute lockout).
+- `tbl_bank_officers`: RBAC (`SUPER_ADMIN`, `BRANCH_ADMIN`, `DLT_PARTNER`), PBKDF2 password hashing, and brute-force account lockout.
 - `tbl_customers`: Master bank customer population supporting accurate `PENDING` vs `YES`/`NO` consent states.
 - `tbl_sms_consents`: Consent records with status (`YES`, `NO`, `PENDING`, `REVOKED`), source (`ONLINE`, `PHYSICAL_OCR`, `ADMIN_ENTRY`), and references.
 - `tbl_consent_history`: Immutable chronological audit log of consent status transitions over time.
@@ -54,6 +57,8 @@ Enterprise Banking SMS Alert Consent, Physical Form OCR Auto-Fill Ingestion, and
 - **Public Customer Form & Status**: [index.html](file:///c:/Users/DELL/Desktop/Namco%20Bank/index.html)
 - **Branch Admin Portal**: [admin.html](file:///c:/Users/DELL/Desktop/Namco%20Bank/admin.html)
 - **Super Admin Governance**: [super-admin.html](file:///c:/Users/DELL/Desktop/Namco%20Bank/super-admin.html)
+- **DLT Telecom Partner**: [dlt-partner.html](file:///c:/Users/DELL/Desktop/Namco%20Bank/dlt-partner.html)
+- **Officer Security Gateway**: [login.html](file:///c:/Users/DELL/Desktop/Namco%20Bank/login.html)
 
 ### 2. Running Django + PostgreSQL Backend (Optional)
 ```bash
@@ -67,3 +72,4 @@ python manage.py runserver 8000
 *Default credentials:*
 - **Super Admin**: `admin` / `admin123`
 - **Branch Officer (Canada Corner)**: `officer` / `officer123`
+- **DLT Telecom Partner**: `dltpartner` / `dlt123`

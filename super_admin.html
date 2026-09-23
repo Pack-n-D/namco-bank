@@ -84,6 +84,11 @@
         <span>Bank-Wide Reports</span>
       </a>
 
+      <a href="dlt-partner.html" class="sidebar-nav-item" title="Open Telecom DLT Gateway Node">
+        <i class="bi bi-broadcast sidebar-nav-icon" style="color: #38bdf8;"></i>
+        <span>DLT Gateway Portal</span>
+      </a>
+
       <a href="#settings" class="sidebar-nav-item" data-nav="settings">
         <i class="bi bi-gear-fill sidebar-nav-icon"></i>
         <span>System Governance</span>
@@ -1515,10 +1520,10 @@
         if (activeBranchScope === 'ALL') {
           // --- BANK-WIDE CENTRAL OVERVIEW MODE ---
           if (heroTitle) heroTitle.innerHTML = `<i class="bi bi-shield-shaded" style="color: #38bdf8;"></i> <span>Namco Bank Central Executive Governance Center</span>`;
-          if (heroSubtitle) heroSubtitle.textContent = 'Enterprise Electronic SMS Alert Consent Control & Multi-Branch Regulatory Governance Portal across all   Branches';
+          if (heroSubtitle) heroSubtitle.textContent = 'Enterprise Electronic SMS Alert Consent Control & Multi-Branch Regulatory Governance Portal across all 80 Branches';
 
           if (scopeBadge) scopeBadge.className = 'scope-badge-live';
-          if (scopeBadgeText) scopeBadgeText.innerHTML = 'Central Executive Level &bull;   Branches Scoped';
+          if (scopeBadgeText) scopeBadgeText.innerHTML = 'Central Executive Level &bull; 80 Branches Scoped';
 
           if (dossierCard) dossierCard.style.display = 'none';
           if (matrixContainer) matrixContainer.style.display = 'block';
@@ -1555,7 +1560,7 @@
         } else {
           // --- SPECIFIC BRANCH DASHBOARD MODE ---
           const branchObj = allBranches.find(b => (b.branch_name || b.name) === activeBranchScope) ||
-            MASTER_ _BRANCHES.find(m => m.branch_name === activeBranchScope) ||
+            MASTER_80_BRANCHES.find(m => m.branch_name === activeBranchScope) ||
               { branch_name: activeBranchScope, branch_code: 'NSK-BR', city: 'Nashik' };
 
           const code = branchObj.branch_code || branchObj.code || 'NSK-001';
@@ -1804,7 +1809,7 @@
         const tbody = document.getElementById('branchMatrixTableBody');
         if (!tbody) return;
         if (!branches || !branches.length) {
-          branches = MASTER_ _BRANCHES.map(b => {
+          branches = MASTER_80_BRANCHES.map(b => {
             const isCC = (b.branch_code === 'NSK-002');
             const isMN = (b.branch_code === 'NSK-003');
             return {
@@ -1867,7 +1872,7 @@
         const tbody = document.getElementById('branchesDirectoryTableBody');
         if (!tbody) return;
         if (!branches || !branches.length) {
-          branches = MASTER_ _BRANCHES;
+          branches = MASTER_80_BRANCHES;
         }
         tbody.innerHTML = branches.map(b => {
           const name = b.branch_name || b.branchName || b.name || '';
@@ -2273,9 +2278,10 @@
             exportData = exportData.filter(r => (r.status || r.consent || '').toUpperCase() === status);
           }
           const csvRows = [
-            ['Ref No', 'Name', 'Acc No', 'CIF', 'Mobile', 'Branch', 'Status', 'Source', 'Submitted']
+            ['Ref No', 'Name', 'Acc No', 'CIF', 'Mobile', 'Branch', 'Status', 'Core Banking Alerts', 'Servicing Notices', 'Fraud Alerts', 'Promotional Offers', 'SMS Channel', 'Email Channel', 'Voice Channel', 'WhatsApp Banking', 'DLT Partner Sharing', 'Source', 'Submitted']
           ];
           exportData.forEach(r => {
+            const isYes = (r.status || r.consent) === 'YES';
             csvRows.push([
               r.refNo || r.referenceNumber || '',
               r.customerName || r.name || '',
@@ -2284,6 +2290,15 @@
               r.rawMobile || r.mobileNumber || r.mobile || '',
               r.branch || r.branchName || '',
               r.status || r.consent || 'PENDING',
+              r.purposeCore !== undefined ? (r.purposeCore ? 'YES' : 'NO') : 'YES',
+              r.purposeServicing !== undefined ? (r.purposeServicing ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO'),
+              r.purposeFraud !== undefined ? (r.purposeFraud ? 'YES' : 'NO') : 'YES',
+              r.purposePromotional !== undefined ? (r.purposePromotional ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO'),
+              r.channelSms !== undefined ? (r.channelSms ? 'YES' : 'NO') : 'YES',
+              r.channelEmail !== undefined ? (r.channelEmail ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO'),
+              r.channelVoice !== undefined ? (r.channelVoice ? 'YES' : 'NO') : 'NO',
+              r.channelWhatsapp !== undefined ? (r.channelWhatsapp ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO'),
+              r.shareDltPartner !== undefined ? (r.shareDltPartner ? 'YES' : 'NO') : 'YES',
               r.source || 'ONLINE',
               r.date || new Date().toISOString().split('T')[0]
             ]);
@@ -2546,7 +2561,7 @@
 
           // Update local state
           allBranches.push(newBranchObj);
-          MASTER_ _BRANCHES.push(newBranchObj);
+          MASTER_80_BRANCHES.push(newBranchObj);
 
           // Update UI
           const settingsCountEl = document.getElementById('settingsBranchCount');
@@ -2602,8 +2617,8 @@
 
           // Remove from local memory
           allBranches = allBranches.filter(b => (b.branch_code || b.branchCode || b.code || '').toUpperCase() !== code.toUpperCase());
-          const masterIdx = MASTER_ _BRANCHES.findIndex(b => (b.branch_code || b.branchCode || b.code || '').toUpperCase() === code.toUpperCase());
-          if (masterIdx !== -1) MASTER_ _BRANCHES.splice(masterIdx, 1);
+          const masterIdx = MASTER_80_BRANCHES.findIndex(b => (b.branch_code || b.branchCode || b.code || '').toUpperCase() === code.toUpperCase());
+          if (masterIdx !== -1) MASTER_80_BRANCHES.splice(masterIdx, 1);
 
           // Update UI
           const settingsCountEl = document.getElementById('settingsBranchCount');
@@ -2660,6 +2675,17 @@
       }
       window.addEventListener('hashchange', handleRouteHash);
       handleRouteHash();
+
+      // Real-time synchronization across browser tabs and periodic refresh
+      window.addEventListener('storage', (e) => {
+        if (!e.key || e.key.includes('namco')) {
+          loadAllSuperAdminData();
+        }
+      });
+      window.addEventListener('namco_consent_updated', () => loadAllSuperAdminData());
+      setInterval(() => {
+        loadAllSuperAdminData();
+      }, 5000);
 
       // Initial Boot
       loadAllSuperAdminData();

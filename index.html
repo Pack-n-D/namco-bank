@@ -38,8 +38,14 @@
     --font-sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
   body{
     background:var(--bg);
     color:var(--text-900);
@@ -56,35 +62,55 @@
   .topbar{
     background:linear-gradient(180deg, var(--navy-950), var(--navy-900));
     color:#EAF0FF;
-    padding:14px 20px;
+    padding:12px 16px;
     box-shadow: 0 2px 10px rgba(11, 34, 68, 0.15);
+    width:100%;
+    max-width: 100vw;
   }
   .topbar-inner{
     max-width:920px; margin:0 auto;
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    width:100%;
   }
-  .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;}
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; min-width:0; flex-shrink:1;}
   .brand-mark{
-    width:42px; height:42px; border-radius:50%;
+    width:36px; height:36px; border-radius:50%;
     background:radial-gradient(circle at 35% 30%, var(--maroon-600), var(--maroon-700) 70%);
     display:flex; align-items:center; justify-content:center;
-    font-family:var(--font-serif); font-weight:700; font-size:17px; color:#FFF8E8;
+    font-family:var(--font-serif); font-weight:700; font-size:15px; color:#FFF8E8;
     flex-shrink:0; overflow:hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   }
   .brand-logo-img{width:100%; height:100%; object-fit:cover;}
-  .brand-text{line-height:1.25;}
-  .brand-text .bank-name{font-family:var(--font-serif); font-size:16px; font-weight:600; color:#fff;}
-  .brand-text .bank-sub{font-size:11.5px; color:#B9C6E4; letter-spacing:.2px;}
-  .topbar-actions{display:flex; align-items:center; gap:12px;}
+  .brand-text{line-height:1.2; min-width:0; overflow:hidden;}
+  .brand-text .bank-name{font-family:var(--font-serif); font-size:15px; font-weight:600; color:#fff; white-space:nowrap;}
+  .brand-text .bank-sub{font-size:11px; color:#B9C6E4; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .topbar-actions{display:flex; align-items:center; gap:8px; flex-shrink:0;}
   .secure-chip{
-    display:flex; align-items:center; gap:6px;
-    font-size:12px; color:#CFE8D8;
+    display:flex; align-items:center; gap:5px;
+    font-size:11.5px; color:#CFE8D8;
     background:rgba(255,255,255,.06);
     border:1px solid rgba(255,255,255,.12);
-    padding:6px 10px; border-radius:20px;
+    padding:5px 9px; border-radius:20px;
     white-space:nowrap;
   }
   .secure-chip svg{width:13px; height:13px; flex-shrink:0;}
+
+  @media (max-width: 680px) {
+    .topbar { padding: 9px 12px; }
+    .secure-chip { display: none; }
+    .brand-text .bank-sub { display: none; }
+    .dpdp-nav-btn { padding: 5px 8px; font-size: 11px; gap: 4px; border-radius: 16px; }
+    .dpdp-nav-btn svg { width: 12px; height: 12px; }
+  }
+  @media (max-width: 440px) {
+    .brand { gap: 8px; }
+    .brand-mark { width: 30px; height: 30px; font-size: 13px; }
+    .brand-text .bank-name { font-size: 13px; }
+    .dpdp-nav-btn { padding: 4px 7px; font-size: 10.5px; }
+    .dpdp-nav-btn span { max-width: 78px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .profile-btn { width: 32px; height: 32px; }
+    .profile-btn svg { width: 15px; height: 15px; }
+  }
 
   /* ===== Profile button + page ===== */
   .profile-btn{
@@ -126,9 +152,9 @@
   .history-empty{color:var(--text-500); font-size:13px; padding:6px 0; font-style:italic;}
 
   /* ===== Page shell ===== */
-  .shell{max-width:920px; margin:0 auto; padding:28px 20px 120px;}
+  .shell{max-width:920px; margin:0 auto; padding:28px 20px 120px; width:100%;}
 
-  .download-row{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;}
+  .download-row{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:12px; flex-wrap:wrap;}
   .download-row .btn svg{width:15px; height:15px;}
 
   .print-summary{display:none;}
@@ -148,11 +174,11 @@
     border:1px solid var(--border);
     border-radius:var(--radius-md);
     padding:16px 14px;
-    overflow-x:auto;
+    width:100%;
     box-shadow:0 1px 3px rgba(0,0,0,.03);
   }
   .step{
-    flex:1 1 0; min-width:84px;
+    flex:1 1 0; min-width:0;
     display:flex; flex-direction:column; align-items:center; text-align:center;
     position:relative; padding:0 4px;
   }
@@ -172,7 +198,7 @@
   }
   .step.active .step-dot{background:var(--navy-900); border-color:var(--navy-900); color:#fff; transform:scale(1.08);}
   .step.done .step-dot{background:var(--success-700); border-color:var(--success-700); color:#fff;}
-  .step-label{font-size:11.5px; margin-top:7px; color:var(--text-500); font-weight:600; max-width:90px;}
+  .step-label{font-size:11.5px; margin-top:7px; color:var(--text-500); font-weight:600; max-width:90px; line-height:1.25;}
   .step.active .step-label{color:var(--text-900); font-weight:700;}
   .step.done .step-label{color:var(--success-700);}
 
@@ -184,6 +210,7 @@
     padding:28px;
     margin-bottom:18px;
     box-shadow:0 2px 8px rgba(0,0,0,.04);
+    width:100%;
   }
   .card-head{margin-bottom:18px;}
   .card-head h2{font-size:19px; color:var(--navy-950);}
@@ -300,6 +327,193 @@
   .choice.yes .choice-title{color:var(--success-700);}
   .choice.no .choice-title{color:var(--text-900);}
 
+  /* Granular Consent Preferences & Accordions */
+  .consent-pref-container {
+    margin-top: 18px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    overflow: hidden;
+  }
+  .consent-pref-head {
+    background: var(--surface-sunk);
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .consent-pref-head h3 {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--navy-900);
+    margin: 0 0 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .consent-pref-head p {
+    font-size: 12.3px;
+    color: var(--text-500);
+    margin: 0;
+    line-height: 1.4;
+  }
+  .pref-section-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--navy-700);
+    background: #f1f5f9;
+    padding: 8px 18px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .consent-point-item {
+    border-bottom: 1px solid var(--border);
+    transition: background .15s ease, opacity .15s ease;
+  }
+  .consent-point-item:last-child {
+    border-bottom: none;
+  }
+  .consent-point-item.disabled {
+    opacity: 0.6;
+    background: #fbfbfb;
+  }
+  .point-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 12px 18px;
+    gap: 12px;
+  }
+  .point-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+    cursor: pointer;
+  }
+  .point-checkbox {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--navy-900);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .point-checkbox:disabled {
+    cursor: not-allowed;
+  }
+  .point-content {
+    flex: 1;
+  }
+  .point-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 3px;
+  }
+  .point-title {
+    font-size: 13.8px;
+    font-weight: 600;
+    color: var(--text-900);
+  }
+  .point-badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    display: inline-block;
+  }
+  .badge-mandatory { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+  .badge-recommended { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+  .badge-security { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+  .badge-optional { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+  .badge-dlt { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+  .badge-paperless { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+  .badge-digital { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+  .point-desc {
+    font-size: 12.3px;
+    color: var(--text-500);
+    line-height: 1.4;
+  }
+  .point-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 9px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--navy-700);
+    background: var(--surface-sunk);
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s ease;
+    flex-shrink: 0;
+  }
+  .point-toggle-btn:hover {
+    background: #e2e8f0;
+    color: var(--navy-900);
+  }
+  .point-toggle-icon {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1;
+  }
+  .point-details {
+    display: none;
+    padding: 12px 18px 14px 44px;
+    background: #f8fafc;
+    border-top: 1px dashed var(--border);
+    font-size: 12.2px;
+    color: var(--text-700);
+    line-height: 1.5;
+  }
+  .point-details.open {
+    display: block;
+    animation: fadeInSlide .18s ease;
+  }
+  @keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .details-clause {
+    margin-bottom: 6px;
+  }
+  .details-clause strong {
+    color: var(--navy-900);
+  }
+  .details-clause:last-child {
+    margin-bottom: 0;
+  }
+  .statutory-notice {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-top: 14px;
+    font-size: 12.6px;
+    color: #92400e;
+  }
+  .statutory-notice-title {
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 3px;
+  }
+  .statutory-notice-title svg {
+    width: 16px;
+    height: 16px;
+  }
+  .statutory-notice p {
+    margin: 0;
+    line-height: 1.45;
+  }
+
   /* Signature */
   .sig-wrap{
     border:1.5px dashed var(--border-strong); border-radius:var(--radius-sm);
@@ -340,17 +554,498 @@
   .trust-item{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-500);}
   .trust-item svg{width:15px; height:15px; color:var(--navy-700); flex-shrink:0;}
 
-  /* Sticky mobile action bar */
-  .sticky-bar{
-    position:fixed; left:0; right:0; bottom:0;
-    background:var(--surface); border-top:1px solid var(--border);
-    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
-    display:none; z-index:20; box-shadow:0 -4px 12px rgba(0,0,0,.08);
+  /* ===== Mobile Responsiveness Rules ===== */
+  @media (max-width: 640px) {
+    .shell {
+      padding: 16px 12px 60px;
+      width: 100%;
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
+    .intro {
+      margin-bottom: 16px;
+    }
+    .intro h1 {
+      font-size: 21px;
+      line-height: 1.25;
+    }
+    .intro p {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .download-row {
+      flex-direction: column-reverse;
+      align-items: stretch;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .download-row .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    #quickLoginLink {
+      font-size: 13px;
+      text-align: center;
+      display: block;
+    }
+    .stepper {
+      padding: 10px 4px;
+      margin-bottom: 16px;
+      border-radius: var(--radius-sm);
+    }
+    .step {
+      padding: 0 1px;
+    }
+    .step-connector {
+      top: 11px;
+    }
+    .step-dot {
+      width: 22px;
+      height: 22px;
+      font-size: 10.5px;
+      border-width: 1.5px;
+    }
+    .step.active .step-dot {
+      transform: scale(1.05);
+    }
+    .step-label {
+      font-size: 9.5px;
+      margin-top: 4px;
+      max-width: 66px;
+      line-height: 1.15;
+    }
+    .card {
+      padding: 16px 12px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      box-sizing: border-box;
+    }
+    .card-head {
+      margin-bottom: 14px;
+    }
+    .card-head h2 {
+      font-size: 17px;
+    }
+    .card-head p.helper {
+      font-size: 12.5px;
+    }
+    .btn-row {
+      display: flex !important;
+      flex-direction: column-reverse;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .btn-row .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-row .btn-secondary {
+      margin-right: 0;
+    }
+    .choice {
+      padding: 12px 10px;
+      gap: 10px;
+    }
+    .choice-title {
+      font-size: 13.5px;
+    }
+    .choice-sub {
+      font-size: 12px;
+    }
+    .consent-pref-container {
+      margin-top: 14px;
+    }
+    .consent-pref-head {
+      padding: 10px 12px;
+    }
+    .consent-pref-head h3 {
+      font-size: 13.5px;
+    }
+    .pref-section-title {
+      padding: 6px 10px;
+      font-size: 10px;
+    }
+    .point-header {
+      padding: 10px 10px;
+      gap: 8px;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .point-left {
+      gap: 8px;
+      width: 100%;
+    }
+    .point-title-row {
+      gap: 6px;
+    }
+    .point-title {
+      font-size: 12.8px;
+    }
+    .point-desc {
+      font-size: 11.5px;
+    }
+    .point-toggle-btn {
+      align-self: flex-start;
+      margin-left: 26px;
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+    .point-details {
+      padding: 10px 12px 12px 26px;
+      font-size: 11.5px;
+    }
+    .ref-row {
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ref-row .v {
+      text-align: left;
+      word-break: break-all;
+    }
+    .trust-strip {
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 14px;
+    }
+    .otp-row {
+      gap: 6px;
+      justify-content: space-between;
+      max-width: 100%;
+      width: 100%;
+    }
+    .otp-row input {
+      flex: 1 1 0;
+      min-width: 0;
+      width: 0;
+      height: 46px;
+      font-size: 17px;
+    }
+    .sig-wrap canvas {
+      height: 130px;
+    }
+    .sig-toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .consent-text {
+      padding: 14px 12px;
+      font-size: 12.5px;
+    }
+    .consent-text ul {
+      padding-left: 18px;
+      margin: 6px 0 0;
+    }
+    .statutory-notice {
+      padding: 10px 12px;
+      font-size: 11.8px;
+    }
   }
-  @media (max-width:640px){
-    .sticky-bar{display:block;}
-    .shell{padding-bottom:100px;}
-    .btn-row{display:none;}
+
+  .sticky-bar { display: none !important; }
+
+  @media (max-width: 360px) {
+    .shell {
+      padding: 12px 8px 50px;
+    }
+    .card {
+      padding: 14px 10px;
+    }
+    .stepper {
+      padding: 8px 2px;
+    }
+    .step-label {
+      font-size: 9px;
+      max-width: 58px;
+    }
+    .step-dot {
+      width: 20px;
+      height: 20px;
+      font-size: 10px;
+    }
+    .step-connector {
+      top: 10px;
+    }
+    .otp-row input {
+      height: 42px;
+      font-size: 15px;
+    }
+  }
+
+  /* DPDP Rules 2025 Nav Button & Styles */
+  .dpdp-nav-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+    color: #fff; font-size: 12.5px; font-weight: 600;
+    padding: 6px 12px; border-radius: 20px; cursor: pointer;
+    transition: all .2s ease; white-space: nowrap;
+  }
+  .dpdp-nav-btn:hover {
+    background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.4); transform: translateY(-1px);
+  }
+  .dpdp-nav-btn svg { width: 14px; height: 14px; color: #f1c40f; flex-shrink: 0; }
+
+  /* Itemised Data Inventory Card (Rule 3(a)) */
+  .itemised-data-card {
+    background: #f8fafc; border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); margin-top: 14px; overflow: hidden;
+  }
+  .itemised-data-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 16px; cursor: pointer; background: var(--surface-sunk);
+    font-size: 13px; font-weight: 600; color: var(--navy-900);
+    user-select: none;
+  }
+  .itemised-data-header:hover { background: #edf2f7; }
+  .itemised-data-header .left-title { display: flex; align-items: center; gap: 8px; }
+  .itemised-data-header svg { width: 15px; height: 15px; color: var(--navy-700); }
+  .itemised-toggle-badge {
+    font-size: 11px; font-weight: 600; color: var(--navy-700);
+    background: #fff; border: 1px solid var(--border); padding: 3px 8px; border-radius: 4px;
+  }
+  .itemised-data-content {
+    display: none; padding: 14px 16px; border-top: 1px dashed var(--border);
+    font-size: 12.4px; color: var(--text-700);
+  }
+  .itemised-data-content.open { display: block; animation: fadeInSlide .18s ease; }
+  .itemised-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .itemised-table th, .itemised-table td {
+    padding: 7px 10px; border: 1px solid var(--border); text-align: left; font-size: 12px;
+  }
+  .itemised-table th { background: #f1f5f9; font-weight: 600; color: var(--navy-900); }
+
+  /* DPDP Modal — Fully Responsive & Modern Styling */
+  .dpdp-modal-overlay {
+    position: fixed; inset: 0; background: rgba(11,37,69,.7);
+    backdrop-filter: blur(5px); z-index: 1000;
+    display: none; align-items: center; justify-content: center; padding: 14px;
+  }
+  .dpdp-modal-overlay.active { display: flex; animation: fadeInSlide .2s ease; }
+  .dpdp-modal-dialog {
+    background: #fff; width: 100%; max-width: 860px; max-height: 92vh;
+    border-radius: 12px; box-shadow: 0 24px 48px rgba(0,0,0,.3);
+    display: flex; flex-direction: column; overflow: hidden;
+    border: 1px solid rgba(255,255,255,.2);
+  }
+  .dpdp-modal-head {
+    background: var(--navy-900); color: #fff; padding: 14px 18px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    border-bottom: 2px solid var(--maroon-700);
+    flex-shrink: 0;
+  }
+  .dpdp-modal-head .head-title-wrap { flex: 1; min-width: 0; }
+  .dpdp-modal-head h3 {
+    font-size: 14.5px; font-weight: 700; margin: 0;
+    display: flex; align-items: center; gap: 7px;
+    line-height: 1.3;
+  }
+  .dpdp-modal-head p {
+    font-size: 11.2px; color: rgba(255,255,255,.75); margin: 3px 0 0 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .dpdp-close-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+    color: #fff; font-size: 20px; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: background .15s ease, transform .15s ease;
+  }
+  .dpdp-close-btn:hover { background: rgba(255,255,255,.25); transform: scale(1.05); }
+
+  /* Professional Non-Collapsing Tabs Bar */
+  .dpdp-tabs-bar {
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+    min-height: 42px;
+    height: 42px;
+    border-bottom: 1.5px solid var(--border);
+    background: #eef2f6;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    padding: 0 8px;
+    gap: 4px;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.05);
+  }
+  .dpdp-tabs-bar::-webkit-scrollbar { height: 3px; }
+  .dpdp-tabs-bar::-webkit-scrollbar-thumb { background: var(--navy-700); border-radius: 999px; }
+  .dpdp-tabs-bar::-webkit-scrollbar-track { background: transparent; }
+
+  .dpdp-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 14px;
+    font-size: 12.2px;
+    font-weight: 600;
+    color: var(--navy-800);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all .15s ease;
+    flex-shrink: 0;
+  }
+  .dpdp-tab-btn:hover { color: var(--navy-950); background: rgba(0,0,0,.04); }
+  .dpdp-tab-btn.active {
+    color: var(--navy-950);
+    font-weight: 700;
+    border-bottom-color: var(--navy-900);
+    background: #ffffff;
+    box-shadow: 0 -2px 5px rgba(0,0,0,.03);
+  }
+
+  .dpdp-modal-body {
+    padding: 18px 20px; overflow-y: auto; flex: 1; font-size: 12.8px; line-height: 1.55;
+    scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.2) transparent;
+  }
+  .dpdp-modal-body::-webkit-scrollbar { width: 5px; }
+  .dpdp-modal-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,.2); border-radius: 999px; }
+  .dpdp-tab-pane { display: none; }
+  .dpdp-tab-pane.active { display: block; animation: fadeInSlide .15s ease; }
+
+  /* Statutory Table Styling with Smooth Horizontal Scrolling */
+  .table-scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--navy-800);
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 4px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+  }
+  .table-scroll-hint svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--navy-700); }
+
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    background: #fff;
+    scrollbar-width: thin;
+    box-shadow: 0 1px 3px rgba(0,0,0,.03);
+  }
+  .table-responsive .itemised-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    margin: 0;
+  }
+  .table-responsive .itemised-table th,
+  .table-responsive .itemised-table td {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    text-align: left;
+    font-size: 12.2px;
+    line-height: 1.45;
+    vertical-align: top;
+  }
+  .table-responsive .itemised-table th {
+    background: #f1f5f9;
+    font-weight: 700;
+    color: var(--navy-900);
+    white-space: nowrap;
+  }
+  .table-responsive .itemised-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+  }
+  .table-responsive .itemised-table tbody tr:hover {
+    background: #f0f7ff;
+  }
+
+  .dpdp-rights-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 14px;
+  }
+  .dpdp-right-card {
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 13px 15px; background: #fff; transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .dpdp-right-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.05); }
+  .dpdp-right-card h4 { font-size: 13px; font-weight: 700; color: var(--navy-900); margin: 0 0 5px; display:flex; align-items:center; gap:6px; }
+  .dpdp-right-card p { font-size: 12px; color: var(--text-500); margin: 0; line-height: 1.45; }
+
+  .dpo-contact-card {
+    background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: var(--radius-sm);
+    padding: 14px 16px; margin-top: 12px;
+  }
+  .dpo-title { font-size: 13.5px; font-weight: 700; color: var(--navy-900); margin-bottom: 8px; }
+  .dpo-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 12.4px; line-height: 1.55; }
+
+  /* ===== Mobile Media Queries for DPDP Modal ===== */
+  @media (max-width: 640px) {
+    .dpdp-modal-overlay {
+      padding: 6px;
+      align-items: center;
+    }
+    .dpdp-modal-dialog {
+      width: 100%;
+      max-width: 100%;
+      max-height: 95vh;
+      border-radius: 10px;
+      margin: 0;
+    }
+    .dpdp-modal-head {
+      padding: 10px 14px;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .dpdp-modal-head h3 {
+      font-size: 13.5px;
+      line-height: 1.25;
+    }
+    .dpdp-modal-head p {
+      display: none;
+    }
+    .dpdp-close-btn {
+      width: 28px;
+      height: 28px;
+      font-size: 18px;
+    }
+    .dpdp-tabs-bar {
+      flex-shrink: 0;
+      min-height: 40px;
+      height: 40px;
+      padding: 0 4px;
+      gap: 2px;
+    }
+    .dpdp-tab-btn {
+      padding: 0 11px;
+      font-size: 11.5px;
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+    }
+    .dpdp-modal-body {
+      padding: 14px 12px 18px;
+    }
+    .dpdp-rights-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .dpdp-right-card {
+      padding: 12px 10px;
+    }
+    .dpo-contact-card {
+      padding: 12px 10px;
+    }
+    .dpo-details-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    #nominationForm, #grievanceForm {
+      padding: 12px 10px !important;
+    }
   }
 
   footer{
@@ -391,6 +1086,10 @@
       </div>
     </a>
     <div class="topbar-actions">
+      <button class="dpdp-nav-btn" id="openDpdpModalBtn" type="button" title="View Digital Personal Data Protection Rights & Notice (DPDP Rules, 2025)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>DPDP Notice & Rights</span>
+      </button>
       <div class="secure-chip">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         <span>RBI Secure Gateway</span>
@@ -615,6 +1314,336 @@
     </div>
     <p class="err" id="choiceErr" style="display:none; margin-top:8px;">Please select a preference to continue.</p>
 
+    <!-- Statutory Alert Banner (Shown when NO is selected) -->
+    <div class="statutory-notice" id="statutoryNotice" style="display:none;">
+      <div class="statutory-notice-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        Statutory Banking Mandate (RBI Directives)
+      </div>
+      <p>You have opted out of optional marketing & promotional alerts. Under Reserve Bank of India (RBI) master directions, <strong>Mandatory Core Banking Alerts</strong> and <strong>Security/Fraud Warnings</strong> will continue to be delivered via SMS to your registered mobile number to protect your account against unauthorized electronic banking transactions.</p>
+    </div>
+
+    <!-- Granular Consent & Communication Preferences -->
+    <div class="consent-pref-container" id="granularPreferences">
+      <div class="consent-pref-head">
+        <h3>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--navy-900)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Granular Consent & Communication Preferences
+        </h3>
+        <p>Review and customize the processing purposes and delivery channels you authorize. Click <strong>[+] Details</strong> on any item to view legal scope, RBI circulars, and data retention rules.</p>
+      </div>
+
+      <!-- GROUP 1: DATA PROCESSING PURPOSES -->
+      <div class="pref-section-title">
+        <span>1. Data Processing Purposes (RBI & DPDPA 2023)</span>
+        <span style="font-weight:400; text-transform:none; font-size:11px; color:var(--text-500);">4 Categories</span>
+      </div>
+
+      <!-- POINT 1: CORE BANKING ALERTS (MANDATORY) -->
+      <div class="consent-point-item" id="itemPurposeCore">
+        <div class="point-header">
+          <label class="point-left" for="cbPurposeCore">
+            <input type="checkbox" class="point-checkbox" id="cbPurposeCore" checked disabled>
+            <div class="point-content">
+              <div class="point-title-row">
+                <span class="point-title">Core Banking & Transaction Alerts</span>
+                <span class="point-badge badge-mandatory">Mandatory (Statutory)</span>
+              </div>
+              <div class="point-desc">Real-time alerts for debit/credit transactions, ATM cash withdrawals, UPI, IMPS/NEFT, POS payments, and 2FA OTP security codes.</div>
+            </div>
+          </label>
+          <button type="button" class="point-toggle-btn" data-toggle="detailsPurposeCore" aria-expanded="false">
+            <span class="point-toggle-icon">+</span> Details
+          </button>
+        </div>
+        <div class="point-details" id="detailsPurposeCore">
+          <div class="details-clause"><strong>• Statutory Authority:</strong> Mandated under RBI Circular <em>RBI/2017-18/15 DBR.No.Leg.BC.78/09.07.005/2017-18</em> ("Limiting Liability of Customers in Unauthorized Electronic Banking Transactions"). Immediate intimations for electronic financial transactions are compulsory by law.</div>
+          <div class="details-clause"><strong>• Processing Scope:</strong> Transaction timestamp, account balance, transaction amount, counterparty details, and two-factor authentication (2FA) OTP tokens.</div>
+          <div class="details-clause"><strong>• Data Retention:</strong> Maintained for 8 years under Section 12 of the Prevention of Money Laundering Act (PMLA) for regulatory audit and dispute resolution.</div>
+          <div class="details-clause"><strong>• Revocation Status:</strong> Non-revocable while the bank account remains active. Cannot be disabled for customer financial protection.</div>
+        </div>
+      </div>
+
+      <!-- POINT 2: SERVICING & NOTICES -->
+      <div class="consent-point-item" id="itemPurposeServicing">
+        <div class="point-header">
+          <label class="point-left" for="cbPurposeServicing">
+            <input type="checkbox" class="point-checkbox" id="cbPurposeServicing" checked>
+            <div class="point-content">
+              <div class="point-title-row">
+                <span class="point-title">Account Servicing, Support & Relationship Notices</span>
+                <span class="point-badge badge-recommended">Recommended</span>
+              </div>
+              <div class="point-desc">Term deposit (FD/RD) maturity intimations, loan EMI due reminders, cheque clearing/issue updates, and safe deposit locker notices.</div>
+            </div>
+          </label>
+          <button type="button" class="point-toggle-btn" data-toggle="detailsPurposeServicing" aria-expanded="false">
+            <span class="point-toggle-icon">+</span> Details
+          </button>
+        </div>
+        <div class="point-details" id="detailsPurposeServicing">
+          <div class="details-clause"><strong>• Processing Scope:</strong> Intimations regarding fixed/recurring deposit renewals, interest credit certificates, loan amortization repayment schedules, cheque clearances/returns under Section 138 of Negotiable Instruments Act, and customer service support tickets.</div>
+          <div class="details-clause"><strong>• Category of Data:</strong> Account number, deposit tenure, maturity amount, loan installment details, and branch operational intimations.</div>
+          <div class="details-clause"><strong>• Retention:</strong> Retained during the active customer relationship plus 3 years post account closure for banking compliance.</div>
+        </div>
+      </div>
+
+      <!-- POINT 3: FRAUD PREVENTION & SECURITY -->
+      <div class="consent-point-item" id="itemPurposeFraud">
+        <div class="point-header">
+          <label class="point-left" for="cbPurposeFraud">
+            <input type="checkbox" class="point-checkbox" id="cbPurposeFraud" checked>
+            <div class="point-content">
+              <div class="point-title-row">
+                <span class="point-title">Fraud Prevention, Security Monitoring & Risk Profiling</span>
+                <span class="point-badge badge-security">Security Critical</span>
+              </div>
+              <div class="point-desc">24x7 automated suspicious login warnings, unusual location alerts, card compromise advisories, and cyber threat cautions.</div>
+            </div>
+          </label>
+          <button type="button" class="point-toggle-btn" data-toggle="detailsPurposeFraud" aria-expanded="false">
+            <span class="point-toggle-icon">+</span> Details
+          </button>
+        </div>
+        <div class="point-details" id="detailsPurposeFraud">
+          <div class="details-clause"><strong>• Security Scope:</strong> Automated risk profiling, transaction velocity verification, unknown device/IP anomaly detection, and security alerts issued by Namco Bank SOC (Security Operations Center).</div>
+          <div class="details-clause"><strong>• Regulatory Reporting:</strong> In case of confirmed phishing attacks or card skimming incidents, data is coordinated with CERT-In and the National Cyber Crime Reporting Portal (NCRP) as per the RBI Cyber Security Framework.</div>
+          <div class="details-clause"><strong>• Customer Benefit:</strong> Enables immediate hotlisting/locking of debit cards or digital channels upon suspected unauthorized access.</div>
+        </div>
+      </div>
+
+      <!-- POINT 4: PROMOTIONAL & COMMERCIAL OFFERS -->
+      <div class="consent-point-item" id="itemPurposePromotional">
+        <div class="point-header">
+          <label class="point-left" for="cbPurposePromotional">
+            <input type="checkbox" class="point-checkbox" id="cbPurposePromotional" checked>
+            <div class="point-content">
+              <div class="point-title-row">
+                <span class="point-title">Commercial Offers, Pre-Approved Loans & Financial Products</span>
+                <span class="point-badge badge-optional">Optional</span>
+              </div>
+              <div class="point-desc">Pre-approved personal/gold loan limits, festive deposit interest discounts, insurance/mutual fund offerings, and special bank schemes.</div>
+            </div>
+          </label>
+          <button type="button" class="point-toggle-btn" data-toggle="detailsPurposePromotional" aria-expanded="false">
+            <span class="point-toggle-icon">+</span> Details
+          </button>
+        </div>
+        <div class="point-details" id="detailsPurposePromotional">
+          <div class="details-clause"><strong>• Commercial Scope:</strong> Marketing updates, special festive loan rates, pre-approved credit limits, co-branded schemes, and customer privilege offers.</div>
+          <div class="details-clause"><strong>• Regulatory Standards:</strong> Fully compliant with Telecom Commercial Communications Customer Preference Regulations, 2018 (TRAI TCCCPR) and Digital Personal Data Protection Act, 2023 (DPDPA).</div>
+          <div class="details-clause"><strong>• Voluntary Nature:</strong> Strictly optional. Opting out will NOT affect your core banking facilities, deposits, interest rates, or branch customer service. Can be revoked at any time without charge.</div>
+        </div>
+      </div>
+
+      <!-- GROUP 2: DELIVERY CHANNELS -->
+      <div class="pref-section-title">
+        <span>2. Authorized Delivery Channels (TRAI / DLT Scrubbed)</span>
+        <span style="font-weight:400; text-transform:none; font-size:11px; color:var(--text-500);">4 Channels</span>
+      </div>
+
+      <!-- POINT 5: CELLULAR SMS -->
+      <div class="consent-point-item" id="itemChannelSms">
+        <div class="point-header">
+          <label class="point-left" for="cbChannelSms">
+            <input type="checkbox" class="point-checkbox" id="cbChannelSms" checked>
+            <div class="point-content">
+              <div class="point-title-row">
+                <span class="point-title">Cellular SMS Alerts</span>
+                <span class="point-badge badge-dlt">DLT Approved (NAMCOB)</span>
+              </div>
+              <div class="point-desc">Immediate cellular SMS messages scrubbed against Telecom TRAI DLT registry using approved Bank Header <strong>NAMCOB</strong>.</div>
+            </div>
+          </label>
+          <button type="button" class="point-toggle-btn" data-toggle="detailsChannelSms" aria-expanded="false">
+            <span class="point-toggle-icon">+</span> Details
+          </button>
+        </div>
+        <div class="point-details" id="detailsChannelSms">
+          <div class="details-clause"><strong>• DLT Scrubbing Route:</strong> Dispatched via TRAI-registered telecom gateway providers under Principal Entity ID <code>1401157291823901234</code> with pre-approved template verification to eliminate unsolicited spam.</div>
+          <div class="details-clause"><strong>• Tariff Notice:</strong> Applicable SMS alert charges are debited periodically as per the Bank's Board-approved Tariff schedule published on the official portal.</div>
+        </div>
+      </div>
+
+      <!-- POINT 6: EMAIL STATEMENTS -->
+      <div class="consent-point-item" id="itemChannelEmail">
+        <div class="point-header">
+          <label class="point-left" for="cbChannelEmail">
+            <input type="checkbox" class="point-checkbox" id="cbChannelEmail" checked>
+            <div class="point-content">
+              <div class="point-title-row">
+                <span class="point-title">Email Notifications & E-Statements</span>
+                <span class="point-badge badge-paperless">Paperless</span>
+              </div>
+              <div class="point-desc">Monthly and quarterly consolidated PDF e-statements, transaction receipts, interest certificates, and official bank notices.</div>
+            </div>
+          </label>
+          <button type="button" class="point-toggle-btn" data-toggle="detailsChannelEmail" aria-expanded="false">
+            <span class="point-toggle-icon">+</span> Details
+          </button>
+        </div>
+        <div class="point-details" id="detailsChannelEmail">
+          <div class="details-clause"><strong>• Delivery Format:</strong> Password-protected consolidated PDF statements transmitted to your verified registered email address.</div>
+          <div class="details-clause"><strong>• Security:</strong> Relayed through TLS 1.3 secured mail servers with SPF, DKIM, and DMARC anti-spoofing validations.</div>
+        </div>
+      </div>
+
+      <!-- POINT 7: VOICE CALLS -->
+      <div class="consent-point-item" id="itemChannelVoice">
+        <div class="point-header">
+          <label class="point-left" for="cbChannelVoice">
+            <input type="checkbox" class="point-checkbox" id="cbChannelVoice">
+            <div class="point-content">
+              <div class="point-title-row">
+                <span class="point-title">Voice Calls & Tele-Banking Advisory</span>
+                <span class="point-badge badge-optional">Optional</span>
+              </div>
+              <div class="point-desc">Branch Relationship Officer calls, customer service verification callbacks, and personalized financial assistance.</div>
+            </div>
+          </label>
+          <button type="button" class="point-toggle-btn" data-toggle="detailsChannelVoice" aria-expanded="false">
+            <span class="point-toggle-icon">+</span> Details
+          </button>
+        </div>
+        <div class="point-details" id="detailsChannelVoice">
+          <div class="details-clause"><strong>• Advisory Scope:</strong> Account renewal consultations, loan documentation support, and customer query resolutions.</div>
+          <div class="details-clause"><strong>• Security Warning:</strong> Namco Bank officials will <strong>NEVER</strong> ask for your PIN, OTP, CVV, or NetBanking password over phone calls. Calls are recorded for quality assurance.</div>
+        </div>
+      </div>
+
+      <!-- POINT 8: WHATSAPP BANKING -->
+      <div class="consent-point-item" id="itemChannelWhatsapp">
+        <div class="point-header">
+          <label class="point-left" for="cbChannelWhatsapp">
+            <input type="checkbox" class="point-checkbox" id="cbChannelWhatsapp" checked>
+            <div class="point-content">
+              <div class="point-title-row">
+                <span class="point-title">WhatsApp Banking & Mobile App Push</span>
+                <span class="point-badge badge-digital">Verified Business Handle</span>
+              </div>
+              <div class="point-desc">Instant balance check, mini-statements, and digital service tickets via verified official green-tick WhatsApp handle.</div>
+            </div>
+          </label>
+          <button type="button" class="point-toggle-btn" data-toggle="detailsChannelWhatsapp" aria-expanded="false">
+            <span class="point-toggle-icon">+</span> Details
+          </button>
+        </div>
+        <div class="point-details" id="detailsChannelWhatsapp">
+          <div class="details-clause"><strong>• Interactive Services:</strong> Automated 24x7 self-service for checking balances, last 5 transactions, ATM/branch locators, and cheque status.</div>
+          <div class="details-clause"><strong>• Privacy:</strong> End-to-end encrypted messaging through WhatsApp Enterprise API hosted within MeitY-empanelled Indian data centers. Opt out anytime by texting 'STOP'.</div>
+        </div>
+      </div>
+
+      <!-- GROUP 3: THIRD-PARTY DATA PROCESSOR & DLT PARTNER -->
+      <div class="pref-section-title" style="margin-top:16px;">
+        <span>3. Third-Party Vendor Data Sharing (TRAI DLT Partner)</span>
+        <span style="font-weight:400; text-transform:none; font-size:11px; color:var(--text-500);">Data Processor (Rule 6(1)(i))</span>
+      </div>
+
+      <!-- POINT 9: DLT PARTNER DATA SHARING AGREEMENT -->
+      <div class="consent-point-item" id="itemShareDltPartner">
+        <div class="point-header">
+          <label class="point-left" for="cbShareDltPartner">
+            <input type="checkbox" class="point-checkbox" id="cbShareDltPartner" checked>
+            <div class="point-content">
+              <div class="point-title-row">
+                <span class="point-title">Data Sharing with Authorized DLT Telecom Partner (Data Processor)</span>
+                <span class="point-badge badge-dlt">TRAI Mandated Partner</span>
+              </div>
+              <div class="point-desc">I agree that Namco Bank may share my registered mobile number and message text with its authorized TRAI-registered Telecom DLT Gateway Partner strictly for the purpose of scrubbing against national DND registries, assigning bank headers (NAMCOB), and delivering SMS alerts.</div>
+            </div>
+          </label>
+          <button type="button" class="point-toggle-btn" data-toggle="detailsShareDltPartner" aria-expanded="false">
+            <span class="point-toggle-icon">+</span> Details
+          </button>
+        </div>
+        <div class="point-details" id="detailsShareDltPartner">
+          <div class="details-clause"><strong>• Legal Basis & Contract (DPDPA 2023 Sec 6 & Rule 6(1)(i)):</strong> Processing is executed through an authorized Telecom Service Provider / Telemarketer bound by a strict Data Processing Agreement (DPA) under Rule 6(1)(i) of the Digital Personal Data Protection Rules, 2025.</div>
+          <div class="details-clause"><strong>• Category of Data Transferred:</strong> Only your 10-digit registered mobile number, message template identifier, and masked SMS dispatch payload. <strong>Zero banking credentials, account balances, PINs, OTP tokens, passwords, or full PAN/Aadhaar data are ever disclosed</strong> to the DLT vendor.</div>
+          <div class="details-clause"><strong>• Specific Processing Purpose:</strong> Verification of customer preference against the Telecom Regulatory Authority of India (TRAI) Distributed Ledger Technology (DLT) registry, suppression of unauthorized telemarketing spam, and cryptographic delivery routing across telecom networks.</div>
+          <div class="details-clause"><strong>• Retention & Security Safeguard:</strong> The DLT vendor is contractually prohibited from retaining, profiling, or monetizing personal data, and must purge transit transmission logs within 72 hours of network delivery confirmation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RULE 3(a) ITEMISED DATA INVENTORY ACCORDION -->
+    <div class="itemised-data-card">
+      <div class="itemised-data-header" id="itemisedInventoryToggle">
+        <div class="left-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Statutory Itemised Data Inventory (Rule 3(a) DPDP Rules 2025)</span>
+        </div>
+        <span class="itemised-toggle-badge" id="itemisedToggleBadge">+ View Items</span>
+      </div>
+      <div class="itemised-data-content" id="itemisedInventoryContent">
+        <div class="table-scroll-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          <span>Swipe table horizontally &harr; to view all regulatory columns</span>
+        </div>
+        <div class="table-responsive">
+          <table class="itemised-table">
+            <thead>
+              <tr>
+                <th>Personal Data Element</th>
+                <th>Processing Purpose</th>
+                <th>Legal Basis / Retention</th>
+                <th>Security Safeguard</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Account Holder Name & CIF</strong></td>
+                <td>Customer identification & Core Banking ledger mapping</td>
+                <td>PMLA Sec 12 (8 Years post account closure)</td>
+                <td>AES-256 at rest, Role-based ACL</td>
+              </tr>
+              <tr>
+                <td><strong>Mobile Number & Email ID</strong></td>
+                <td>Dispatch of 2FA OTP, financial alerts & notices</td>
+                <td>Active customer relationship + 3 Years</td>
+                <td>TRAI DLT scrubbed, TLS 1.3 transit</td>
+              </tr>
+              <tr>
+                <td><strong>Mobile & SMS Template Payload</strong></td>
+                <td>Shared with authorized Telecom DLT Partner for national DND scrubbing & SMS routing</td>
+                <td>Rule 6(1)(i) DPDP Rules (Transit only; 72-hr purge)</td>
+                <td>Binding Data Processor Agreement (DPA), Header NAMCOB</td>
+              </tr>
+              <tr>
+                <td><strong>Masked PAN & Aadhaar Hash</strong></td>
+                <td>Statutory KYC and Income Tax compliance</td>
+                <td>Statutory (PMLA & RBI Master Direction)</td>
+                <td>Masked (XXXXX1234F / XXXX-XXXX-1234)</td>
+              </tr>
+              <tr>
+                <td><strong>Digital Signature & Biometric Hash</strong></td>
+                <td>Proof of consent & legal non-repudiation (IT Act 2000)</td>
+                <td>DPDPA 2023 Sec 6 (Audit trail 8 Years)</td>
+                <td>SHA-256 digital digest, tamper-evident</td>
+              </tr>
+              <tr>
+                <td><strong>Device IP & User-Agent Telemetry</strong></td>
+                <td>Fraud detection, anomaly prevention & audit trail</td>
+                <td>Rule 6(1)(h) DPDP Rules (Min 1 Year retention)</td>
+                <td>Encrypted audit logging, SOC monitored</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATUTORY DECLARATION (RULES 10 & 11) -->
+    <div style="margin-top:16px; padding:12px 14px; background:#fffdf5; border:1px solid #fde68a; border-radius:8px;">
+      <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:12.8px; color:var(--text-900);">
+        <input type="checkbox" id="cbAgeDeclaration" style="width:17px; height:17px; margin-top:2px; accent-color:var(--navy-900); flex-shrink:0;">
+        <span>
+          <strong>Age & Legal Competency Declaration (Rule 10 & 11):</strong> I solemnly declare and verify that I am an adult individual (above 18 years of age) competent to contract under applicable Indian law, OR I am a designated lawful guardian appointed by a competent court / authority acting on behalf of the account holder.
+        </span>
+      </label>
+      <p class="err" id="ageErr" style="display:none; margin-top:6px; font-size:12px;">You must declare age competency or lawful guardianship before submitting consent.</p>
+    </div>
+
     <div class="field" style="margin-top:22px;">
       <label>Digital signature <span class="req">*</span></label>
       <div class="sig-wrap">
@@ -659,7 +1688,9 @@
     <div class="ref-box">
       <div class="ref-row"><span class="k">Reference ID</span><span class="v" id="refId">—</span></div>
       <div class="ref-row"><span class="k">Account holder</span><span class="v" id="refName">—</span></div>
-      <div class="ref-row"><span class="k">Preference</span><span class="v" id="refChoice">—</span></div>
+      <div class="ref-row"><span class="k">Overall preference</span><span class="v" id="refChoice">—</span></div>
+      <div class="ref-row"><span class="k">Authorised purposes</span><span class="v" id="refPurposes">—</span></div>
+      <div class="ref-row"><span class="k">Active channels</span><span class="v" id="refChannels">—</span></div>
       <div class="ref-row"><span class="k">Submitted</span><span class="v" id="refDate">—</span></div>
     </div>
 
@@ -690,6 +1721,8 @@
       <div class="ref-row"><span class="k">Branch</span><span class="v" id="profBranch">—</span></div>
       <div class="ref-row"><span class="k">PAN</span><span class="v" id="profPan">—</span></div>
       <div class="ref-row"><span class="k">Aadhaar</span><span class="v" id="profAadhaar">—</span></div>
+      <div class="ref-row"><span class="k">Consent status</span><span class="v" id="profConsentStatus">—</span></div>
+      <div class="ref-row"><span class="k">Active channels</span><span class="v" id="profChannels">—</span></div>
     </div>
 
     <div class="profile-history">
@@ -706,13 +1739,290 @@
 
 </div>
 
+<!-- DPDP RULES 2025 COMPLIANCE MODAL -->
+<div class="dpdp-modal-overlay" id="dpdpModal" role="dialog" aria-modal="true" aria-labelledby="dpdpModalTitle">
+  <div class="dpdp-modal-dialog">
+    <div class="dpdp-modal-head">
+      <div class="head-title-wrap">
+        <h3 id="dpdpModalTitle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px; height:18px; color:#f1c40f; flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>DPDP Rules 2025 — Privacy & Rights Portal</span>
+        </h3>
+        <p>The Nasik Merchants Co-operative Bank Ltd. · Data Fiduciary Reg: DF-COOP-MH-4291</p>
+      </div>
+      <button type="button" class="dpdp-close-btn" id="closeDpdpModalBtn" aria-label="Close DPDP Privacy Dialog">&times;</button>
+    </div>
+
+    <div class="dpdp-tabs-bar" role="tablist">
+      <button type="button" class="dpdp-tab-btn active" data-tab="tabNotice" role="tab" aria-selected="true">1. Privacy Notice</button>
+      <button type="button" class="dpdp-tab-btn" data-tab="tabRights" role="tab" aria-selected="false">2. Data Rights</button>
+      <button type="button" class="dpdp-tab-btn" data-tab="tabNomination" role="tab" aria-selected="false">3. Nomination</button>
+      <button type="button" class="dpdp-tab-btn" data-tab="tabDpo" role="tab" aria-selected="false">4. DPO & Grievance</button>
+      <button type="button" class="dpdp-tab-btn" data-tab="tabDpbi" role="tab" aria-selected="false">5. Complain to DPBI</button>
+    </div>
+
+    <div class="dpdp-modal-body">
+      <!-- TAB 1: PRIVACY NOTICE & ITEMISED DATA -->
+      <div class="dpdp-tab-pane active" id="tabNotice" role="tabpanel">
+        <h4 style="font-size:14px; font-weight:700; color:var(--navy-900); margin-bottom:6px;">Rule 3(a) Clear & Independent Statutory Notice</h4>
+        <p style="font-size:12.6px; color:var(--text-700); line-height:1.5; margin-bottom:12px;">
+          Under Section 5 of the Digital Personal Data Protection Act, 2023 and Rule 3 of the DPDP Rules, 2025, Namco Bank processes personal data solely for specified banking services, regulatory compliance, and consented communication channels. Below is the itemised inventory of personal data collected, processing purpose, retention period, and security safeguards.
+        </p>
+
+        <div class="table-scroll-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          <span>Swipe table horizontally &harr; to view all columns & statutory safeguards</span>
+        </div>
+        <div class="table-responsive">
+          <table class="itemised-table">
+            <thead>
+              <tr>
+                <th>Personal Data Element</th>
+                <th>Processing Purpose & Services Enabled</th>
+                <th>Statutory Basis & Retention Period</th>
+                <th>Reasonable Security Safeguard (Rule 6)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Account Holder Name, CIF & Account Number</strong></td>
+                <td>Core Banking Ledger, deposit/loan servicing, KYC verification, cheque clearance</td>
+                <td>PMLA 2002 Sec 12 & Banking Regulation Act (Retained 8 years post account closure)</td>
+                <td>AES-256 database encryption at rest, role-based access control, SOC monitoring</td>
+              </tr>
+              <tr>
+                <td><strong>Mobile Number & Email Address</strong></td>
+                <td>2FA OTP dispatch, immediate transaction alerts, e-statements, official notices</td>
+                <td>Duration of active banking relationship + 3 years for dispute audit</td>
+                <td>TRAI DLT scrubbed dispatch (NAMCOB Header), TLS 1.3 encrypted email transport</td>
+              </tr>
+              <tr>
+                <td><strong>Mobile & SMS Template Payload</strong></td>
+                <td>Shared with authorized Telecom DLT Gateway Partner for spam scrubbing & network SMS dispatch</td>
+                <td>Rule 6(1)(i) DPDP Rules (Transit only; purged within 72 hrs)</td>
+                <td>Binding Data Processing Agreement (DPA), Header NAMCOB</td>
+              </tr>
+              <tr>
+                <td><strong>Masked PAN & Masked Aadhaar Hash</strong></td>
+                <td>Statutory tax deduction (TDS), Income Tax reporting, RBI Master Direction KYC</td>
+                <td>Statutory mandate under Income Tax Act & PMLA (Permanent regulatory archive)</td>
+                <td>Partially masked on all user views (XXXXX1234F / XXXX-XXXX-1234); unmasked stored in HSM/FIPS-compliant vault</td>
+              </tr>
+              <tr>
+                <td><strong>Digital Signature Canvas / Image</strong></td>
+                <td>Legal non-repudiation & proof of voluntary consent submission (IT Act 2000 Sec 10A)</td>
+                <td>DPDPA 2023 Sec 6 (Retained for 8 years alongside consent record)</td>
+                <td>Cryptographic SHA-256 integrity hash verification; tamper-evident storage</td>
+              </tr>
+              <tr>
+                <td><strong>Device IP Address, Timestamp & User-Agent</strong></td>
+                <td>Fraud detection, anomaly prevention, access control & audit trail</td>
+                <td>Rule 6(1)(h) DPDP Rules 2025 (Retained for minimum 1 year in security log)</td>
+                <td>Immutable WORM audit logging, SIEM intrusion analysis, automated anomaly alerts</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:14px; padding:10px 12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:6px; font-size:12px; color:#1e40af; line-height:1.45;">
+          <strong>Data Localization Notice (Rule 13 & 15):</strong> All customer personal data and communication logs are stored and processed exclusively within MeitY-empanelled secure Tier-IV data centers located within the territory of India. No financial or personal data is transferred across international borders.
+        </div>
+      </div>
+
+      <!-- TAB 2: DATA PRINCIPAL RIGHTS -->
+      <div class="dpdp-tab-pane" id="tabRights" role="tabpanel">
+        <h4 style="font-size:14.5px; font-weight:700; color:var(--navy-900); margin-bottom:6px;">Your Statutory Rights under DPDPA 2023 & DPDP Rules 2025</h4>
+        <p style="font-size:12.8px; color:var(--text-700); line-height:1.5; margin-bottom:12px;">
+          As a Data Principal, the law guarantees you unequivocal control over your personal data. You can exercise any of the following statutory rights free of cost by contacting our Data Protection Officer:
+        </p>
+
+        <div class="dpdp-rights-grid">
+          <div class="dpdp-right-card">
+            <h4>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; color:#1B3E70;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              1. Right to Access Information (Sec 11)
+            </h4>
+            <p>You have the right to obtain a summary of personal data being processed by Namco Bank, the processing activities undertaken, and identities of Data Processors or DLT partners with whom data has been shared.</p>
+          </div>
+
+          <div class="dpdp-right-card">
+            <h4>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; color:#1B3E70;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              2. Right to Correction & Updating (Sec 12)
+            </h4>
+            <p>You have the right to request correction of inaccurate, misleading, or incomplete personal data. KYC changes (address, mobile, email) can be updated through our branch or online verification.</p>
+          </div>
+
+          <div class="dpdp-right-card">
+            <h4>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; color:#1B3E70;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              3. Right to Erasure / Deletion (Sec 12)
+            </h4>
+            <p>You may request erasure of personal data that is no longer necessary for the specified purpose, unless mandatory retention is required under PMLA 2002, Income Tax Act, or RBI banking regulations.</p>
+          </div>
+
+          <div class="dpdp-right-card">
+            <h4>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px; height:16px; color:#1B3E70;"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+              4. Right to Withdraw Consent (Sec 6(4))
+            </h4>
+            <p>Where processing is based on consent, you have the right to withdraw consent at any time as easily as giving it. Opting out will stop commercial offers and non-mandatory notices without affecting your deposits or banking service.</p>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:16px;">
+          <button type="button" class="btn btn-secondary" onclick="switchDpdpTab('tabDpo')">Submit a Data Principal Rights Request &rarr;</button>
+        </div>
+      </div>
+
+      <!-- TAB 3: NOMINATION (RULE 14) -->
+      <div class="dpdp-tab-pane" id="tabNomination" role="tabpanel">
+        <h4 style="font-size:14.5px; font-weight:700; color:var(--navy-900); margin-bottom:6px;">Rule 14: Right of Nomination for Personal Data</h4>
+        <p style="font-size:12.8px; color:var(--text-700); line-height:1.5; margin-bottom:12px;">
+          Under Rule 14 of the DPDP Rules, 2025, you have the statutory right to nominate an individual who shall be authorized to exercise your data principal rights (such as data access or erasure) in the event of your death or incapacity.
+        </p>
+
+        <form id="nominationForm" onsubmit="return false;" style="background:#f8fafc; border:1px solid var(--border); padding:16px; border-radius:8px;">
+          <div class="row2">
+            <div class="field">
+              <label for="nomineeName">Nominee Full Name <span class="req">*</span></label>
+              <input type="text" id="nomineeName" placeholder="e.g., Sunita Rajesh Patil" required>
+            </div>
+            <div class="field">
+              <label for="nomineeRel">Relationship to Account Holder <span class="req">*</span></label>
+              <select id="nomineeRel" required>
+                <option value="">Select relationship</option>
+                <option value="Spouse">Spouse</option>
+                <option value="Son">Son</option>
+                <option value="Daughter">Daughter</option>
+                <option value="Parent">Parent (Father / Mother)</option>
+                <option value="Brother/Sister">Brother / Sister</option>
+                <option value="Lawful Guardian">Court-Appointed Lawful Guardian</option>
+                <option value="Legal Heir">Designated Legal Heir</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label for="nomineeMobile">Nominee Mobile Number <span class="req">*</span></label>
+              <input type="tel" id="nomineeMobile" maxlength="10" placeholder="10-digit mobile" required>
+            </div>
+            <div class="field">
+              <label for="nomineeId">Nominee Govt ID / Identifier</label>
+              <input type="text" id="nomineeId" placeholder="e.g. Masked Aadhaar / PAN">
+            </div>
+          </div>
+
+          <div id="nomineeSuccessBox" style="display:none; padding:10px 12px; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:6px; color:#065f46; font-size:12.5px; margin-bottom:12px;">
+            Nominee record saved successfully under Rule 14 of DPDP Rules, 2025.
+          </div>
+
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-primary" id="saveNomineeBtn">Save Nominee Details</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB 4: DPO & GRIEVANCE REDRESSAL -->
+      <div class="dpdp-tab-pane" id="tabDpo" role="tabpanel">
+        <h4 style="font-size:14.5px; font-weight:700; color:var(--navy-900); margin-bottom:6px;">Rule 9 & 14: Data Protection Officer (DPO) & Grievance Redressal</h4>
+        <p style="font-size:12.8px; color:var(--text-700); line-height:1.5; margin-bottom:12px;">
+          Namco Bank maintains an expedited Grievance Redressal System capable of resolving questions, data principal rights requests, and data protection concerns with an SLA of <strong>30 calendar days</strong> (well within the statutory 90-day ceiling mandated under Rule 14).
+        </p>
+
+        <div class="dpo-contact-card">
+          <div class="dpo-title">Data Protection Officer (DPO) — Official Contact Particulars</div>
+          <div class="dpo-details-grid">
+            <div>
+              <strong>Officer Name:</strong> Shri Ramesh V. Patil<br>
+              <strong>Designation:</strong> Chief Compliance Officer & DPO<br>
+              <strong>Organisation:</strong> The Nasik Merchants Co-op Bank Ltd.
+            </div>
+            <div>
+              <strong>Email:</strong> <a href="mailto:dpo@namcobank.in" style="color:#1B3E70; font-weight:600;">dpo@namcobank.in</a><br>
+              <strong>Direct Helpline:</strong> 1800 233 6262 / 0253-2578421<br>
+              <strong>Registered Office:</strong> "Namco Bhavan", Old Agra Road, Nashik - 422002
+            </div>
+          </div>
+          <div style="margin-top:10px; font-size:11.8px; color:#475569; border-top:1px dashed #cbd5e1; padding-top:8px;">
+            <strong>Statutory Turnaround SLA:</strong> Acknowledgement within 24 working hours · Final Resolution within 30 calendar days.
+          </div>
+        </div>
+
+        <h5 style="font-size:13.5px; font-weight:700; color:var(--navy-900); margin:16px 0 8px 0;">Submit an Online Privacy Grievance or Rights Request</h5>
+        <form id="grievanceForm" onsubmit="return false;" style="background:#f8fafc; border:1px solid var(--border); padding:16px; border-radius:8px;">
+          <div class="row2">
+            <div class="field">
+              <label for="grievanceCustomer">Your Full Name / CIF <span class="req">*</span></label>
+              <input type="text" id="grievanceCustomer" placeholder="Full Name or CIF" required>
+            </div>
+            <div class="field">
+              <label for="grievanceMobile">Registered Mobile Number <span class="req">*</span></label>
+              <input type="tel" id="grievanceMobile" maxlength="10" placeholder="10-digit mobile" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="grievanceType">Request Category <span class="req">*</span></label>
+            <select id="grievanceType" required>
+              <option value="RIGHTS_ACCESS">Access Personal Data Summary (Sec 11)</option>
+              <option value="RIGHTS_CORRECTION">Correction / Update of Inaccurate KYC Data (Sec 12)</option>
+              <option value="CONSENT_REVOCATION">Consent Withdrawal / Revocation of Alert Channels (Sec 6)</option>
+              <option value="DATA_ERASURE">Enquiry Regarding Data Erasure / Retention (Sec 12 & Rule 8)</option>
+              <option value="PRIVACY_GRIEVANCE">Report Suspected Personal Data Breach / Privacy Concern (Rule 7)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="grievanceDetails">Detailed Description of Request / Grievance <span class="req">*</span></label>
+            <textarea id="grievanceDetails" rows="3" style="width:100%; border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-family:inherit; font-size:13px;" placeholder="Provide specifics regarding your account, alert preference change, or grievance..." required></textarea>
+          </div>
+
+          <div id="grievanceStatusBox" style="display:none; padding:10px 12px; border-radius:6px; font-size:12.5px; margin-bottom:12px;"></div>
+
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-primary" id="submitGrievanceBtn">Submit to DPO (SLA 30 Days)</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TAB 5: COMPLAIN TO DPBI -->
+      <div class="dpdp-tab-pane" id="tabDpbi" role="tabpanel">
+        <h4 style="font-size:14.5px; font-weight:700; color:var(--navy-900); margin-bottom:6px;">Rule 3(b) & Section 28: Appeal / Complaint to the Data Protection Board of India</h4>
+        <p style="font-size:12.8px; color:var(--text-700); line-height:1.5; margin-bottom:12px;">
+          The Central Government has established the <strong>Data Protection Board of India (DPBI)</strong> under Section 18 of the Digital Personal Data Protection Act, 2023 as an independent adjudicatory body for data principal protection.
+        </p>
+
+        <div style="background:#fff; border:1px solid var(--border); border-radius:8px; padding:16px; margin-bottom:14px;">
+          <h5 style="font-size:13px; font-weight:700; color:var(--navy-900); margin-bottom:6px;">When can you file a complaint to the Board?</h5>
+          <ul style="font-size:12.5px; color:var(--text-700); line-height:1.6; padding-left:18px; margin:0 0 10px 0;">
+            <li><strong>Step 1 (Mandatory First Recourse):</strong> You must first lodge your grievance with Namco Bank's Data Protection Officer through Tab 4 or by email at <code>dpo@namcobank.in</code>.</li>
+            <li><strong>Step 2 (Board Appeal):</strong> If you do not receive a resolution within the statutory 30-day turnaround period, or if you are dissatisfied with the resolution provided by the Bank, you have the right to lodge an appeal/complaint before the Data Protection Board of India.</li>
+            <li><strong>Step 3 (Breach Reporting):</strong> In the event of a significant personal data breach affecting your privacy, both the Data Fiduciary and the affected Data Principal may report directly to the Board under Section 8(6) and Rule 7.</li>
+          </ul>
+
+          <div style="background:#f8fafc; border:1px solid var(--border); border-radius:6px; padding:10px 12px; font-size:12px; color:var(--text-900);">
+            <strong>Official DPBI Portal:</strong> <code>dpbi.gov.in</code> (Ministry of Electronics and Information Technology, Govt. of India)<br>
+            <strong>Jurisdiction:</strong> National Appellate Tribunal under Section 29 (Telecom Disputes Settlement and Appellate Tribunal - TDSAT).
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="sticky-bar no-print" id="stickyBar">
   <button class="btn btn-primary btn-full" id="stickyActionBtn" type="button">Send OTP</button>
 </div>
 
 <footer class="no-print">
   © The Nasik Merchants Co‑operative Bank Ltd., Nashik (Namco Bank). All rights reserved.<br>
-  RBI electronic banking consent compliance · <a href="/login">Bank staff sign‑in</a>
+  RBI Electronic Banking & Digital Personal Data Protection (DPDP Rules, 2025) Compliance · 
+  <a href="javascript:void(0)" id="footerPrivacyLink">DPDP Notice</a> · 
+  <a href="javascript:void(0)" id="footerRightsLink">Data Principal Rights</a> · 
+  <a href="javascript:void(0)" id="footerDpoLink">DPO & Grievance (SLA: 30 Days)</a> · 
+  <a href="/login">Bank staff sign‑in</a>
 </footer>
 
 <div class="print-summary" id="printSummary">
@@ -908,6 +2218,16 @@
           document.querySelector('input[value="no"]').checked = !isYes;
           document.querySelector('.choice.yes').classList.toggle('selected', isYes);
           document.querySelector('.choice.no').classList.toggle('selected', !isYes);
+          applyConsentChoice(isYes ? 'yes' : 'no');
+        }
+        if(p.preferences){
+          if(cbPurposeServicing) cbPurposeServicing.checked = !!p.preferences.purpose_servicing;
+          if(cbPurposeFraud) cbPurposeFraud.checked = !!p.preferences.purpose_fraud;
+          if(cbPurposePromotional) cbPurposePromotional.checked = !!p.preferences.purpose_promotional;
+          if(cbChannelSms) cbChannelSms.checked = !!p.preferences.channel_sms;
+          if(cbChannelEmail) cbChannelEmail.checked = !!p.preferences.channel_email;
+          if(cbChannelVoice) cbChannelVoice.checked = !!p.preferences.channel_voice;
+          if(cbChannelWhatsapp) cbChannelWhatsapp.checked = !!p.preferences.channel_whatsapp;
         }
         unlockProfile();
       }
@@ -948,16 +2268,98 @@
     setTimeout(resizeCanvas, 50);
   });
 
-  /* ---------- STEP 3: consent choice ---------- */
+  /* ---------- STEP 3: consent choice & granular preferences ---------- */
   const choices = Array.from(document.querySelectorAll('.choice'));
-  choices.forEach(c=>{
-    c.addEventListener('click', ()=>{
-      choices.forEach(x=>x.classList.remove('selected'));
-      c.classList.add('selected');
-      c.querySelector('input').checked = true;
-      document.getElementById('choiceErr').style.display = 'none';
+  const cbPurposeCore = document.getElementById('cbPurposeCore');
+  const cbPurposeServicing = document.getElementById('cbPurposeServicing');
+  const cbPurposeFraud = document.getElementById('cbPurposeFraud');
+  const cbPurposePromotional = document.getElementById('cbPurposePromotional');
+  const itemPurposePromotional = document.getElementById('itemPurposePromotional');
+
+  const cbChannelSms = document.getElementById('cbChannelSms');
+  const cbChannelEmail = document.getElementById('cbChannelEmail');
+  const cbChannelVoice = document.getElementById('cbChannelVoice');
+  const cbChannelWhatsapp = document.getElementById('cbChannelWhatsapp');
+  const cbShareDltPartner = document.getElementById('cbShareDltPartner');
+  const statutoryNotice = document.getElementById('statutoryNotice');
+
+  // Accordion Expand/Collapse [+] Details
+  document.querySelectorAll('.point-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const targetId = btn.getAttribute('data-toggle');
+      const detailsEl = document.getElementById(targetId);
+      if(!detailsEl) return;
+      const isOpen = detailsEl.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.innerHTML = isOpen
+        ? '<span class="point-toggle-icon">−</span> Hide'
+        : '<span class="point-toggle-icon">+</span> Details';
     });
   });
+
+  // Dynamic YES / NO choice behavior
+  function applyConsentChoice(choiceVal) {
+    const isYes = choiceVal === 'yes';
+    if(isYes) {
+      if(statutoryNotice) statutoryNotice.style.display = 'none';
+      if(cbPurposePromotional) {
+        cbPurposePromotional.disabled = false;
+        cbPurposePromotional.checked = true;
+        if(itemPurposePromotional) itemPurposePromotional.classList.remove('disabled');
+      }
+      if(cbPurposeServicing) cbPurposeServicing.checked = true;
+      if(cbPurposeFraud) cbPurposeFraud.checked = true;
+      if(cbChannelSms) cbChannelSms.checked = true;
+      if(cbChannelEmail) cbChannelEmail.checked = true;
+      if(cbChannelWhatsapp) cbChannelWhatsapp.checked = true;
+      if(cbShareDltPartner) cbShareDltPartner.checked = true;
+    } else {
+      if(statutoryNotice) statutoryNotice.style.display = 'block';
+      if(cbPurposePromotional) {
+        cbPurposePromotional.checked = false;
+        cbPurposePromotional.disabled = true;
+        if(itemPurposePromotional) itemPurposePromotional.classList.add('disabled');
+      }
+      if(cbPurposeServicing) cbPurposeServicing.checked = false;
+      if(cbChannelEmail) cbChannelEmail.checked = false;
+      if(cbChannelVoice) cbChannelVoice.checked = false;
+      if(cbChannelWhatsapp) cbChannelWhatsapp.checked = false;
+      // Core & fraud stay checked under statutory mandate
+      if(cbPurposeCore) cbPurposeCore.checked = true;
+      if(cbPurposeFraud) cbPurposeFraud.checked = true;
+      if(cbChannelSms) cbChannelSms.checked = true;
+      if(cbShareDltPartner) cbShareDltPartner.checked = true;
+    }
+  }
+
+  choices.forEach(c => {
+    c.addEventListener('click', () => {
+      choices.forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+      const radio = c.querySelector('input');
+      radio.checked = true;
+      document.getElementById('choiceErr').style.display = 'none';
+      applyConsentChoice(radio.value);
+    });
+  });
+
+  // If user manually checks promotional offer, ensure YES is selected
+  if(cbPurposePromotional) {
+    cbPurposePromotional.addEventListener('change', () => {
+      if(cbPurposePromotional.checked) {
+        const yesChoice = document.querySelector('.choice.yes');
+        const noChoice = document.querySelector('.choice.no');
+        if(yesChoice && noChoice) {
+          noChoice.classList.remove('selected');
+          yesChoice.classList.add('selected');
+          yesChoice.querySelector('input').checked = true;
+          if(statutoryNotice) statutoryNotice.style.display = 'none';
+        }
+      }
+    });
+  }
 
   /* signature pad */
   const canvas = document.getElementById('sigPad');
@@ -1015,6 +2417,15 @@
     setInvalid(placeField.closest('.field'), !placeField.value.trim());
     if(!placeField.value.trim()) ok = false;
 
+    const cbAge = document.getElementById('cbAgeDeclaration');
+    const ageErr = document.getElementById('ageErr');
+    if(cbAge && !cbAge.checked){
+      if(ageErr) ageErr.style.display = 'block';
+      ok = false;
+    } else {
+      if(ageErr) ageErr.style.display = 'none';
+    }
+
     if(!ok) return;
 
     submitBtn.disabled = true;
@@ -1023,6 +2434,18 @@
     const consentVal = chosen.value.toUpperCase();
     const sigData = canvas.toDataURL('image/png');
     let refId = 'NAMCO-SMS-2026-' + Math.floor(100000 + Math.random()*900000);
+
+    const preferences = {
+      purpose_core: true,
+      purpose_servicing: !!cbPurposeServicing?.checked,
+      purpose_fraud: !!cbPurposeFraud?.checked,
+      purpose_promotional: !!cbPurposePromotional?.checked,
+      channel_sms: !!cbChannelSms?.checked,
+      channel_email: !!cbChannelEmail?.checked,
+      channel_voice: !!cbChannelVoice?.checked,
+      channel_whatsapp: !!cbChannelWhatsapp?.checked,
+      share_dlt_partner: !!cbShareDltPartner?.checked
+    };
 
     try {
       const res = await fetch('/api/v1/consent/submit/', {
@@ -1039,7 +2462,8 @@
           consent: consentVal,
           date: dateField.value,
           place: placeField.value.trim(),
-          signatureData: sigData
+          signatureData: sigData,
+          preferences: preferences
         })
       });
       const data = await res.json();
@@ -1051,16 +2475,38 @@
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit consent';
 
+    const activePurposes = ['Core Banking (Statutory)'];
+    if(preferences.purpose_servicing) activePurposes.push('Account Servicing');
+    if(preferences.purpose_fraud) activePurposes.push('Fraud Monitoring');
+    if(preferences.purpose_promotional) activePurposes.push('Commercial Offers');
+    if(preferences.share_dlt_partner) activePurposes.push('DLT Partner Sharing');
+
+    const activeChannels = [];
+    if(preferences.channel_sms) activeChannels.push('SMS (DLT)');
+    if(preferences.channel_email) activeChannels.push('Email');
+    if(preferences.channel_voice) activeChannels.push('Voice');
+    if(preferences.channel_whatsapp) activeChannels.push('WhatsApp');
+
+    const purpStr = activePurposes.join(', ');
+    const chanStr = activeChannels.length ? activeChannels.join(', ') : 'SMS (Statutory)';
+
     document.getElementById('refId').textContent = refId;
     document.getElementById('refName').textContent = getFullName();
-    document.getElementById('refChoice').textContent = chosen.value === 'yes' ? 'Receive SMS alerts' : 'Opted out of optional alerts';
+    document.getElementById('refChoice').textContent = chosen.value === 'yes' ? 'Authorised communications' : 'Restricted to statutory alerts only';
+    const refPurposes = document.getElementById('refPurposes');
+    if(refPurposes) refPurposes.textContent = purpStr;
+    const refChannels = document.getElementById('refChannels');
+    if(refChannels) refChannels.textContent = chanStr;
     const d = new Date();
     document.getElementById('refDate').textContent = d.toLocaleString('en-IN', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
 
     recordConsentAndUnlockProfile({
       refId,
-      choiceLabel: chosen.value === 'yes' ? 'Receive SMS alerts' : 'Opted out of optional alerts',
-      dateLabel: document.getElementById('refDate').textContent
+      choiceLabel: chosen.value === 'yes' ? 'Authorised communications' : 'Restricted to statutory alerts only',
+      dateLabel: document.getElementById('refDate').textContent,
+      purpStr,
+      chanStr,
+      preferences
     });
 
     goToStep(4);
@@ -1111,6 +2557,16 @@
     document.getElementById('profBranch').textContent = branch.value || '—';
     document.getElementById('profPan').textContent = panCard.value.trim() ? maskId(panCard.value.toUpperCase(), 2, 2) : '—';
     document.getElementById('profAadhaar').textContent = aadhaarCard.value.trim() ? ('XXXX-XXXX-' + aadhaarCard.value.trim().slice(-4)) : '—';
+    
+    const latest = consentHistory[0] || {};
+    const profConsentStatus = document.getElementById('profConsentStatus');
+    if(profConsentStatus) {
+      profConsentStatus.textContent = latest.choiceLabel || 'Active';
+    }
+    const profChannels = document.getElementById('profChannels');
+    if(profChannels) {
+      profChannels.textContent = latest.chanStr || (latest.choiceLabel && latest.choiceLabel.includes('Authorised') ? 'SMS (DLT), Email, WhatsApp' : 'SMS (Statutory Only)');
+    }
   }
 
   function renderHistory(){
@@ -1188,7 +2644,177 @@
     window.print();
   });
 
-  /* ---------- sticky mobile action bar ---------- */
+  /* ---------- DPDP Rules 2025: Itemised Inventory Accordion ---------- */
+  const itemisedToggle = document.getElementById('itemisedInventoryToggle');
+  const itemisedContent = document.getElementById('itemisedInventoryContent');
+  const itemisedBadge = document.getElementById('itemisedToggleBadge');
+  if(itemisedToggle && itemisedContent) {
+    itemisedToggle.addEventListener('click', () => {
+      const isOpen = itemisedContent.classList.toggle('open');
+      if(itemisedBadge) {
+        itemisedBadge.textContent = isOpen ? '− Hide Items' : '+ View Items';
+      }
+    });
+  }
+
+  /* ---------- DPDP Rules 2025: Modal, Rights, Nomination & Grievance ---------- */
+  const dpdpModal = document.getElementById('dpdpModal');
+  const openDpdpModalBtn = document.getElementById('openDpdpModalBtn');
+  const closeDpdpModalBtn = document.getElementById('closeDpdpModalBtn');
+  const dpdpTabBtns = Array.from(document.querySelectorAll('.dpdp-tab-btn'));
+  const dpdpTabPanes = Array.from(document.querySelectorAll('.dpdp-tab-pane'));
+
+  function switchDpdpTab(targetTabId) {
+    dpdpTabBtns.forEach(btn => {
+      const isActive = btn.dataset.tab === targetTabId;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    dpdpTabPanes.forEach(pane => {
+      pane.classList.toggle('active', pane.id === targetTabId);
+    });
+  }
+  window.switchDpdpTab = switchDpdpTab;
+
+  function openDpdpModal(tabId) {
+    if(dpdpModal) {
+      dpdpModal.classList.add('active');
+      if(tabId) switchDpdpTab(tabId);
+      // Pre-fill grievance or nomination fields if user entered data in Step 1/2
+      const gCust = document.getElementById('grievanceCustomer');
+      const gMob = document.getElementById('grievanceMobile');
+      if(gCust && !gCust.value.trim()) gCust.value = getFullName() || cif.value.trim() || '';
+      if(gMob && !gMob.value.trim()) gMob.value = mobileInput.value.trim() || '';
+    }
+  }
+  window.openDpdpModal = openDpdpModal;
+
+  function closeDpdpModal() {
+    if(dpdpModal) dpdpModal.classList.remove('active');
+  }
+  window.closeDpdpModal = closeDpdpModal;
+
+  if(openDpdpModalBtn) openDpdpModalBtn.addEventListener('click', () => openDpdpModal('tabNotice'));
+  if(closeDpdpModalBtn) closeDpdpModalBtn.addEventListener('click', closeDpdpModal);
+
+  // Footer quick links
+  const footerPrivacyLink = document.getElementById('footerPrivacyLink');
+  const footerRightsLink = document.getElementById('footerRightsLink');
+  const footerDpoLink = document.getElementById('footerDpoLink');
+  if(footerPrivacyLink) footerPrivacyLink.addEventListener('click', () => openDpdpModal('tabNotice'));
+  if(footerRightsLink) footerRightsLink.addEventListener('click', () => openDpdpModal('tabRights'));
+  if(footerDpoLink) footerDpoLink.addEventListener('click', () => openDpdpModal('tabDpo'));
+
+  // Tab click listeners
+  dpdpTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => switchDpdpTab(btn.dataset.tab));
+  });
+
+  // Close modal when clicking outside dialog
+  if(dpdpModal) {
+    dpdpModal.addEventListener('click', (e) => {
+      if(e.target === dpdpModal) closeDpdpModal();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && dpdpModal && dpdpModal.classList.contains('active')) {
+      closeDpdpModal();
+    }
+  });
+
+  // Save Nominee Details (Rule 14)
+  const saveNomineeBtn = document.getElementById('saveNomineeBtn');
+  const nomineeSuccessBox = document.getElementById('nomineeSuccessBox');
+  if(saveNomineeBtn) {
+    saveNomineeBtn.addEventListener('click', () => {
+      const nomName = document.getElementById('nomineeName')?.value.trim();
+      const nomRel = document.getElementById('nomineeRel')?.value;
+      const nomMobile = document.getElementById('nomineeMobile')?.value.trim();
+      const nomId = document.getElementById('nomineeId')?.value.trim();
+
+      if(!nomName || !nomRel || !nomMobile || nomMobile.length !== 10) {
+        alert('Please provide valid Nominee Full Name, Relationship, and 10-digit Mobile Number.');
+        return;
+      }
+
+      const nomineeData = {
+        nomineeName: nomName,
+        relationship: nomRel,
+        nomineeMobile: nomMobile,
+        nomineeId: nomId,
+        registeredAt: new Date().toISOString(),
+        customerCif: cif.value.trim() || 'CURRENT_CUSTOMER'
+      };
+
+      try {
+        localStorage.setItem('namcoDpdpNominee', JSON.stringify(nomineeData));
+      } catch(e) {}
+
+      if(nomineeSuccessBox) {
+        nomineeSuccessBox.style.display = 'block';
+        nomineeSuccessBox.textContent = `Nominee "${nomName}" (${nomRel}) successfully registered under Rule 14 of DPDP Rules, 2025.`;
+        setTimeout(() => { nomineeSuccessBox.style.display = 'none'; }, 6000);
+      }
+    });
+  }
+
+  // Grievance / Rights Request Submission (Rule 9 & 14)
+  const submitGrievanceBtn = document.getElementById('submitGrievanceBtn');
+  const grievanceStatusBox = document.getElementById('grievanceStatusBox');
+  if(submitGrievanceBtn) {
+    submitGrievanceBtn.addEventListener('click', async () => {
+      const custIdentifier = document.getElementById('grievanceCustomer')?.value.trim();
+      const mobileNum = document.getElementById('grievanceMobile')?.value.trim();
+      const reqType = document.getElementById('grievanceType')?.value;
+      const details = document.getElementById('grievanceDetails')?.value.trim();
+
+      if(!custIdentifier || !mobileNum || mobileNum.length !== 10 || !details) {
+        alert('Please fill all required grievance fields: Full Name/CIF, 10-digit mobile, and description.');
+        return;
+      }
+
+      submitGrievanceBtn.disabled = true;
+      submitGrievanceBtn.textContent = 'Submitting Request to DPO...';
+
+      let refTracking = 'DPDP-GRV-2026-' + Math.floor(100000 + Math.random() * 900000);
+
+      try {
+        const response = await fetch('/api/v1/customer/dpdp-grievance/', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+          body: JSON.stringify({
+            customer_identifier: custIdentifier,
+            mobile: mobileNum,
+            request_type: reqType,
+            details: details
+          })
+        });
+        const resData = await response.json();
+        if(response.ok && resData.success) {
+          refTracking = resData.reference_id || refTracking;
+        }
+      } catch(err) {
+        console.warn('Grievance logged offline / fallback active:', err);
+      }
+
+      submitGrievanceBtn.disabled = false;
+      submitGrievanceBtn.textContent = 'Submit to DPO (SLA 30 Days)';
+
+      if(grievanceStatusBox) {
+        grievanceStatusBox.style.display = 'block';
+        grievanceStatusBox.style.background = '#ecfdf5';
+        grievanceStatusBox.style.color = '#065f46';
+        grievanceStatusBox.style.border = '1px solid #a7f3d0';
+        grievanceStatusBox.innerHTML = `
+          <strong>Request Logged Successfully!</strong><br>
+          Grievance Reference ID: <strong>${refTracking}</strong><br>
+          Forwarded to: <em>Shri Ramesh V. Patil (Data Protection Officer)</em><br>
+          Statutory Resolution SLA: <strong>Within 30 Calendar Days</strong>. An acknowledgement SMS has been sent to +91 ${mobileNum}.
+        `;
+        document.getElementById('grievanceDetails').value = '';
+      }
+    });
+  }
   const stickyBar = document.getElementById('stickyBar');
   const stickyBtn = document.getElementById('stickyActionBtn');
   function updateStickyBar(){

@@ -356,8 +356,8 @@
 
     .quick-btn-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
     }
 
     .quick-btn {
@@ -480,6 +480,10 @@
               <strong>🛡️ Super Admin</strong>
               <span>admin / admin123</span>
             </button>
+            <button type="button" class="quick-btn" id="fillDltPartnerBtn">
+              <strong>📡 DLT Partner</strong>
+              <span>dltpartner / dlt123</span>
+            </button>
           </div>
         </div>
       </form>
@@ -592,6 +596,13 @@
       document.getElementById('fillSuperAdminBtn')?.addEventListener('click', () => {
         usernameInput.value = 'admin';
         passwordInput.value = 'admin123';
+        hideAlert();
+        usernameInput.focus();
+      });
+
+      document.getElementById('fillDltPartnerBtn')?.addEventListener('click', () => {
+        usernameInput.value = 'dltpartner';
+        passwordInput.value = 'dlt123';
         hideAlert();
         usernameInput.focus();
       });
@@ -725,7 +736,14 @@
             setTimeout(() => otpBoxes[0].focus(), 100);
           } else if (res.token) {
             // Direct login fallback
-            window.location.href = res.user.role === 'SUPER_ADMIN' ? 'super-admin.html' : 'admin.html';
+            const role = (res.user?.role || '').toUpperCase();
+            if (role === 'SUPER_ADMIN' || res.user?.isSuperAdmin) {
+              window.location.href = 'super-admin.html';
+            } else if (role === 'DLT_PARTNER' || res.user?.username === 'dltpartner') {
+              window.location.href = 'dlt-partner.html';
+            } else {
+              window.location.href = 'admin.html';
+            }
           }
         } catch (err) {
           showAlert(err.message || 'Invalid credentials.', 'danger');
@@ -758,6 +776,8 @@
             const role = (res.user.role || '').toUpperCase();
             if (role === 'SUPER_ADMIN' || res.user.isSuperAdmin) {
               window.location.href = 'super-admin.html';
+            } else if (role === 'DLT_PARTNER' || res.user.username === 'dltpartner') {
+              window.location.href = 'dlt-partner.html';
             } else {
               window.location.href = 'admin.html';
             }

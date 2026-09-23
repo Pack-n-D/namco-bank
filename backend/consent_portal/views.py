@@ -184,11 +184,33 @@ def ensure_db_schema():
             if 'aadhaar_number' not in consent_cols:
                 cursor.execute("ALTER TABLE tbl_sms_consents ADD COLUMN aadhaar_number VARCHAR(20) NULL")
 
+            # Granular preferences columns (Purposes & Channels)
+            granular_cols = [
+                ('purpose_core', 'BOOLEAN DEFAULT 1'),
+                ('purpose_servicing', 'BOOLEAN DEFAULT 1'),
+                ('purpose_fraud', 'BOOLEAN DEFAULT 1'),
+                ('purpose_promotional', 'BOOLEAN DEFAULT 0'),
+                ('channel_sms', 'BOOLEAN DEFAULT 1'),
+                ('channel_email', 'BOOLEAN DEFAULT 1'),
+                ('channel_voice', 'BOOLEAN DEFAULT 0'),
+                ('channel_whatsapp', 'BOOLEAN DEFAULT 0'),
+                ('share_dlt_partner', 'BOOLEAN DEFAULT 1'),
+                ('preferences_json', 'TEXT NULL')
+            ]
+            for col_name, col_def in granular_cols:
+                if col_name not in consent_cols:
+                    cursor.execute(f"ALTER TABLE tbl_sms_consents ADD COLUMN {col_name} {col_def}")
+
             # Backfill sample values for any preexisting legacy records with NULL so all records display PAN & Aadhaar
             cursor.execute("UPDATE tbl_customers SET pan_number = 'ABCDE' || substr(account_number, -4, 4) || 'F' WHERE pan_number IS NULL OR pan_number = ''")
             cursor.execute("UPDATE tbl_customers SET aadhaar_number = '98765432' || substr(account_number, -4, 4) WHERE aadhaar_number IS NULL OR aadhaar_number = ''")
             cursor.execute("UPDATE tbl_sms_consents SET pan_number = 'ABCDE' || substr(account_number, -4, 4) || 'F' WHERE pan_number IS NULL OR pan_number = ''")
             cursor.execute("UPDATE tbl_sms_consents SET aadhaar_number = '98765432' || substr(account_number, -4, 4) WHERE aadhaar_number IS NULL OR aadhaar_number = ''")
+
+            # Backfill granular defaults for legacy consent records
+            cursor.execute("UPDATE tbl_sms_consents SET purpose_core = 1, purpose_fraud = 1, channel_sms = 1, share_dlt_partner = 1 WHERE purpose_core IS NULL OR share_dlt_partner IS NULL")
+            cursor.execute("UPDATE tbl_sms_consents SET purpose_servicing = 1, purpose_promotional = 1, channel_email = 1, channel_whatsapp = 1 WHERE status = 'YES' AND (purpose_servicing IS NULL OR purpose_servicing = 0)")
+            cursor.execute("UPDATE tbl_sms_consents SET purpose_servicing = 0, purpose_promotional = 0, channel_email = 0, channel_voice = 0, channel_whatsapp = 0 WHERE status = 'NO' AND (purpose_promotional IS NULL OR purpose_promotional = 1)")
 
             # tbl_two_factor_challenges
             cursor.execute("""
@@ -439,18 +461,18 @@ def resolve_requester(request):
     officer_param = request.GET.get('officer_user', '').strip()
 
     # Internal Bank Portal tokens for Super Admin, Branch Officer & DLT Partner
-    if token.startswith('namco_sec_token_admin') or token == 'namco_sec_token_admin_super':
+    if officer_param == 'admin' or token.startswith('namco_sec_token_admin') or token == 'namco_sec_token_admin_super':
         admin_officer = BankOfficer.objects.filter(username='admin', is_active=True).first()
         if admin_officer:
             return admin_officer
+    if officer_param == 'dltpartner' or token.startswith('namco_sec_token_dlt') or token == 'namco_sec_token_dlt':
+        dlt_officer = BankOfficer.objects.filter(username='dltpartner', is_active=True).first()
+        if dlt_officer:
+            return dlt_officer
     if token.startswith('namco_sec_token_officer') or token == 'namco_sec_token_officer':
         branch_officer = BankOfficer.objects.filter(username='officer', is_active=True).first()
         if branch_officer:
             return branch_officer
-    if token.startswith('namco_sec_token_dlt') or token == 'namco_sec_token_dlt':
-        dlt_officer = BankOfficer.objects.filter(username='dltpartner', is_active=True).first()
-        if dlt_officer:
-            return dlt_officer
 
     # Fallback for direct portal navigation with officer_user query param
     if officer_param in ('admin', 'officer', 'dltpartner'):
@@ -585,6 +607,41 @@ class CustomerConsentSubmitView(APIView):
         customer.branch_name = str(branch_name).strip()
         customer.save()
 
+        # Granular Preferences Parsing
+        prefs = data.get('preferences') or {}
+        def parse_bool_pref(key, default_val):
+            if isinstance(prefs, dict) and key in prefs:
+                v = prefs[key]
+                return str(v).lower() in ['true', '1', 'yes']
+            if key in data:
+                v = data[key]
+                return str(v).lower() in ['true', '1', 'yes']
+            return default_val
+
+        p_core = True  # Always True (Mandatory RBI Statutory)
+        p_servicing = parse_bool_pref('purpose_servicing', True if status_val == 'YES' else False)
+        p_fraud = parse_bool_pref('purpose_fraud', True)
+        p_promotional = parse_bool_pref('purpose_promotional', True if status_val == 'YES' else False)
+
+        c_sms = parse_bool_pref('channel_sms', True)
+        c_email = parse_bool_pref('channel_email', True if status_val == 'YES' else False)
+        c_voice = parse_bool_pref('channel_voice', False)
+        c_whatsapp = parse_bool_pref('channel_whatsapp', True if status_val == 'YES' else False)
+        p_share_dlt = parse_bool_pref('share_dlt_partner', True)
+
+        prefs_dict = {
+            'purpose_core': p_core,
+            'purpose_servicing': p_servicing,
+            'purpose_fraud': p_fraud,
+            'purpose_promotional': p_promotional,
+            'channel_sms': c_sms,
+            'channel_email': c_email,
+            'channel_voice': c_voice,
+            'channel_whatsapp': c_whatsapp,
+            'share_dlt_partner': p_share_dlt
+        }
+        prefs_json_str = json.dumps(prefs_dict)
+
         # 2. Check if existing consent record exists
         existing_consent = SMSConsent.objects.filter(customer=customer).first()
         prev_status = existing_consent.status if existing_consent else 'PENDING'
@@ -607,6 +664,19 @@ class CustomerConsentSubmitView(APIView):
             existing_consent.ip_address = client_ip
             existing_consent.user_agent = user_agent
             existing_consent.submitted_at = timezone.now()
+            
+            # Granular preferences
+            existing_consent.purpose_core = p_core
+            existing_consent.purpose_servicing = p_servicing
+            existing_consent.purpose_fraud = p_fraud
+            existing_consent.purpose_promotional = p_promotional
+            existing_consent.channel_sms = c_sms
+            existing_consent.channel_email = c_email
+            existing_consent.channel_voice = c_voice
+            existing_consent.channel_whatsapp = c_whatsapp
+            existing_consent.share_dlt_partner = p_share_dlt
+            existing_consent.preferences_json = prefs_json_str
+            
             existing_consent.save()
             consent_record = existing_consent
         else:
@@ -628,17 +698,28 @@ class CustomerConsentSubmitView(APIView):
                 form_place=form_place,
                 ip_address=client_ip,
                 user_agent=user_agent,
-                submitted_at=timezone.now()
+                submitted_at=timezone.now(),
+                purpose_core=p_core,
+                purpose_servicing=p_servicing,
+                purpose_fraud=p_fraud,
+                purpose_promotional=p_promotional,
+                channel_sms=c_sms,
+                channel_email=c_email,
+                channel_voice=c_voice,
+                channel_whatsapp=c_whatsapp,
+                share_dlt_partner=p_share_dlt,
+                preferences_json=prefs_json_str
             )
 
-        # 3. Create Consent History entry
+        # 3. Create Consent History entry with granular record
+        history_reason = f"Customer online consent submission ({status_val}) [Purposes: Core={p_core}, Servicing={p_servicing}, Fraud={p_fraud}, Promo={p_promotional}; Channels: SMS={c_sms}, Email={c_email}, Voice={c_voice}, WA={c_whatsapp}; DLT_Partner_Sharing={p_share_dlt}]"
         ConsentHistory.objects.create(
             consent=consent_record,
             previous_status=prev_status,
             new_status=status_val,
             source='ONLINE',
             changed_by=f"{customer.name} (Customer)",
-            reason=f"Customer online consent submission ({status_val})"
+            reason=history_reason
         )
 
         # 4. Immutable Audit Log
@@ -1078,7 +1159,17 @@ class CustomerVerifyOtpView(APIView):
             "history": history_list,
             "isFirstTime": is_first_time,
             "hasPan": has_pan,
-            "hasAadhaar": has_aadhaar
+            "hasAadhaar": has_aadhaar,
+            "preferences": {
+                "purpose_core": getattr(consent_record, 'purpose_core', True) if consent_record else True,
+                "purpose_servicing": getattr(consent_record, 'purpose_servicing', True) if consent_record else True,
+                "purpose_fraud": getattr(consent_record, 'purpose_fraud', True) if consent_record else True,
+                "purpose_promotional": getattr(consent_record, 'purpose_promotional', True) if (consent_record and consent_record.status == 'YES') else False,
+                "channel_sms": getattr(consent_record, 'channel_sms', True) if consent_record else True,
+                "channel_email": getattr(consent_record, 'channel_email', True) if (consent_record and consent_record.status == 'YES') else False,
+                "channel_voice": getattr(consent_record, 'channel_voice', False) if consent_record else False,
+                "channel_whatsapp": getattr(consent_record, 'channel_whatsapp', True) if (consent_record and consent_record.status == 'YES') else False,
+            } if consent_record else None
         }
 
         token = f"ctk_{secrets.token_urlsafe(32)}"
@@ -1325,6 +1416,41 @@ class CustomerUpdateConsentView(APIView):
         consent_record = SMSConsent.objects.filter(customer=customer).first()
         prev_status = consent_record.status if consent_record else 'PENDING'
 
+        # Granular Preferences Parsing
+        prefs = data.get('preferences') or {}
+        def parse_bool_pref(key, default_val):
+            if isinstance(prefs, dict) and key in prefs:
+                v = prefs[key]
+                return str(v).lower() in ['true', '1', 'yes']
+            if key in data:
+                v = data[key]
+                return str(v).lower() in ['true', '1', 'yes']
+            return default_val
+
+        p_core = True
+        p_servicing = parse_bool_pref('purpose_servicing', True if new_status == 'YES' else False)
+        p_fraud = parse_bool_pref('purpose_fraud', True)
+        p_promotional = parse_bool_pref('purpose_promotional', True if new_status == 'YES' else False)
+
+        c_sms = parse_bool_pref('channel_sms', True)
+        c_email = parse_bool_pref('channel_email', True if new_status == 'YES' else False)
+        c_voice = parse_bool_pref('channel_voice', False)
+        c_whatsapp = parse_bool_pref('channel_whatsapp', True if new_status == 'YES' else False)
+        p_share_dlt = parse_bool_pref('share_dlt_partner', True)
+
+        prefs_dict = {
+            'purpose_core': p_core,
+            'purpose_servicing': p_servicing,
+            'purpose_fraud': p_fraud,
+            'purpose_promotional': p_promotional,
+            'channel_sms': c_sms,
+            'channel_email': c_email,
+            'channel_voice': c_voice,
+            'channel_whatsapp': c_whatsapp,
+            'share_dlt_partner': p_share_dlt
+        }
+        prefs_json_str = json.dumps(prefs_dict)
+
         if not consent_record:
             ref_no = generate_reference_number()
             consent_record = SMSConsent.objects.create(
@@ -1345,7 +1471,17 @@ class CustomerUpdateConsentView(APIView):
                 cbs_updated='No',
                 ip_address=client_ip,
                 user_agent=user_agent,
-                submitted_at=timezone.now()
+                submitted_at=timezone.now(),
+                purpose_core=p_core,
+                purpose_servicing=p_servicing,
+                purpose_fraud=p_fraud,
+                purpose_promotional=p_promotional,
+                channel_sms=c_sms,
+                channel_email=c_email,
+                channel_voice=c_voice,
+                channel_whatsapp=c_whatsapp,
+                share_dlt_partner=p_share_dlt,
+                preferences_json=prefs_json_str
             )
         else:
             consent_record.status = new_status
@@ -1359,16 +1495,30 @@ class CustomerUpdateConsentView(APIView):
             consent_record.ip_address = client_ip
             consent_record.user_agent = user_agent
             consent_record.submitted_at = timezone.now()
+            
+            # Update granular fields
+            consent_record.purpose_core = p_core
+            consent_record.purpose_servicing = p_servicing
+            consent_record.purpose_fraud = p_fraud
+            consent_record.purpose_promotional = p_promotional
+            consent_record.channel_sms = c_sms
+            consent_record.channel_email = c_email
+            consent_record.channel_voice = c_voice
+            consent_record.channel_whatsapp = c_whatsapp
+            consent_record.share_dlt_partner = p_share_dlt
+            consent_record.preferences_json = prefs_json_str
+            
             consent_record.save()
 
         # Append to ConsentHistory
+        history_reason = f"Customer self-service updated preference to {new_status} [Purposes: Core={p_core}, Servicing={p_servicing}, Fraud={p_fraud}, Promo={p_promotional}; Channels: SMS={c_sms}, Email={c_email}, Voice={c_voice}, WA={c_whatsapp}; DLT_Partner_Sharing={p_share_dlt}]"
         ConsentHistory.objects.create(
             consent=consent_record,
             previous_status=prev_status,
             new_status=new_status,
             source='ONLINE',
             changed_by=f"{customer.name} (Customer)",
-            reason=f"Customer self-service updated preference to {new_status}"
+            reason=history_reason
         )
 
         # Immutable Audit Log
@@ -1892,14 +2042,15 @@ class ConsentRecordsView(APIView):
 
         records = SMSConsent.objects.all().order_by('-submitted_at')
 
+        officer_param = request.GET.get('officer_user', '').strip().lower()
+        is_super = (requester.role in ['SUPER_ADMIN', 'DLT_PARTNER', 'AUDITOR']) or (officer_param in ['admin', 'dltpartner'])
+
         # Multi-Tenant Branch Scoping:
         # - Super Admin & DLT Partner see all branches by default, or filter by branch
         # - Branch Admin defaults to their branch, but if branch='all' is requested (All Branches view), all synced records are returned
-        if branch_param and branch_param.lower() == 'all':
-            pass  # Bank-wide view requested: show all synced branches
-        elif branch_param:
+        if branch_param and branch_param.lower() != 'all':
             records = records.filter(branch_name__icontains=branch_param.split(',')[0].strip())
-        elif requester.role not in ['SUPER_ADMIN', 'DLT_PARTNER', 'AUDITOR']:
+        elif not is_super and not (branch_param and branch_param.lower() == 'all'):
             branch_key = requester.branch_name.split(',')[0].strip()
             records = records.filter(branch_name__icontains=branch_key)
 
@@ -1956,7 +2107,16 @@ class ConsentRecordsView(APIView):
                 "date": str(r.form_date),
                 "place": r.form_place,
                 "signatureData": r.signature_data,
-                "timestamp": r.submitted_at.isoformat()
+                "timestamp": r.submitted_at.isoformat(),
+                "purposeCore": getattr(r, 'purpose_core', True),
+                "purposeServicing": getattr(r, 'purpose_servicing', r.status == 'YES'),
+                "purposeFraud": getattr(r, 'purpose_fraud', True),
+                "purposePromotional": getattr(r, 'purpose_promotional', r.status == 'YES'),
+                "channelSms": getattr(r, 'channel_sms', True),
+                "channelEmail": getattr(r, 'channel_email', r.status == 'YES'),
+                "channelVoice": getattr(r, 'channel_voice', False),
+                "channelWhatsapp": getattr(r, 'channel_whatsapp', r.status == 'YES'),
+                "preferencesJson": getattr(r, 'preferences_json', None)
             })
 
         return Response({
@@ -2323,7 +2483,12 @@ class BranchDataExportView(APIView):
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
         writer = csv.writer(response)
-        writer.writerow(['Ref No', 'Name', 'Acc No', 'CIF', 'PAN', 'Aadhaar', 'Mobile', 'Branch', 'Status', 'Source', 'Submitted'])
+        writer.writerow([
+            'Ref No', 'Customer Name', 'Account No', 'CIF', 'PAN', 'Aadhaar', 'Mobile', 'Branch', 'Status',
+            'Core Banking Alerts', 'Servicing Notices', 'Fraud & Security Alerts', 'Promotional Offers',
+            'SMS Channel', 'Email Channel', 'Voice Calls', 'WhatsApp Banking', 'DLT Partner Data Sharing',
+            'Source', 'Submitted At'
+        ])
 
         for r in records:
             masked_pan = f"XXXXX{r.pan_number[-5:]}" if (r.pan_number and len(r.pan_number) >= 5) else (r.pan_number or 'N/A')
@@ -2338,8 +2503,17 @@ class BranchDataExportView(APIView):
                 mask_mobile(r.mobile_number),
                 r.branch_name,
                 r.status,
+                'YES' if getattr(r, 'purpose_core', True) else 'NO',
+                'YES' if getattr(r, 'purpose_servicing', r.status == 'YES') else 'NO',
+                'YES' if getattr(r, 'purpose_fraud', True) else 'NO',
+                'YES' if getattr(r, 'purpose_promotional', False) else 'NO',
+                'YES' if getattr(r, 'channel_sms', True) else 'NO',
+                'YES' if getattr(r, 'channel_email', False) else 'NO',
+                'YES' if getattr(r, 'channel_voice', False) else 'NO',
+                'YES' if getattr(r, 'channel_whatsapp', False) else 'NO',
+                'YES' if getattr(r, 'share_dlt_partner', True) else 'NO',
                 r.source,
-                r.submitted_at.strftime('%Y-%m-%d')
+                r.submitted_at.strftime('%Y-%m-%d %H:%M')
             ])
 
         return response
@@ -2358,12 +2532,12 @@ class DashboardMetricsView(APIView):
 
         records = SMSConsent.objects.all()
         branch_param = request.GET.get('branch', '').strip()
+        officer_param = request.GET.get('officer_user', '').strip().lower()
+        is_super = (requester.role in ['SUPER_ADMIN', 'DLT_PARTNER', 'AUDITOR']) or (officer_param in ['admin', 'dltpartner'])
 
-        if branch_param and branch_param.lower() == 'all':
-            pass  # Bank-wide view
-        elif branch_param:
+        if branch_param and branch_param.lower() != 'all':
             records = records.filter(branch_name__icontains=branch_param.split(',')[0].strip())
-        elif requester.role not in ['SUPER_ADMIN', 'DLT_PARTNER', 'AUDITOR']:
+        elif not is_super and not (branch_param and branch_param.lower() == 'all'):
             branch_key = requester.branch_name.split(',')[0].strip()
             records = records.filter(branch_name__icontains=branch_key)
 
@@ -2382,7 +2556,7 @@ class DashboardMetricsView(APIView):
 
         # Branch breakdown for Super Admin and DLT Partner
         branch_stats = []
-        if requester.role in ['SUPER_ADMIN', 'DLT_PARTNER']:
+        if is_super:
             for b in BankBranch.objects.filter(is_active=True)[:80]:
                 b_records = SMSConsent.objects.filter(branch_name__icontains=b.branch_name.split(',')[0])
                 b_total = b_records.count()
@@ -2909,6 +3083,66 @@ class SuperAdminAuditLogsView(APIView):
             "success": True,
             "message": f"Audit activity '{action_type}' recorded successfully.",
             "id": log_entry.id if log_entry else None
+        }, status=status.HTTP_201_CREATED)
+
+
+class DPDPGrievanceSubmitView(APIView):
+    """
+    POST /api/v1/customer/dpdp-grievance/
+    Digital Personal Data Protection Act, 2023 & DPDP Rules 2025 (Rule 14 & Rule 9).
+    Enables Data Principals to submit privacy grievances, exercise rights (Access, Rectification, Erasure),
+    or register privacy nominees with immutable audit logging and compliant tracking ticket.
+    """
+    def post(self, request):
+        ensure_default_accounts()
+        client_ip = get_client_ip(request)
+        user_agent = request.META.get('HTTP_USER_AGENT', 'Web')[:250]
+        data = decrypt_client_payload(request.data)
+
+        req_type = data.get('requestType') or data.get('type') or 'GRIEVANCE'
+        customer_name = (data.get('name') or data.get('customerName') or '').strip()
+        mobile = (data.get('mobile') or data.get('mobileNumber') or '').strip()
+        account_no = (data.get('accountNumber') or data.get('accNo') or '').strip()
+        description = (data.get('description') or data.get('details') or data.get('grievance') or '').strip()
+        nominee_name = (data.get('nomineeName') or '').strip()
+        nominee_relation = (data.get('nomineeRelation') or '').strip()
+        nominee_contact = (data.get('nomineeContact') or '').strip()
+
+        ticket_id = f"NAMCO-DPDP-{timezone.now().year}-{secrets.randbelow(900000) + 100000}"
+
+        details_msg = f"DPDP Request [{req_type}] (Ref: {ticket_id}) submitted by {customer_name} (Mob: {mask_mobile(mobile)}). Description: {description}"
+        if nominee_name:
+            details_msg += f" | Nominee: {nominee_name} ({nominee_relation}, {mask_mobile(nominee_contact)})"
+
+        create_audit_entry(
+            action_type=f'DPDP_{req_type.upper()}',
+            username=f"{customer_name or 'Data Principal'} (Customer - {mobile})",
+            officer_role='CUSTOMER',
+            branch_name='Namco Bank DPO Office, Nashik',
+            details=details_msg,
+            entity_type='DPDPRequest',
+            entity_id=ticket_id,
+            account_no=account_no,
+            ref_no=ticket_id,
+            ip_address=client_ip,
+            user_agent=user_agent
+        )
+
+        return Response({
+            "success": True,
+            "ticketId": ticket_id,
+            "requestType": req_type,
+            "slaDays": 30,
+            "maxStatutorySla": 90,
+            "message": f"Your DPDP privacy request has been registered under reference {ticket_id}. Our Data Protection Officer will review and respond within our guaranteed 30-day turnaround.",
+            "dpoContact": {
+                "name": "Shri Ramesh V. Patil",
+                "designation": "Chief Compliance Officer & Data Protection Officer",
+                "email": "dpo@namcobank.in",
+                "phone": "+91 253 2345678",
+                "tollFree": "1800 233 6262",
+                "officeAddress": "Namco Bhavan, Opp. Pramod Mahajan Garden, Gangapur Road, Nashik - 422013, Maharashtra"
+            }
         }, status=status.HTTP_201_CREATED)
 
 

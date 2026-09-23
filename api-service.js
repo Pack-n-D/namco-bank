@@ -10,7 +10,7 @@
 
 class BankApiService {
   constructor() {
-    const origin = typeof window !== 'undefined' && window.location.origin.startsWith('http') ? window.location.origin : 'http://127.0.0.1:3000';
+    const origin = typeof window !== 'undefined' && window.location.origin.startsWith('http') ? window.location.origin : 'http://127.0.0.1:8000';
     this.baseUrl = (window.BANK_CONFIG && window.BANK_CONFIG.API_BASE_URL) || `${origin}/api/v1`;
     this.token = localStorage.getItem('namco_auth_token') || null;
     this.user = JSON.parse(localStorage.getItem('namco_auth_user') || 'null');
@@ -86,11 +86,14 @@ class BankApiService {
       headers['Accept'] = 'application/json';
     }
     const isSuperPage = typeof window !== 'undefined' && (window.location.pathname.includes('super_admin') || window.location.pathname.includes('super-admin'));
-    const isBranchPage = typeof window !== 'undefined' && window.location.pathname.includes('admin.html') && !isSuperPage;
+    const isDltPage = typeof window !== 'undefined' && window.location.pathname.includes('dlt');
+    const isBranchPage = typeof window !== 'undefined' && window.location.pathname.includes('admin.html') && !isSuperPage && !isDltPage;
 
     let tok = this.token;
     if (isSuperPage) {
       tok = localStorage.getItem('namco_super_auth_token') || (this.user?.isSuperAdmin ? this.token : null) || 'namco_sec_token_admin_super';
+    } else if (isDltPage) {
+      tok = localStorage.getItem('namco_dlt_auth_token') || (this.user?.role === 'DLT_PARTNER' ? this.token : null) || 'namco_sec_token_dlt';
     } else if (isBranchPage) {
       tok = localStorage.getItem('namco_officer_auth_token') || (!this.user?.isSuperAdmin ? this.token : null) || 'namco_sec_token_officer';
     } else {
@@ -150,7 +153,17 @@ class BankApiService {
       consentChoice: statusVal,
       date: formData.formDate || formData.date || new Date().toISOString().split('T')[0],
       place: formData.formPlace || formData.place || 'Nashik',
-      signatureData: formData.digitalSignature || formData.signatureData || null
+      signatureData: formData.digitalSignature || formData.signatureData || null,
+      preferences: formData.preferences || {
+        purpose_core: true,
+        purpose_servicing: statusVal === 'YES',
+        purpose_fraud: true,
+        purpose_promotional: statusVal === 'YES',
+        channel_sms: true,
+        channel_email: statusVal === 'YES',
+        channel_voice: false,
+        channel_whatsapp: statusVal === 'YES'
+      }
     };
 
     const encryptedBody = this.encryptPayload(payload);
@@ -305,6 +318,12 @@ class BankApiService {
       local.unshift(newRec);
     }
     localStorage.setItem('namco_local_consents', JSON.stringify(local));
+    try {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('namco_consent_updated', { detail: newRec }));
+        window.dispatchEvent(new Event('storage'));
+      }
+    } catch (e) {}
     return newRec;
   }
 
@@ -315,6 +334,12 @@ class BankApiService {
       match.status = newStatus;
       match.consent = newStatus;
       localStorage.setItem('namco_local_consents', JSON.stringify(local));
+      try {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('namco_consent_updated', { detail: match }));
+          window.dispatchEvent(new Event('storage'));
+        }
+      } catch (e) {}
       return match;
     }
     return null;
@@ -489,7 +514,7 @@ class BankApiService {
       let local = JSON.parse(localStorage.getItem('namco_local_consents') || '[]');
 
       // Strict Branch Isolation for Branch Admins
-      if (this.user && !this.user.isSuperAdmin && this.user.role !== 'SUPER_ADMIN') {
+      if (this.user && !this.user.isSuperAdmin && this.user.role !== 'SUPER_ADMIN' && this.user.role !== 'DLT_PARTNER') {
         const branchKey = (this.user.branchName || '').toLowerCase().split(' ')[0];
         local = local.filter(r => r.branch && r.branch.toLowerCase().includes(branchKey));
       } else if (params.branch && params.branch.toLowerCase() !== 'all') {
@@ -699,11 +724,12 @@ class BankApiService {
 
     const records = await this.fetchRecords({ status, branch });
     
-    // Format CSV client-side (Mobile Number completely unmasked per bank governance requirements)
-    let csv = "Reference Number,Customer Name,Account Number (Masked),CIF Number,Mobile Number,Branch Name,Consent Status,Consent Source,Submission Date,Verification Date,Verified By\n";
+    // Format CSV client-side with partitioned purpose and channel preferences
+    let csv = "Reference Number,Customer Name,Account Number (Masked),CIF Number,Mobile Number,Branch Name,Consent Status,Core Banking Alerts,Servicing Notices,Fraud Alerts,Promotional Offers,SMS Channel,Email Channel,Voice Calls,WhatsApp Banking,DLT Partner Sharing,Consent Source,Submission Date,Verification Date,Verified By\n";
     records.forEach(r => {
       const maskedAcc = r.maskedAccNo || (r.accNo ? `XXXXX${String(r.accNo).slice(-4)}` : '');
       const unmaskedMob = r.mobile || r.mobileNumber || r.rawMobile || r.maskedMobile || '';
+      const isYes = (r.status || r.consent) === 'YES';
       const row = [
         `"${r.refNo || r.referenceNumber || ''}"`,
         `"${r.name || r.customerName || ''}"`,
@@ -712,6 +738,15 @@ class BankApiService {
         `"${unmaskedMob}"`,
         `"${r.branch || r.branchName || ''}"`,
         `"${r.status || r.consent || ''}"`,
+        `"${r.purposeCore !== undefined ? (r.purposeCore ? 'YES' : 'NO') : 'YES'}"`,
+        `"${r.purposeServicing !== undefined ? (r.purposeServicing ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO')}"`,
+        `"${r.purposeFraud !== undefined ? (r.purposeFraud ? 'YES' : 'NO') : 'YES'}"`,
+        `"${r.purposePromotional !== undefined ? (r.purposePromotional ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO')}"`,
+        `"${r.channelSms !== undefined ? (r.channelSms ? 'YES' : 'NO') : 'YES'}"`,
+        `"${r.channelEmail !== undefined ? (r.channelEmail ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO')}"`,
+        `"${r.channelVoice !== undefined ? (r.channelVoice ? 'YES' : 'NO') : 'NO'}"`,
+        `"${r.channelWhatsapp !== undefined ? (r.channelWhatsapp ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO')}"`,
+        `"${r.shareDltPartner !== undefined ? (r.shareDltPartner ? 'YES' : 'NO') : 'YES'}"`,
         `"${r.source || r.sourceType || ''}"`,
         `"${r.date || ''}"`,
         `"${r.verifiedAt || 'N/A'}"`,

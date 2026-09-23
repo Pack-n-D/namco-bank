@@ -162,12 +162,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS Configuration — Strict Origin Whitelist
-CORS_ALLOW_ALL_ORIGINS = False
+# CORS Configuration
+CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'True') == 'True'
 CORS_ALLOWED_ORIGINS = [
     h.strip() for h in os.environ.get(
         'CORS_ALLOWED_ORIGINS',
-        'http://127.0.0.1:3000,http://localhost:3000,http://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:5173,http://localhost:5173'
+        'http://127.0.0.1:3000,http://localhost:3000,http://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:5500,http://localhost:5500'
     ).split(',') if h.strip()
 ]
 CORS_ALLOW_CREDENTIALS = True

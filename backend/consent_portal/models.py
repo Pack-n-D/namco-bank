@@ -158,6 +158,23 @@ class SMSConsent(models.Model):
     
     cbs_updated = models.CharField(max_length=5, default='No', db_index=True)
     
+    # Granular Processing Purpose Consents (RBI & DPDPA 2023)
+    purpose_core = models.BooleanField(default=True)
+    purpose_servicing = models.BooleanField(default=True)
+    purpose_fraud = models.BooleanField(default=True)
+    purpose_promotional = models.BooleanField(default=False)
+    
+    # Granular Delivery Channel Consents (TRAI DLT)
+    channel_sms = models.BooleanField(default=True)
+    channel_email = models.BooleanField(default=True)
+    channel_voice = models.BooleanField(default=False)
+    channel_whatsapp = models.BooleanField(default=False)
+    
+    # Third-Party Telecom DLT Vendor Data Processor Agreement (DPDPA Sec 6 & Rule 6(1)(i))
+    share_dlt_partner = models.BooleanField(default=True)
+    
+    preferences_json = models.TextField(blank=True, null=True)
+
     ip_address = models.CharField(max_length=45, blank=True, null=True)
     user_agent = models.CharField(max_length=255, blank=True, null=True)
     

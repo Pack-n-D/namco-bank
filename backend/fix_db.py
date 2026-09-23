@@ -17,6 +17,18 @@ add_column_if_missing('tbl_bank_officers', 'activation_status', 'VARCHAR(30) DEF
 add_column_if_missing('tbl_bank_officers', 'two_factor_enabled', 'BOOLEAN DEFAULT 1')
 add_column_if_missing('tbl_bank_officers', 'last_2fa_success', 'DATETIME NULL')
 
+# Add missing granular columns to tbl_sms_consents
+add_column_if_missing('tbl_sms_consents', 'purpose_core', 'BOOLEAN DEFAULT 1')
+add_column_if_missing('tbl_sms_consents', 'purpose_servicing', 'BOOLEAN DEFAULT 1')
+add_column_if_missing('tbl_sms_consents', 'purpose_fraud', 'BOOLEAN DEFAULT 1')
+add_column_if_missing('tbl_sms_consents', 'purpose_promotional', 'BOOLEAN DEFAULT 0')
+add_column_if_missing('tbl_sms_consents', 'channel_sms', 'BOOLEAN DEFAULT 1')
+add_column_if_missing('tbl_sms_consents', 'channel_email', 'BOOLEAN DEFAULT 1')
+add_column_if_missing('tbl_sms_consents', 'channel_voice', 'BOOLEAN DEFAULT 0')
+add_column_if_missing('tbl_sms_consents', 'channel_whatsapp', 'BOOLEAN DEFAULT 0')
+add_column_if_missing('tbl_sms_consents', 'share_dlt_partner', 'BOOLEAN DEFAULT 1')
+add_column_if_missing('tbl_sms_consents', 'preferences_json', 'TEXT NULL')
+
 # Add missing columns to tbl_admin_audit_logs
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS tbl_admin_audit_logs (

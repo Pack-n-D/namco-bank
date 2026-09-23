@@ -1276,9 +1276,10 @@
             exportData = exportData.filter(r => (r.status || r.consent || '').toUpperCase() === status);
           }
           const csvRows = [
-            ['Ref No', 'Name', 'Acc No', 'CIF', 'Mobile', 'Branch', 'Status', 'Source', 'Submitted']
+            ['Ref No', 'Name', 'Acc No', 'CIF', 'Mobile', 'Branch', 'Status', 'Core Banking Alerts', 'Servicing Notices', 'Fraud Alerts', 'Promotional Offers', 'SMS Channel', 'Email Channel', 'Voice Channel', 'WhatsApp Banking', 'Source', 'Submitted']
           ];
           exportData.forEach(r => {
+            const isYes = (r.status || r.consent) === 'YES';
             csvRows.push([
               r.refNo || r.referenceNumber || '',
               r.customerName || r.name || '',
@@ -1287,6 +1288,14 @@
               r.rawMobile || r.mobileNumber || r.mobile || '',
               r.branch || r.branchName || user.branchName || '',
               r.status || r.consent || 'PENDING',
+              r.purposeCore !== undefined ? (r.purposeCore ? 'YES' : 'NO') : 'YES',
+              r.purposeServicing !== undefined ? (r.purposeServicing ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO'),
+              r.purposeFraud !== undefined ? (r.purposeFraud ? 'YES' : 'NO') : 'YES',
+              r.purposePromotional !== undefined ? (r.purposePromotional ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO'),
+              r.channelSms !== undefined ? (r.channelSms ? 'YES' : 'NO') : 'YES',
+              r.channelEmail !== undefined ? (r.channelEmail ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO'),
+              r.channelVoice !== undefined ? (r.channelVoice ? 'YES' : 'NO') : 'NO',
+              r.channelWhatsapp !== undefined ? (r.channelWhatsapp ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO'),
               r.source || 'ONLINE',
               r.date || new Date().toISOString().split('T')[0]
             ]);
@@ -1478,6 +1487,17 @@
         await window.bankApi.logout();
         window.location.href = 'login.html?reason=logged_out';
       });
+
+      // Real-time synchronization across browser tabs and periodic refresh
+      window.addEventListener('storage', (e) => {
+        if (!e.key || e.key.includes('namco')) {
+          loadDashboardAndRecords();
+        }
+      });
+      window.addEventListener('namco_consent_updated', () => loadDashboardAndRecords());
+      setInterval(() => {
+        loadDashboardAndRecords();
+      }, 5000);
 
       // Initial Boot
       loadDashboardAndRecords();

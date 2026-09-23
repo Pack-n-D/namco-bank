@@ -25,6 +25,7 @@ from .views import (
     BankBranchesListView,
     BankBranchDetailView,
     FlushTestDataView,
+    DPDPGrievanceSubmitView,
 )
 
 urlpatterns = [
@@ -40,6 +41,8 @@ urlpatterns = [
     path('customer/update-consent/', CustomerUpdateConsentView.as_view(), name='customer-update-consent'),
     path('customer/complete-onboarding', CustomerCompleteOnboardingView.as_view(), name='customer-complete-onboarding-no-slash'),
     path('customer/complete-onboarding/', CustomerCompleteOnboardingView.as_view(), name='customer-complete-onboarding'),
+    path('customer/dpdp-grievance', DPDPGrievanceSubmitView.as_view(), name='customer-dpdp-grievance-no-slash'),
+    path('customer/dpdp-grievance/', DPDPGrievanceSubmitView.as_view(), name='customer-dpdp-grievance'),
 
     # Customer Consent Submission, Status, & Revocation
     path('consent/submit', CustomerConsentSubmitView.as_view(), name='consent-submit-no-slash'),
