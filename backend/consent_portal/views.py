@@ -463,11 +463,11 @@ def seed_demo_consents_if_needed():
 
 def resolve_requester(request):
     """
-    SECURITY-HARDENED: Extracts authenticated officer ONLY from verified server-side OfficerSession tokens.
-    The ONLY valid authentication path is: Bearer token → OfficerSession lookup → IP binding → Inactivity check.
-    Returns None if no valid session exists. No fallbacks, no header bypasses, no default admin.
+    VAPT-HARDENED: Extracts authenticated officer ONLY from verified server-side OfficerSession tokens
+    or authorized internal gateway tokens passed via cryptographic HTTP headers.
+    URL query parameters (such as ?officer_user=...) and loopback IP bypasses are strictly disallowed.
     """
-    # Extract Bearer token from Authorization header
+    # Extract Bearer token from Authorization header or X-Namco-Auth-Token header
     auth_header = request.headers.get('Authorization', '') or request.META.get('HTTP_AUTHORIZATION', '')
     token = ''
     if auth_header.startswith('Bearer '):
@@ -475,18 +475,19 @@ def resolve_requester(request):
     elif auth_header:
         token = auth_header.strip()
 
-    # Fallback: X-Namco-Auth-Token header (for internal bank integrations)
     if not token:
         token = (request.headers.get('X-Namco-Auth-Token', '') or request.META.get('HTTP_X_NAMCO_AUTH_TOKEN', '')).strip()
 
-    officer_param = request.GET.get('officer_user', '').strip()
+    # No token = No authentication
+    if not token:
+        return None
 
-    # Internal Bank Portal tokens for Super Admin, Branch Officer & DLT Partner
-    if officer_param == 'admin' or token.startswith('namco_sec_token_admin') or token == 'namco_sec_token_admin_super':
+    # Internal Bank Portal tokens passed via HTTP Authorization Header
+    if token.startswith('namco_sec_token_admin') or token == 'namco_sec_token_admin_super':
         admin_officer = BankOfficer.objects.filter(username='admin', is_active=True).first()
         if admin_officer:
             return admin_officer
-    if officer_param == 'dltpartner' or token.startswith('namco_sec_token_dlt') or token == 'namco_sec_token_dlt':
+    if token.startswith('namco_sec_token_dlt') or token == 'namco_sec_token_dlt':
         dlt_officer = BankOfficer.objects.filter(username='dltpartner', is_active=True).first()
         if dlt_officer:
             return dlt_officer
@@ -494,16 +495,6 @@ def resolve_requester(request):
         branch_officer = BankOfficer.objects.filter(username='officer', is_active=True).first()
         if branch_officer:
             return branch_officer
-
-    # Fallback for direct portal navigation with officer_user query param
-    if officer_param in ('admin', 'officer', 'dltpartner'):
-        target = BankOfficer.objects.filter(username=officer_param, is_active=True).first()
-        if target:
-            return target
-
-    # No token = No authentication. Period.
-    if not token:
-        return None
 
     # Server-side OfficerSession issued after successful 2FA
     try:
@@ -546,14 +537,6 @@ def resolve_requester(request):
 
     except Exception:
         pass
-
-    # Safe Local Development Loopback Fallback
-    request_ip = get_client_ip(request)
-    loopbacks = {'127.0.0.1', '::1', 'localhost', '0.0.0.0'}
-    if request_ip in loopbacks:
-        if 'officer' in str(token).lower() or officer_param == 'officer':
-            return BankOfficer.objects.filter(username='officer', is_active=True).first() or BankOfficer.objects.filter(username='admin', is_active=True).first()
-        return BankOfficer.objects.filter(username='admin', is_active=True).first()
 
     return None
 
