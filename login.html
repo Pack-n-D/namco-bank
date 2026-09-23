@@ -468,24 +468,6 @@
           <span id="step1BtnText">Verify Credentials & Send OTP</span>
         </button>
 
-        <!-- Quick Test Fill Accounts -->
-        <div class="quick-login-section">
-          <div class="quick-login-title">Quick Demo / Test Accounts</div>
-          <div class="quick-btn-grid">
-            <button type="button" class="quick-btn" id="fillOfficerBtn">
-              <strong>🏢 Branch Officer</strong>
-              <span>officer / officer123</span>
-            </button>
-            <button type="button" class="quick-btn" id="fillSuperAdminBtn">
-              <strong>🛡️ Super Admin</strong>
-              <span>admin / admin123</span>
-            </button>
-            <button type="button" class="quick-btn" id="fillDltPartnerBtn">
-              <strong>📡 DLT Partner</strong>
-              <span>dltpartner / dlt123</span>
-            </button>
-          </div>
-        </div>
       </form>
 
       <!-- STAGE 2: 2-Step OTP Verification -->
@@ -583,28 +565,6 @@
           passwordInput.type = 'password';
           togglePasswordBtn.textContent = '👁️';
         }
-      });
-
-      // Quick autofill buttons
-      document.getElementById('fillOfficerBtn')?.addEventListener('click', () => {
-        usernameInput.value = 'officer';
-        passwordInput.value = 'officer123';
-        hideAlert();
-        usernameInput.focus();
-      });
-
-      document.getElementById('fillSuperAdminBtn')?.addEventListener('click', () => {
-        usernameInput.value = 'admin';
-        passwordInput.value = 'admin123';
-        hideAlert();
-        usernameInput.focus();
-      });
-
-      document.getElementById('fillDltPartnerBtn')?.addEventListener('click', () => {
-        usernameInput.value = 'dltpartner';
-        passwordInput.value = 'dlt123';
-        hideAlert();
-        usernameInput.focus();
       });
 
       function showAlert(message, type = 'danger') {
