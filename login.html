@@ -4,145 +4,185 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Officer Portal Security Gateway (2FA) - NAMCO Bank</title>
+  <title>Officer Portal Login - Namco Bank</title>
   <meta name="description"
-    content="Official Multi-Factor Authentication Gateway for The Nasik Merchants Co-operative Bank Ltd. (Namco Bank) Officers and Super Admins.">
+    content="Official Secure Officer Authentication Gateway for The Nasik Merchants Co-operative Bank Ltd. (Namco Bank).">
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  
   <style>
+    :root {
+      --bank-navy: #0f2744;
+      --bank-blue: #0056b3;
+      --bank-blue-hover: #004085;
+      --bank-text-main: #1e293b;
+      --bank-text-muted: #64748b;
+      --bank-border: #cbd5e1;
+      --bank-bg: #f3f6f9;
+      --bank-card-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
+      background-color: var(--bank-bg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--bank-text-main);
+    }
+
+    /* Top Institutional Header Bar */
+    .bank-nav-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 24px;
+      display: flex;
       align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at 50% 15%, #1e293b 0%, #0f172a 100%);
-      padding: 24px 16px;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: #0f172a;
+      justify-content: space-between;
     }
 
-    .login-container {
-      width: 100%;
-      max-width: 470px;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-      animation: modalFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    .bank-brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
     }
 
-    .login-header {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      padding: 26px 24px 20px;
-      text-align: center;
-      border-bottom: 3px solid #0284c7;
-      position: relative;
-    }
-
-    .login-logo-wrapper {
-      background: #ffffff;
-      display: inline-block;
-      padding: 8px 16px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .login-logo {
-      height: 44px;
+    .bank-brand-logo {
+      height: 42px;
       width: auto;
       display: block;
     }
 
-    .login-header h1 {
-      color: #f8fafc;
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      margin-bottom: 4px;
+    .bank-brand-text {
+      display: flex;
+      flex-direction: column;
     }
 
-    .login-header p {
-      color: #94a3b8;
-      font-size: 0.78rem;
+    .bank-name-primary {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--bank-navy);
+      letter-spacing: 0.2px;
+      line-height: 1.2;
+    }
+
+    .bank-name-sub {
+      font-size: 0.74rem;
+      color: var(--bank-text-muted);
       font-weight: 500;
     }
 
-    .login-security-tag {
+    .bank-nav-link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 8px;
-      background: rgba(2, 132, 199, 0.2);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 3px 10px;
-      border-radius: 12px;
-      color: #38bdf8;
-      font-size: 0.72rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--bank-blue);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      transition: background 0.15s ease;
+    }
+
+    .bank-nav-link:hover {
+      background: #e2e8f0;
+    }
+
+    /* Main Content Area */
+    .login-main-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bank-card-bg);
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+      overflow: hidden;
+    }
+
+    .login-header-section {
+      padding: 24px 24px 16px;
+      text-align: center;
+      border-bottom: 1px solid #f1f5f9;
+      background: #ffffff;
+    }
+
+    .login-portal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--bank-navy);
+      margin-bottom: 4px;
+    }
+
+    .login-portal-subtitle {
+      font-size: 0.8rem;
+      color: var(--bank-text-muted);
+    }
+
+    .security-notice-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: #166534;
+      font-size: 0.74rem;
       font-weight: 600;
     }
 
     .login-body {
-      padding: 26px 28px 20px;
+      padding: 24px;
     }
 
-    .login-alert {
-      padding: 12px 14px;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      line-height: 1.4;
-    }
-
-    .login-alert-danger {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      color: #b91c1c;
-    }
-
-    .login-alert-success {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      color: #15803d;
-    }
-
-    .login-alert-info {
-      background: #f0f9ff;
-      border: 1px solid #bae6fd;
-      color: #0369a1;
-    }
-
-    /* Step Indicator */
+    /* Step Tracker */
     .auth-step-tracker {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 22px;
+      gap: 10px;
+      margin-bottom: 20px;
     }
 
     .auth-step-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       font-weight: 600;
       color: #94a3b8;
     }
 
     .auth-step-item.active {
-      color: #0284c7;
+      color: var(--bank-blue);
     }
 
     .auth-step-item.completed {
-      color: #10b981;
+      color: #16a34a;
     }
 
     .step-circle {
@@ -159,27 +199,57 @@
     }
 
     .auth-step-item.active .step-circle {
-      background: #0284c7;
+      background: var(--bank-blue);
       color: #ffffff;
     }
 
     .auth-step-item.completed .step-circle {
-      background: #10b981;
+      background: #16a34a;
       color: #ffffff;
     }
 
     .auth-step-divider {
-      width: 24px;
-      height: 2px;
-      background: #e2e8f0;
+      width: 28px;
+      height: 1px;
+      background: #cbd5e1;
+    }
+
+    /* Alerts */
+    .login-alert {
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    .login-alert-danger {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    .login-alert-success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .login-alert-info {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      color: #0369a1;
     }
 
     /* Form Fields */
-    .login-form-group {
-      margin-bottom: 18px;
+    .form-field-group {
+      margin-bottom: 16px;
     }
 
-    .login-label {
+    .form-field-label {
       display: block;
       font-size: 0.8rem;
       font-weight: 600;
@@ -187,84 +257,85 @@
       margin-bottom: 6px;
     }
 
-    .login-input-wrap {
+    .input-icon-wrap {
       position: relative;
       display: flex;
       align-items: center;
     }
 
-    .login-input-icon {
+    .input-left-icon {
       position: absolute;
       left: 12px;
       color: #64748b;
-      font-size: 1rem;
+      display: flex;
+      align-items: center;
       pointer-events: none;
     }
 
-    .login-input {
+    .form-field-input {
       width: 100%;
-      height: 44px;
-      padding: 0 14px 0 38px;
-      background: #f8fafc;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
+      height: 42px;
+      padding: 0 12px 0 38px;
+      background: #ffffff;
+      border: 1px solid var(--bank-border);
+      border-radius: 6px;
       font-size: 0.88rem;
-      color: #0f172a;
-      transition: all 0.2s ease;
+      color: var(--bank-text-main);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
       font-family: inherit;
     }
 
-    .login-input:focus {
+    .form-field-input:focus {
       outline: none;
-      background: #ffffff;
-      border-color: #0284c7;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+      border-color: var(--bank-blue);
+      box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.12);
     }
 
-    .login-input.mono {
+    .form-field-input.mono {
       font-family: 'JetBrains Mono', monospace;
     }
 
     .password-toggle-btn {
       position: absolute;
-      right: 12px;
+      right: 10px;
       background: none;
       border: none;
       color: #64748b;
       cursor: pointer;
-      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
       padding: 4px;
     }
 
-    .login-submit-btn {
+    .password-toggle-btn:hover {
+      color: #334155;
+    }
+
+    .btn-submit-login {
       width: 100%;
-      height: 46px;
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      height: 44px;
+      background: var(--bank-blue);
       color: #ffffff;
       border: none;
-      border-radius: 8px;
-      font-size: 0.92rem;
-      font-weight: 700;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
-      transition: all 0.2s ease;
-      margin-top: 20px;
+      transition: background 0.15s ease;
+      margin-top: 18px;
     }
 
-    .login-submit-btn:hover {
-      background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.45);
+    .btn-submit-login:hover {
+      background: var(--bank-blue-hover);
     }
 
-    .login-submit-btn:disabled {
-      opacity: 0.6;
+    .btn-submit-login:disabled {
+      opacity: 0.65;
       cursor: not-allowed;
-      transform: none;
     }
 
     /* 2FA Digit Boxes */
@@ -272,35 +343,34 @@
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 8px;
-      margin: 18px 0 14px;
+      margin: 16px 0 14px;
     }
 
     .otp-digit-box {
       width: 100%;
-      height: 52px;
+      height: 48px;
       text-align: center;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
-      background: #f8fafc;
-      border: 2px solid #cbd5e1;
-      border-radius: 10px;
-      color: #0f172a;
-      transition: all 0.2s ease;
+      background: #ffffff;
+      border: 1.5px solid var(--bank-border);
+      border-radius: 6px;
+      color: var(--bank-navy);
+      transition: border-color 0.15s ease;
     }
 
     .otp-digit-box:focus {
       outline: none;
-      background: #ffffff;
-      border-color: #0284c7;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+      border-color: var(--bank-blue);
+      box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.15);
     }
 
     .two-fa-info-box {
-      background: #f1f5f9;
+      background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 12px 14px;
+      border-radius: 6px;
+      padding: 10px 12px;
       font-size: 0.8rem;
       color: #334155;
       margin-bottom: 12px;
@@ -312,8 +382,8 @@
     .two-fa-timer {
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      color: #0284c7;
-      font-size: 0.88rem;
+      color: var(--bank-blue);
+      font-size: 0.86rem;
     }
 
     .dev-otp-chip {
@@ -334,192 +404,204 @@
 
     .dev-otp-chip strong {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: #78350f;
     }
 
-    .quick-login-section {
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px dashed #e2e8f0;
-    }
-
-    .quick-login-title {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #64748b;
-      font-weight: 700;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    .quick-btn-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-
-    .quick-btn {
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      padding: 8px 10px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .quick-btn:hover {
-      background: #e2e8f0;
-      border-color: #cbd5e1;
-    }
-
-    .quick-btn strong {
-      display: block;
-      font-size: 0.78rem;
-      color: #0f172a;
-    }
-
-    .quick-btn span {
-      display: block;
-      font-size: 0.7rem;
-      color: #64748b;
-    }
-
-    .login-footer {
+    .login-footer-section {
       background: #f8fafc;
-      padding: 14px 24px;
+      padding: 12px 24px;
       border-top: 1px solid #e2e8f0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 0.76rem;
-      color: #64748b;
+      color: var(--bank-text-muted);
     }
 
-    .login-footer a {
-      color: #0284c7;
+    .login-footer-section a {
+      color: var(--bank-blue);
       text-decoration: none;
       font-weight: 600;
     }
 
-    .login-footer a:hover {
+    .login-footer-section a:hover {
       text-decoration: underline;
+    }
+
+    /* Bottom Page Footer */
+    .bank-page-footer {
+      text-align: center;
+      padding: 16px 24px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      background: #ffffff;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="login-container">
-    <!-- Header -->
-    <div class="login-header">
-      <div class="login-logo-wrapper">
-        <img src="assets/logo.png" alt="Namco Bank" class="login-logo">
+  <!-- Top Navbar Header -->
+  <header class="bank-nav-header">
+    <a href="index.html" class="bank-brand-wrap">
+      <img src="assets/logo.png" alt="Namco Bank" class="bank-brand-logo">
+      <div class="bank-brand-text">
+        <span class="bank-name-primary">THE NASIK MERCHANTS CO-OP. BANK LTD.</span>
+        <span class="bank-name-sub">दि नाशिक मर्चेंट्स को-ऑपरेटिव्ह बँक लि. &bull; Official Portal</span>
       </div>
-      <h1>Officer Security Gateway</h1>
-      <p>The Nasik Merchants Co-operative Bank Ltd.</p>
-      <div class="login-security-tag">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Mandatory 2-Step Verification (VAPT Hardened)
-      </div>
-    </div>
+    </a>
 
-    <!-- Login Body -->
-    <div class="login-body">
+    <a href="index.html" class="bank-nav-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>Customer Portal</span>
+    </a>
+  </header>
+
+  <!-- Centered Login Box -->
+  <main class="login-main-wrapper">
+    <div class="login-container">
       
-      <!-- 2FA Step Tracker -->
-      <div class="auth-step-tracker">
-        <div class="auth-step-item active" id="trackerStep1">
-          <div class="step-circle" id="circleStep1">1</div>
-          <span>Credentials</span>
-        </div>
-        <div class="auth-step-divider"></div>
-        <div class="auth-step-item" id="trackerStep2">
-          <div class="step-circle" id="circleStep2">2</div>
-          <span>2FA Verify</span>
+      <!-- Card Header -->
+      <div class="login-header-section">
+        <h1 class="login-portal-title">Officer Security Gateway</h1>
+        <p class="login-portal-subtitle">Branch Admin, Central Super Admin &amp; DLT Gateway</p>
+        <div class="security-notice-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Mandatory 2-Step Verification</span>
         </div>
       </div>
 
-      <div id="loginAlert" style="display: none;"></div>
-
-      <!-- STAGE 1: Username & Password -->
-      <form id="step1Form">
-        <div class="login-form-group">
-          <label class="login-label" for="usernameInput">Officer Username / Employee ID</label>
-          <div class="login-input-wrap">
-            <span class="login-input-icon">👤</span>
-            <input type="text" id="usernameInput" class="login-input mono" placeholder="e.g. officer or admin" required autocomplete="username">
+      <!-- Card Body -->
+      <div class="login-body">
+        
+        <!-- Step Tracker -->
+        <div class="auth-step-tracker">
+          <div class="auth-step-item active" id="trackerStep1">
+            <div class="step-circle" id="circleStep1">1</div>
+            <span>Credentials</span>
+          </div>
+          <div class="auth-step-divider"></div>
+          <div class="auth-step-item" id="trackerStep2">
+            <div class="step-circle" id="circleStep2">2</div>
+            <span>2FA OTP</span>
           </div>
         </div>
 
-        <div class="login-form-group">
-          <label class="login-label" for="passwordInput">Secure Access Password</label>
-          <div class="login-input-wrap">
-            <span class="login-input-icon">🔒</span>
-            <input type="password" id="passwordInput" class="login-input" placeholder="Enter password" required autocomplete="current-password">
-            <button type="button" id="togglePasswordBtn" class="password-toggle-btn" title="Toggle password">👁️</button>
-          </div>
-        </div>
+        <div id="loginAlert" style="display: none;"></div>
 
-        <button type="submit" id="step1Btn" class="login-submit-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          <span id="step1BtnText">Verify Credentials & Send OTP</span>
-        </button>
-
-      </form>
-
-      <!-- STAGE 2: 2-Step OTP Verification -->
-      <div id="step2Container" style="display: none;">
-        <div class="two-fa-info-box">
-          <div>
-            <div style="font-weight: 600; font-size: 0.82rem;">Code sent to: <span id="deliveryTargetDisplay" style="color: #0284c7; font-family: 'JetBrains Mono', monospace;">98XXXX0002</span></div>
-            <div style="font-size: 0.72rem; color: #64748b;">Single-use 6-digit cryptographic OTP</div>
-          </div>
-          <div class="two-fa-timer" id="otpCountdownTimer">05:00</div>
-        </div>
-
-        <!-- Dev OTP Helper Badge -->
-        <div id="devOtpChip" class="dev-otp-chip" style="display: none;" title="Click to auto-fill OTP">
-          <span>🧪 <strong>Simulated OTP:</strong> <strong id="devOtpVal">------</strong> (Click to auto-fill)</span>
-        </div>
-
-        <form id="step2Form">
-          <label class="login-label" style="text-align: center;">Enter 6-Digit Verification Code</label>
-          <div class="otp-inputs-grid">
-            <input type="text" class="otp-digit-box" maxlength="1" data-index="0" autofocus>
-            <input type="text" class="otp-digit-box" maxlength="1" data-index="1">
-            <input type="text" class="otp-digit-box" maxlength="1" data-index="2">
-            <input type="text" class="otp-digit-box" maxlength="1" data-index="3">
-            <input type="text" class="otp-digit-box" maxlength="1" data-index="4">
-            <input type="text" class="otp-digit-box" maxlength="1" data-index="5">
+        <!-- STAGE 1: Username & Password -->
+        <form id="step1Form">
+          <div class="form-field-group">
+            <label class="form-field-label" for="usernameInput">Officer Username / Employee ID</label>
+            <div class="input-icon-wrap">
+              <span class="input-left-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </span>
+              <input type="text" id="usernameInput" class="form-field-input mono" placeholder="Enter username or employee ID" required autocomplete="username">
+            </div>
           </div>
 
-          <button type="submit" id="step2Btn" class="login-submit-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-            <span id="step2BtnText">Verify 2FA & Enter Portal</span>
+          <div class="form-field-group">
+            <label class="form-field-label" for="passwordInput">Password</label>
+            <div class="input-icon-wrap">
+              <span class="input-left-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </span>
+              <input type="password" id="passwordInput" class="form-field-input" placeholder="Enter password" required autocomplete="current-password">
+              <button type="button" id="togglePasswordBtn" class="password-toggle-btn" title="Toggle password view" aria-label="Toggle password visibility">
+                <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="step1Btn" class="btn-submit-login">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            <span id="step1BtnText">Verify &amp; Request OTP</span>
           </button>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 0.78rem;">
-            <button type="button" id="backToStep1Btn" style="background: none; border: none; color: #64748b; cursor: pointer; text-decoration: underline;">
-              ← Back to Login
-            </button>
-            <button type="button" id="resendOtpBtn" style="background: none; border: none; color: #0284c7; font-weight: 600; cursor: pointer;">
-              🔄 Resend Code
-            </button>
-          </div>
         </form>
+
+        <!-- STAGE 2: 2-Step OTP Verification -->
+        <div id="step2Container" style="display: none;">
+          <div class="two-fa-info-box">
+            <div>
+              <div style="font-weight: 600; font-size: 0.8rem;">Code sent to: <span id="deliveryTargetDisplay" style="color: var(--bank-blue); font-family: 'JetBrains Mono', monospace;">98XXXX0002</span></div>
+              <div style="font-size: 0.72rem; color: #64748b;">Single-use 6-digit OTP</div>
+            </div>
+            <div class="two-fa-timer" id="otpCountdownTimer">05:00</div>
+          </div>
+
+          <!-- Dev OTP Helper Badge (Only active if mock mode) -->
+          <div id="devOtpChip" class="dev-otp-chip" style="display: none;" title="Click to auto-fill OTP">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="M7 15h0M2 9.5h20"/>
+            </svg>
+            <span><strong>OTP:</strong> <strong id="devOtpVal">------</strong> (Click to auto-fill)</span>
+          </div>
+
+          <form id="step2Form">
+            <label class="form-field-label" style="text-align: center;">Enter 6-Digit Verification Code</label>
+            <div class="otp-inputs-grid">
+              <input type="text" class="otp-digit-box" maxlength="1" data-index="0" autofocus>
+              <input type="text" class="otp-digit-box" maxlength="1" data-index="1">
+              <input type="text" class="otp-digit-box" maxlength="1" data-index="2">
+              <input type="text" class="otp-digit-box" maxlength="1" data-index="3">
+              <input type="text" class="otp-digit-box" maxlength="1" data-index="4">
+              <input type="text" class="otp-digit-box" maxlength="1" data-index="5">
+            </div>
+
+            <button type="submit" id="step2Btn" class="btn-submit-login">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+              <span id="step2BtnText">Verify 2FA &amp; Sign In</span>
+            </button>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 0.78rem;">
+              <button type="button" id="backToStep1Btn" style="background: none; border: none; color: #64748b; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span>Back</span>
+              </button>
+              <button type="button" id="resendOtpBtn" style="background: none; border: none; color: var(--bank-blue); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                <span>Resend Code</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
       </div>
 
+      <!-- Card Footer -->
+      <div class="login-footer-section">
+        <span>Public Customer Portal?</span>
+        <a href="index.html">Customer Form &rarr;</a>
+      </div>
     </div>
+  </main>
 
-    <!-- Footer -->
-    <div class="login-footer">
-      <span>Customer SMS Consent Form?</span>
-      <a href="index.html">← Go to Customer Form</a>
-    </div>
-  </div>
+  <!-- Page Bottom Copyright -->
+  <footer class="bank-page-footer">
+    &copy; 2026 The Nasik Merchants Co-operative Bank Ltd. (Namco Bank) &bull; Multi-State Scheduled Bank. All rights reserved.
+  </footer>
 
   <!-- Scripts -->
   <script src="config.js"></script>
@@ -533,6 +615,7 @@
       const usernameInput = document.getElementById('usernameInput');
       const passwordInput = document.getElementById('passwordInput');
       const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+      const eyeIcon = document.getElementById('eyeIcon');
       
       const step1Btn = document.getElementById('step1Btn');
       const step1BtnText = document.getElementById('step1BtnText');
@@ -556,21 +639,28 @@
       let countdownInterval = null;
       let secondsRemaining = 300;
 
-      // Password toggle
+      // Password visibility toggle with SVG icons
+      const eyeOpenSvg = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+      const eyeOffSvg = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+
       togglePasswordBtn?.addEventListener('click', () => {
         if (passwordInput.type === 'password') {
           passwordInput.type = 'text';
-          togglePasswordBtn.textContent = '🙈';
+          if (eyeIcon) eyeIcon.innerHTML = eyeOffSvg;
         } else {
           passwordInput.type = 'password';
-          togglePasswordBtn.textContent = '👁️';
+          if (eyeIcon) eyeIcon.innerHTML = eyeOpenSvg;
         }
       });
 
       function showAlert(message, type = 'danger') {
-        const icons = { danger: '⚠️', success: '✅', info: 'ℹ️' };
+        const svgIcons = {
+          danger: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+          success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+          info: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+        };
         alertBox.className = `login-alert login-alert-${type}`;
-        alertBox.innerHTML = `<span>${icons[type] || 'ℹ️'}</span> <div>${message}</div>`;
+        alertBox.innerHTML = `${svgIcons[type] || svgIcons.info} <div>${message}</div>`;
         alertBox.style.display = 'flex';
       }
 
@@ -578,12 +668,12 @@
         alertBox.style.display = 'none';
       }
 
-      // Check URL params
+      // Check URL parameters
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('reason') === 'logged_out') {
-        showAlert('You have been securely logged out. Server session terminated.', 'success');
+        showAlert('You have been securely logged out.', 'success');
       } else if (urlParams.get('reason') === 'auth_required') {
-        showAlert('2-Step authentication required. Please sign in to access the portal.', 'info');
+        showAlert('Authentication required. Please sign in.', 'info');
       }
 
       // Start Countdown Timer
@@ -672,7 +762,6 @@
             currentChallengeToken = res.challengeToken;
             deliveryTargetDisplay.textContent = res.deliveryTarget || 'Registered Contact';
             
-            // Show dev test OTP badge if available
             if (res.devOtp) {
               devOtpVal.textContent = res.devOtp;
               devOtpChip.style.display = 'inline-flex';
@@ -685,17 +774,16 @@
             step2Container.style.display = 'block';
 
             trackerStep1.className = 'auth-step-item completed';
-            circleStep1.innerHTML = '✓';
+            circleStep1.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
             trackerStep2.className = 'auth-step-item active';
 
-            showAlert(`Step 1 verified! 6-digit code sent to ${res.deliveryTarget}.`, 'info');
+            showAlert(`Step 1 verified. 6-digit code dispatched to ${res.deliveryTarget}.`, 'info');
             startTimer(res.expiresInSeconds || 300);
 
             // Clear & focus first OTP box
             otpBoxes.forEach(b => b.value = '');
             setTimeout(() => otpBoxes[0].focus(), 100);
           } else if (res.token) {
-            // Direct login fallback
             const role = (res.user?.role || '').toUpperCase();
             if (role === 'SUPER_ADMIN' || res.user?.isSuperAdmin) {
               window.location.href = 'super-admin.html';
@@ -709,7 +797,7 @@
           showAlert(err.message || 'Invalid credentials.', 'danger');
         } finally {
           step1Btn.disabled = false;
-          step1BtnText.textContent = 'Verify Credentials & Send OTP';
+          step1BtnText.textContent = 'Verify & Request OTP';
         }
       });
 
@@ -730,13 +818,13 @@
         try {
           const res = await window.bankApi.verifyTwoFactor(currentChallengeToken, otp);
           clearInterval(countdownInterval);
-          showAlert(`2FA Verified! Welcome, ${res.user.fullName || res.user.username}. Entering portal...`, 'success');
+          showAlert(`Authentication successful. Entering portal...`, 'success');
 
           setTimeout(() => {
-            const role = (res.user.role || '').toUpperCase();
-            if (role === 'SUPER_ADMIN' || res.user.isSuperAdmin) {
+            const role = (res.user?.role || '').toUpperCase();
+            if (role === 'SUPER_ADMIN' || res.user?.isSuperAdmin) {
               window.location.href = 'super-admin.html';
-            } else if (role === 'DLT_PARTNER' || res.user.username === 'dltpartner') {
+            } else if (role === 'DLT_PARTNER' || res.user?.username === 'dltpartner') {
               window.location.href = 'dlt-partner.html';
             } else {
               window.location.href = 'admin.html';
@@ -745,7 +833,7 @@
         } catch (err) {
           showAlert(err.message || 'Invalid 2FA verification code.', 'danger');
           step2Btn.disabled = false;
-          step2BtnText.textContent = 'Verify 2FA & Enter Portal';
+          step2BtnText.textContent = 'Verify 2FA & Sign In';
         }
       });
 
@@ -753,7 +841,7 @@
       resendOtpBtn.addEventListener('click', async () => {
         hideAlert();
         resendOtpBtn.disabled = true;
-        resendOtpBtn.textContent = 'Sending...';
+        resendOtpBtn.innerHTML = '<span>Sending...</span>';
 
         try {
           const res = await window.bankApi.resendTwoFactorOtp(currentChallengeToken);
@@ -770,8 +858,8 @@
         } finally {
           setTimeout(() => {
             resendOtpBtn.disabled = false;
-            resendOtpBtn.textContent = '🔄 Resend Code';
-          }, 5000);
+            resendOtpBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> <span>Resend Code</span>';
+          }, 4000);
         }
       });
 
