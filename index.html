@@ -80,7 +80,7 @@
     font-family:var(--font-serif); font-weight:700; font-size:15px; color:#FFF8E8;
     flex-shrink:0; overflow:hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   }
-  .brand-logo-img{width:100%; height:100%; object-fit:cover;}
+  .brand-logo-img{width:100%; height:100%; object-fit:contain; background:#fff;}
   .brand-text{line-height:1.2; min-width:0; overflow:hidden;}
   .brand-text .bank-name{font-family:var(--font-serif); font-size:15px; font-weight:600; color:#fff; white-space:nowrap;}
   .brand-text .bank-sub{font-size:11px; color:#B9C6E4; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
@@ -1088,84 +1088,42 @@
       page-break-inside: avoid;
       box-sizing: border-box;
     }
-    .opf-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 2px solid #0B2244;
-      padding-bottom: 4px;
-      margin-bottom: 4px;
-    }
-    .opf-logo-col {
-      width: 60px;
-      flex-shrink: 0;
+    .opf-header-clean {
       text-align: center;
+      margin-bottom: 5px;
+      padding-bottom: 3px;
+      border-bottom: 1.5px solid #0B2244;
     }
-    .opf-logo-img {
-      max-width: 52px;
+    .opf-logo-wrap {
+      text-align: center;
+      margin: 0 auto 3px auto;
+    }
+    .opf-official-logo {
+      max-width: 320px;
       max-height: 52px;
-      display: block;
+      width: auto;
+      height: auto;
+      display: inline-block;
       margin: 0 auto;
+      object-fit: contain;
     }
-    .opf-logo-fallback {
-      font-weight: 800;
+    .opf-bank-sub-title {
       font-size: 11px;
+      font-weight: 700;
       color: #7A1030;
-      border: 1.5px solid #7A1030;
-      padding: 4px;
+      line-height: 1.25;
     }
-    .opf-title-col {
-      flex: 1;
-      text-align: center;
-      padding: 0 8px;
-    }
-    .opf-bank-marathi {
-      font-size: 13px;
-      font-weight: 800;
-      color: #7A1030;
-      line-height: 1.2;
-    }
-    .opf-bank-eng {
-      font-size: 13.5px;
+    .opf-bank-eng-title {
+      font-size: 11.5px;
       font-weight: 800;
       color: #0B2244;
+      line-height: 1.25;
       letter-spacing: 0.3px;
-      line-height: 1.2;
     }
-    .opf-bank-type {
-      font-size: 9.5px;
-      font-weight: 700;
-      color: #333;
-      margin-top: 1px;
-    }
-    .opf-bank-ho {
+    .opf-bank-meta {
       font-size: 8.5px;
-      color: #555;
+      color: #475569;
       margin-top: 1px;
-    }
-    .opf-estd-col {
-      width: 65px;
-      flex-shrink: 0;
-      text-align: right;
-    }
-    .opf-badge-box {
-      border: 1.5px solid #0B2244;
-      padding: 2px 4px;
-      text-align: center;
-      background: #f8fafc;
-    }
-    .opf-badge-yr {
-      font-size: 10px;
-      font-weight: 800;
-      display: block;
-      color: #0B2244;
-    }
-    .opf-badge-lbl {
-      font-size: 7px;
-      font-weight: 700;
-      display: block;
-      color: #7A1030;
-      letter-spacing: 0.5px;
     }
     .opf-banner {
       background: #0B2244 !important;
@@ -1174,38 +1132,18 @@
       print-color-adjust: exact;
       text-align: center;
       padding: 3px 6px;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
+      border-radius: 2px;
     }
     .opf-main-title {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 800;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       color: #fff;
     }
     .opf-sub-title {
-      font-size: 9px;
-      color: #e2e8f0;
-    }
-    .opf-meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 9px;
-      padding: 2px 4px;
-      border-bottom: 1px solid #94a3b8;
-      margin-bottom: 4px;
-      background: #f1f5f9;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-    .opf-meta-row .opf-lbl {
-      font-weight: 700;
-      color: #333;
-    }
-    .opf-meta-row .opf-val-bold {
-      font-weight: 800;
-      color: #0B2244;
-      font-family: monospace;
+      font-size: 8px;
+      color: #cbd5e1;
     }
     .opf-section {
       border: 1px solid #1e3a5f;
@@ -1434,7 +1372,7 @@
   <div class="topbar-inner">
     <a href="/" class="brand">
       <div class="brand-mark">
-        <img src="/logo.png" alt="Namco Bank" class="brand-logo-img" onerror="this.style.display='none'; this.parentElement.textContent='N';">
+        <img src="/assets/logo.png" alt="Namco Bank" class="brand-logo-img" onerror="if(this.src!='/logo.png') this.src='/logo.png';">
       </div>
       <div class="brand-text">
         <div class="bank-name">Namco Bank</div>
@@ -2433,46 +2371,27 @@
 
 <div class="print-summary" id="printSummary">
   <div class="official-paper-form">
-    <!-- TOP HEADER -->
-    <div class="opf-header">
-      <div class="opf-logo-col">
-        <img src="/logo.png" alt="Namco Crest" class="opf-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="opf-logo-fallback" style="display:none;">NAMCO</div>
+    <!-- TOP HEADER: OFFICIAL CENTERED NAMCO BANK LETTERHEAD -->
+    <div class="opf-header-clean">
+      <div class="opf-logo-wrap">
+        <img src="/assets/logo.png" alt="The Nasik Merchants Co-operative Bank Ltd." id="pfOfficialLogo" class="opf-official-logo" onerror="if(this.src!='/logo.png') this.src='/logo.png';">
       </div>
-      <div class="opf-title-col">
-        <div class="opf-bank-marathi">दि नाशिक मर्चंट्स को-ऑपरेटिव्ह बँक लि., नाशिक</div>
-        <div class="opf-bank-eng">THE NASIK MERCHANTS CO-OPERATIVE BANK LTD., NASHIK</div>
-        <div class="opf-bank-type">(MULTI-STATE SCHEDULED BANK) • ESTD. 1959</div>
-        <div class="opf-bank-ho">Head Office: "Namco Bhavan", Old Agra Road / A-2, B-Road, MIDC, Nashik - 422002</div>
-      </div>
-      <div class="opf-estd-col">
-        <div class="opf-badge-box">
-          <span class="opf-badge-yr">1959</span>
-          <span class="opf-badge-lbl">ESTABLISHED</span>
-        </div>
-      </div>
+      <div class="opf-bank-sub-title">द नाशिक मर्चंट्स को-ऑपरेटिव्ह बँक लि. (नामको बँक)</div>
+      <div class="opf-bank-eng-title">THE NASIK MERCHANTS CO-OPERATIVE BANK LTD. (NAMCO BANK)</div>
+      <div class="opf-bank-meta">Multi-State Scheduled Bank • Head Office: Nashik • Estd. 1959</div>
     </div>
 
     <!-- FORM TITLE STRIP -->
     <div class="opf-banner">
       <div class="opf-main-title">BANK SMS ALERT REGISTRATION / CONSENT FORM</div>
-      <div class="opf-sub-title">बँक एसएमएस अलर्ट नोंदणी / संमती अर्ज (RBI Directives & DPDP Guidelines)</div>
+      <div class="opf-sub-title">बँक एसएमएस अलर्ट नोंदणी / संमती अर्ज (As per RBI Guidelines)</div>
     </div>
 
-    <!-- META ROW -->
-    <div class="opf-meta-row">
-      <div class="opf-meta-left">
-        <span class="opf-lbl">Application Ref:</span>
-        <span class="opf-val-bold" id="pfRefNo">NAMCO-SMS-BLANK</span>
-      </div>
-      <div class="opf-meta-mid">
-        <span class="opf-lbl">Form Category:</span>
-        <span class="opf-val" id="pfFormMode">[ ] Direct Physical Branch Submission   [ ] Online Self-Service</span>
-      </div>
-      <div class="opf-meta-right">
-        <span class="opf-lbl">Date:</span>
-        <span class="opf-val" id="pfFormDate">____ / ____ / 2026</span>
-      </div>
+    <!-- SUBTLE META STRIP -->
+    <div style="display:flex; justify-content:space-between; align-items:center; font-size:8px; color:#475569; margin-bottom:4px; padding:0 2px;">
+      <span>Ref: <strong id="pfRefNo" style="font-family:monospace; color:#0B2244;">NAMCO-SMS-BLANK</strong></span>
+      <span id="pfFormMode">[ ] Physical Branch Form &nbsp;&nbsp; [ ] Online Self-Service</span>
+      <span>Date: <span id="pfFormDate">____ / ____ / 2026</span></span>
     </div>
 
     <!-- SECTION 1: CUSTOMER & ACCOUNT DETAILS -->
@@ -3036,7 +2955,7 @@
   const canvas = document.getElementById('sigPad');
   const ctx = canvas.getContext('2d');
   const sigPlaceholder = document.getElementById('sigPlaceholder');
-  let drawing = false, hasSignature = false;
+  let drawing = false, hasSignature = false, lastSignatureData = null;
 
   function resizeCanvas(){
     const ratio = window.devicePixelRatio || 1;
@@ -3056,7 +2975,15 @@
   }
   function start(e){ drawing = true; hasSignature = true; sigPlaceholder.style.display='none'; const p = pointerPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); }
   function move(e){ if(!drawing) return; const p = pointerPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); }
-  function end(){ drawing = false; }
+  function end(){ 
+    drawing = false; 
+    if(hasSignature && canvas){
+      try {
+        lastSignatureData = canvas.toDataURL('image/png');
+        localStorage.setItem('namcoLastSignature', lastSignatureData);
+      } catch(e){}
+    }
+  }
   canvas.addEventListener('mousedown', start);
   canvas.addEventListener('mousemove', move);
   window.addEventListener('mouseup', end);
@@ -3067,6 +2994,8 @@
   document.getElementById('clearSigBtn').addEventListener('click', ()=>{
     ctx.clearRect(0,0,canvas.width,canvas.height);
     hasSignature = false;
+    lastSignatureData = null;
+    try { localStorage.removeItem('namcoLastSignature'); } catch(e){}
     sigPlaceholder.style.display = 'flex';
     document.getElementById('sigErr').style.display = 'none';
   });
@@ -3104,6 +3033,8 @@
 
     const consentVal = chosen.value.toUpperCase();
     const sigData = canvas.toDataURL('image/png');
+    lastSignatureData = sigData;
+    try { localStorage.setItem('namcoLastSignature', sigData); } catch(e){}
     let refId = 'NAMCO-SMS-2026-' + Math.floor(100000 + Math.random()*900000);
 
     const preferences = {
@@ -3328,6 +3259,12 @@
   function populateOfficialPhysicalForm(mode){
     const isFilled = (mode === 'filled');
 
+    // 0. Ensure official bank logo is loaded
+    const pfLogo = document.getElementById('pfOfficialLogo');
+    if(pfLogo && (!pfLogo.complete || pfLogo.naturalWidth === 0 || !pfLogo.src)) {
+      pfLogo.src = '/assets/logo.png';
+    }
+
     // 1. Reference and metadata
     const refNumEl = document.getElementById('refId');
     const existingRef = (refNumEl && refNumEl.textContent && refNumEl.textContent !== '—') ? refNumEl.textContent.trim() : '';
@@ -3423,15 +3360,18 @@
     const sigImage = document.getElementById('pfSigImage');
     const sigLine = document.getElementById('pfSigLine');
 
-    if(isFilled && hasSigned && typeof sigPad !== 'undefined') {
-      try {
-        sigImage.src = sigPad.toDataURL('image/png');
-        if(sigImgWrap) sigImgWrap.style.display = 'flex';
-        if(sigLine) sigLine.style.display = 'none';
-      } catch(e) {
-        if(sigImgWrap) sigImgWrap.style.display = 'none';
-        if(sigLine) sigLine.style.display = 'block';
-      }
+    let currentSig = lastSignatureData;
+    if(!currentSig) {
+      try { currentSig = localStorage.getItem('namcoLastSignature'); } catch(e){}
+    }
+    if(!currentSig && hasSignature && canvas) {
+      try { currentSig = canvas.toDataURL('image/png'); } catch(e){}
+    }
+
+    if(isFilled && currentSig) {
+      if(sigImage) sigImage.src = currentSig;
+      if(sigImgWrap) sigImgWrap.style.display = 'flex';
+      if(sigLine) sigLine.style.display = 'none';
     } else {
       if(sigImgWrap) sigImgWrap.style.display = 'none';
       if(sigLine) sigLine.style.display = 'block';
@@ -3450,39 +3390,50 @@
     }
   }
 
+  function triggerPrintForm(mode){
+    try {
+      populateOfficialPhysicalForm(mode);
+    } catch(err) {
+      console.error('populateOfficialPhysicalForm error:', err);
+    }
+    setTimeout(()=>{
+      window.print();
+    }, 150);
+  }
+
   // Bind Download Blank Physical Form button (at top of portal for paper submission)
   const downloadBlankFormBtn = document.getElementById('downloadBlankFormBtn');
   if(downloadBlankFormBtn){
-    downloadBlankFormBtn.addEventListener('click', ()=>{
-      populateOfficialPhysicalForm('blank');
-      window.print();
+    downloadBlankFormBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      triggerPrintForm('blank');
     });
   }
 
   // Bind Download My Consent button (on Step 4 confirmation after online submission)
   const downloadMyConsentBtn = document.getElementById('downloadMyConsentBtn');
   if(downloadMyConsentBtn){
-    downloadMyConsentBtn.addEventListener('click', ()=>{
-      populateOfficialPhysicalForm('filled');
-      window.print();
+    downloadMyConsentBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      triggerPrintForm('filled');
     });
   }
 
   // Bind Download My Consent button on Customer Profile page
   const profileDownloadConsentBtn = document.getElementById('profileDownloadConsentBtn');
   if(profileDownloadConsentBtn){
-    profileDownloadConsentBtn.addEventListener('click', ()=>{
-      populateOfficialPhysicalForm('filled');
-      window.print();
+    profileDownloadConsentBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      triggerPrintForm('filled');
     });
   }
 
   // Fallback for legacy button IDs if present
   const confirmPrintCopyBtn = document.getElementById('confirmPrintCopyBtn');
   if(confirmPrintCopyBtn){
-    confirmPrintCopyBtn.addEventListener('click', ()=>{
-      populateOfficialPhysicalForm('filled');
-      window.print();
+    confirmPrintCopyBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      triggerPrintForm('filled');
     });
   }
 
