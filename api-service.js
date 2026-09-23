@@ -732,28 +732,63 @@ class BankApiService {
     const records = await this.fetchRecords({ status, branch });
     
     // Format CSV client-side with partitioned purpose and channel preferences
-    let csv = "Reference Number,Customer Name,Account Number (Masked),CIF Number,Mobile Number,Branch Name,Consent Status,Core Banking Alerts,Servicing Notices,Fraud Alerts,Promotional Offers,SMS Channel,Email Channel,Voice Calls,WhatsApp Banking,DLT Partner Sharing,Consent Source,Submission Date,Verification Date,Verified By\n";
+    let csv = "Reference Number,Customer Name,Account Number (Masked),CIF Number,Mobile Number,Address Line 1,Address Line 2,City / District,State,PIN Code,Branch Name,Overall Status,Consent Classification,Active Channels Summary,Core Banking Alerts (Statutory),Servicing Notices,Fraud Alerts,Promotional Offers,SMS Channel,Email Channel,Voice Calls,WhatsApp Banking,Authorised Third-Party Data Sharing,Signature Status,Consent Source,Submission Date,Verification Date,Verified By\n";
     records.forEach(r => {
       const maskedAcc = r.maskedAccNo || (r.accNo ? `XXXXX${String(r.accNo).slice(-4)}` : '');
       const unmaskedMob = r.mobile || r.mobileNumber || r.rawMobile || r.maskedMobile || '';
       const isYes = (r.status || r.consent) === 'YES';
+
+      const pCore = r.purposeCore !== undefined ? r.purposeCore : (r.purpose_core !== undefined ? r.purpose_core : true);
+      const pServicing = r.purposeServicing !== undefined ? r.purposeServicing : (r.purpose_servicing !== undefined ? r.purpose_servicing : isYes);
+      const pFraud = r.purposeFraud !== undefined ? r.purposeFraud : (r.purpose_fraud !== undefined ? r.purpose_fraud : true);
+      const pPromo = r.purposePromotional !== undefined ? r.purposePromotional : (r.purpose_promotional !== undefined ? r.purpose_promotional : false);
+      const cSms = r.channelSms !== undefined ? r.channelSms : (r.channel_sms !== undefined ? r.channel_sms : true);
+      const cEmail = r.channelEmail !== undefined ? r.channelEmail : (r.channel_email !== undefined ? r.channel_email : false);
+      const cVoice = r.channelVoice !== undefined ? r.channelVoice : (r.channel_voice !== undefined ? r.channel_voice : false);
+      const cWa = r.channelWhatsapp !== undefined ? r.channelWhatsapp : (r.channel_whatsapp !== undefined ? r.channel_whatsapp : false);
+      const pShare = r.shareDltPartner !== undefined ? r.shareDltPartner : (r.share_dlt_partner !== undefined ? r.share_dlt_partner : true);
+
+      const st = (r.status || r.consent || 'PENDING').toUpperCase();
+      let classification = 'Authorised (Custom / Granular)';
+      if (st === 'REVOKED') classification = 'Revoked (Voluntary Opt-Out)';
+      else if (st === 'PENDING') classification = 'Pending (Action Required)';
+      else if (st === 'NO') classification = 'Statutory Only (Mandatory Alert Only)';
+      else if (pPromo && cEmail && cWa && pShare) classification = 'Authorised (Full Consent)';
+
+      const chs = [];
+      if (cSms) chs.push('SMS');
+      if (cEmail) chs.push('Email');
+      if (cWa) chs.push('WhatsApp');
+      if (cVoice) chs.push('Voice');
+      const chSummary = chs.length ? chs.join(', ') : 'Statutory SMS Only';
+
+      const hasSig = (r.signatureData || r.signature_data) ? 'YES (Digital)' : (r.source === 'PHYSICAL_OCR' ? 'YES (Physical Form)' : 'NO');
+
       const row = [
         `"${r.refNo || r.referenceNumber || ''}"`,
         `"${r.name || r.customerName || ''}"`,
         `"${maskedAcc}"`,
         `"${r.cif || r.cifNumber || ''}"`,
         `"${unmaskedMob}"`,
+        `"${r.addressLine1 || r.address_line1 || ''}"`,
+        `"${r.addressLine2 || r.address_line2 || ''}"`,
+        `"${r.cityDistrict || r.city_district || r.city || ''}"`,
+        `"${r.state || ''}"`,
+        `"${r.pincode || ''}"`,
         `"${r.branch || r.branchName || ''}"`,
-        `"${r.status || r.consent || ''}"`,
-        `"${r.purposeCore !== undefined ? (r.purposeCore ? 'YES' : 'NO') : 'YES'}"`,
-        `"${r.purposeServicing !== undefined ? (r.purposeServicing ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO')}"`,
-        `"${r.purposeFraud !== undefined ? (r.purposeFraud ? 'YES' : 'NO') : 'YES'}"`,
-        `"${r.purposePromotional !== undefined ? (r.purposePromotional ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO')}"`,
-        `"${r.channelSms !== undefined ? (r.channelSms ? 'YES' : 'NO') : 'YES'}"`,
-        `"${r.channelEmail !== undefined ? (r.channelEmail ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO')}"`,
-        `"${r.channelVoice !== undefined ? (r.channelVoice ? 'YES' : 'NO') : 'NO'}"`,
-        `"${r.channelWhatsapp !== undefined ? (r.channelWhatsapp ? 'YES' : 'NO') : (isYes ? 'YES' : 'NO')}"`,
-        `"${r.shareDltPartner !== undefined ? (r.shareDltPartner ? 'YES' : 'NO') : 'YES'}"`,
+        `"${st}"`,
+        `"${classification}"`,
+        `"${chSummary}"`,
+        `"${pCore ? 'YES' : 'NO'}"`,
+        `"${pServicing ? 'YES' : 'NO'}"`,
+        `"${pFraud ? 'YES' : 'NO'}"`,
+        `"${pPromo ? 'YES' : 'NO'}"`,
+        `"${cSms ? 'YES' : 'NO'}"`,
+        `"${cEmail ? 'YES' : 'NO'}"`,
+        `"${cVoice ? 'YES' : 'NO'}"`,
+        `"${cWa ? 'YES' : 'NO'}"`,
+        `"${pShare ? 'YES' : 'NO'}"`,
+        `"${hasSig}"`,
         `"${r.source || r.sourceType || ''}"`,
         `"${r.date || ''}"`,
         `"${r.verifiedAt || 'N/A'}"`,

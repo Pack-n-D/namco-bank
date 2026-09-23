@@ -803,13 +803,22 @@ class CustomerConsentSubmitView(APIView):
                 "accNo": consent_record.account_number,
                 "maskedAccNo": mask_account(consent_record.account_number),
                 "cif": consent_record.cif_number,
+                "pan": getattr(consent_record, 'pan_number', '') or '',
+                "aadhaar": mask_aadhaar(consent_record.aadhaar_number) if getattr(consent_record, 'aadhaar_number', '') else '',
                 "mobile": consent_record.mobile_number,
                 "maskedMobile": mask_mobile(consent_record.mobile_number),
+                "addressLine1": getattr(consent_record, 'address_line1', '') or '',
+                "addressLine2": getattr(consent_record, 'address_line2', '') or '',
+                "cityDistrict": getattr(consent_record, 'city_district', 'Nashik') or 'Nashik',
+                "state": getattr(consent_record, 'state', 'Maharashtra') or 'Maharashtra',
+                "pincode": getattr(consent_record, 'pincode', '') or '',
                 "branch": consent_record.branch_name,
                 "consent": consent_record.status,
                 "status": consent_record.status,
                 "source": consent_record.source,
-                "timestamp": consent_record.submitted_at.isoformat()
+                "signatureData": getattr(consent_record, 'signature_data', '') or '',
+                "timestamp": consent_record.submitted_at.isoformat(),
+                "preferences": prefs_dict
             }
         }, status=status.HTTP_201_CREATED)
 
@@ -1209,6 +1218,7 @@ class CustomerVerifyOtpView(APIView):
             "state": getattr(customer, 'state', 'Maharashtra') or 'Maharashtra',
             "pincode": getattr(customer, 'pincode', '') or '',
             # SECURITY: Raw Aadhaar NEVER returned in API responses (DPDPA 2023 compliance)
+            "signatureData": getattr(consent_record, 'signature_data', '') if consent_record else '',
             "currentConsent": consent_record.status if consent_record else 'PENDING',
             "referenceNumber": consent_record.reference_number if consent_record else '',
             "cbsUpdated": consent_record.cbs_updated if consent_record else 'No',
@@ -1226,6 +1236,7 @@ class CustomerVerifyOtpView(APIView):
                 "channel_email": getattr(consent_record, 'channel_email', True) if (consent_record and consent_record.status == 'YES') else False,
                 "channel_voice": getattr(consent_record, 'channel_voice', False) if consent_record else False,
                 "channel_whatsapp": getattr(consent_record, 'channel_whatsapp', True) if (consent_record and consent_record.status == 'YES') else False,
+                "share_dlt_partner": getattr(consent_record, 'share_dlt_partner', True) if consent_record else True,
             } if consent_record else None
         }
 
@@ -1454,7 +1465,19 @@ class CustomerCompleteOnboardingView(APIView):
             "history": history_list,
             "isFirstTime": False,
             "hasPan": True,
-            "hasAadhaar": True
+            "hasAadhaar": True,
+            "signatureData": getattr(consent_record, 'signature_data', '') or '',
+            "preferences": {
+                "purpose_core": getattr(consent_record, 'purpose_core', True),
+                "purpose_servicing": getattr(consent_record, 'purpose_servicing', True if consent_record.status == 'YES' else False),
+                "purpose_fraud": getattr(consent_record, 'purpose_fraud', True),
+                "purpose_promotional": getattr(consent_record, 'purpose_promotional', True if consent_record.status == 'YES' else False),
+                "channel_sms": getattr(consent_record, 'channel_sms', True),
+                "channel_email": getattr(consent_record, 'channel_email', True if consent_record.status == 'YES' else False),
+                "channel_voice": getattr(consent_record, 'channel_voice', False),
+                "channel_whatsapp": getattr(consent_record, 'channel_whatsapp', True if consent_record.status == 'YES' else False),
+                "share_dlt_partner": getattr(consent_record, 'share_dlt_partner', True)
+            }
         }
 
         return Response({
@@ -2221,6 +2244,11 @@ class ConsentRecordsView(APIView):
                 "cbsUpdated": r.cbs_updated,
                 "verifiedBy": r.verified_by or 'DLT SMS Online Consent',
                 "verifiedAt": r.verified_at.isoformat() if r.verified_at else None,
+                "addressLine1": getattr(r, 'address_line1', '') or '',
+                "addressLine2": getattr(r, 'address_line2', '') or '',
+                "cityDistrict": getattr(r, 'city_district', 'Nashik') or 'Nashik',
+                "state": getattr(r, 'state', 'Maharashtra') or 'Maharashtra',
+                "pincode": getattr(r, 'pincode', '') or '',
                 "date": str(r.form_date),
                 "place": r.form_place,
                 "signatureData": r.signature_data,
@@ -2233,6 +2261,7 @@ class ConsentRecordsView(APIView):
                 "channelEmail": getattr(r, 'channel_email', r.status == 'YES'),
                 "channelVoice": getattr(r, 'channel_voice', False),
                 "channelWhatsapp": getattr(r, 'channel_whatsapp', r.status == 'YES'),
+                "shareDltPartner": getattr(r, 'share_dlt_partner', True),
                 "preferencesJson": getattr(r, 'preferences_json', None)
             })
 
@@ -2603,15 +2632,49 @@ class BranchDataExportView(APIView):
         writer.writerow([
             'Ref No', 'Customer Name', 'Account No', 'CIF', 'PAN', 'Aadhaar', 'Mobile', 
             'Address Line 1', 'Address Line 2', 'City / District', 'State', 'PIN Code',
-            'Branch', 'Status',
-            'Core Banking Alerts', 'Servicing Notices', 'Fraud & Security Alerts', 'Promotional Offers',
+            'Branch', 'Overall Status', 'Consent Classification', 'Active Channels Summary',
+            'Core Banking Alerts (Statutory)', 'Servicing Notices', 'Fraud & Security Alerts', 'Promotional Offers',
             'SMS Channel', 'Email Channel', 'Voice Calls', 'WhatsApp Banking', 'Authorised Third-Party Data Sharing',
-            'Source', 'Submitted At'
+            'Signature Captured', 'Source', 'Submitted At'
         ])
 
         for r in records:
             masked_pan = f"XXXXX{r.pan_number[-5:]}" if (r.pan_number and len(r.pan_number) >= 5) else (r.pan_number or 'N/A')
             masked_aadhaar = f"XXXX-XXXX-{r.aadhaar_number[-4:]}" if (r.aadhaar_number and len(r.aadhaar_number) >= 4) else (r.aadhaar_number or 'N/A')
+
+            p_core = getattr(r, 'purpose_core', True)
+            p_servicing = getattr(r, 'purpose_servicing', r.status == 'YES')
+            p_fraud = getattr(r, 'purpose_fraud', True)
+            p_promo = getattr(r, 'purpose_promotional', False)
+            c_sms = getattr(r, 'channel_sms', True)
+            c_email = getattr(r, 'channel_email', False)
+            c_voice = getattr(r, 'channel_voice', False)
+            c_wa = getattr(r, 'channel_whatsapp', False)
+            p_share = getattr(r, 'share_dlt_partner', True)
+
+            # Determine Granular Classification beyond simple YES/NO
+            if r.status == 'REVOKED':
+                classification = 'Revoked (Voluntary Opt-Out)'
+            elif r.status == 'PENDING':
+                classification = 'Pending (Action Required)'
+            elif r.status == 'NO':
+                classification = 'Statutory Only (Mandatory Alert Only)'
+            else:
+                if p_promo and c_email and c_wa and p_share:
+                    classification = 'Authorised (Full Consent)'
+                else:
+                    classification = 'Authorised (Custom / Granular)'
+
+            # Active Channels Summary
+            channels = []
+            if c_sms: channels.append('SMS')
+            if c_email: channels.append('Email')
+            if c_wa: channels.append('WhatsApp')
+            if c_voice: channels.append('Voice')
+            channels_summary = ', '.join(channels) if channels else 'Statutory SMS Only'
+
+            has_sig = 'YES (Digital)' if (getattr(r, 'signature_data', None) and len(str(r.signature_data)) > 50) else ('YES (Physical Form)' if r.source == 'PHYSICAL_OCR' else 'NO')
+
             writer.writerow([
                 mask_reference(r.reference_number),
                 r.customer_name,
@@ -2627,15 +2690,18 @@ class BranchDataExportView(APIView):
                 getattr(r, 'pincode', '') or '',
                 r.branch_name,
                 r.status,
-                'YES' if getattr(r, 'purpose_core', True) else 'NO',
-                'YES' if getattr(r, 'purpose_servicing', r.status == 'YES') else 'NO',
-                'YES' if getattr(r, 'purpose_fraud', True) else 'NO',
-                'YES' if getattr(r, 'purpose_promotional', False) else 'NO',
-                'YES' if getattr(r, 'channel_sms', True) else 'NO',
-                'YES' if getattr(r, 'channel_email', False) else 'NO',
-                'YES' if getattr(r, 'channel_voice', False) else 'NO',
-                'YES' if getattr(r, 'channel_whatsapp', False) else 'NO',
-                'YES' if getattr(r, 'share_dlt_partner', True) else 'NO',
+                classification,
+                channels_summary,
+                'YES' if p_core else 'NO',
+                'YES' if p_servicing else 'NO',
+                'YES' if p_fraud else 'NO',
+                'YES' if p_promo else 'NO',
+                'YES' if c_sms else 'NO',
+                'YES' if c_email else 'NO',
+                'YES' if c_voice else 'NO',
+                'YES' if c_wa else 'NO',
+                'YES' if p_share else 'NO',
+                has_sig,
                 r.source,
                 r.submitted_at.strftime('%Y-%m-%d %H:%M')
             ])
